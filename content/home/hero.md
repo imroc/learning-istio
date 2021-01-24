@@ -48,6 +48,6 @@ hero_media = "book.svg"
 
 +++
 
-分享 Kubernetes 相关理论知识与实践经验
+分享 Istio 相关理论知识与实践经验
 
 <span style="text-shadow: none;"><a class="github-button" href="https://github.com/imroc/learning-istio" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star this on GitHub">Star</a><script async defer src="https://buttons.github.io/buttons.js"></script></span>
