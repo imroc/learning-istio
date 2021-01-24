@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Authors | Istio 学习笔记</title>
+    <link>/learning-istio/en/authors/</link>
+      <atom:link href="/learning-istio/en/authors/index.xml" rel="self" type="application/rss+xml" />
+    <description>Authors</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>roc © 2021</copyright>
+    <image>
+      <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
+      <title>Authors</title>
+      <link>/learning-istio/en/authors/</link>
+    </image>
+    
+  </channel>
+</rss>

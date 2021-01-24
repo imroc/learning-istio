@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc></loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/authors/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href=""
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/</loc>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/publication_types/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/publication_types/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/publication_types/"
+                />
+  </url>
+  
+  <url>
+    <loc></loc>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/tags/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/tags/"
+                />
+  </url>
+  
+</urlset>

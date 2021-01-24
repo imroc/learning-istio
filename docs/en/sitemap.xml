@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/learning-istio/en/authors/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href=""
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/authors/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/en/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/en/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/en/publication_types/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/publication_types/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/publication_types/"
+                />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/en/tags/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/learning-istio/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/learning-istio/en/tags/"
+                />
+  </url>
+  
+</urlset>
