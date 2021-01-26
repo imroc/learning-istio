@@ -12,3 +12,7 @@
   name = "Istio 基础"
   url = "/basics/"
   weight = 20
+[[main]]
+  name = "源码阅读"
+  url = "/source/"
+  weight = 30

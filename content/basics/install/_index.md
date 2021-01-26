@@ -1,8 +1,9 @@
 ---
-linktitle: Istio 基础
 weight: 1
+icon: book
+icon_pack: fas
 
-title: Istio 基础
+title: 安装
 date: "2021-01-26"
 type: book  # Do not modify.
 ---

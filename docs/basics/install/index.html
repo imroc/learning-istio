@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-us" >
+<!DOCTYPE html><html lang="zh-Hans" >
 
 <head>
 
@@ -21,21 +21,23 @@
   
   
   
+    
+    
+    
+  
   
 
-  
+  <meta name="author" content="roc">
 
   
   
   
     
   
-  <meta name="description" content="">
+  <meta name="description" content="腾讯云高级工程师">
 
   
-  <link rel="alternate" hreflang="zh" href="/learning-istio/categories/">
-  
-  <link rel="alternate" hreflang="en-us" href="/learning-istio/en/categories/">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/install/">
 
   
 
@@ -251,17 +253,17 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/en/categories/index.xml" type="application/rss+xml" title="Istio 学习笔记">
+  <link rel="alternate" href="/learning-istio/basics/install/index.xml" type="application/rss+xml" title="Istio 学习笔记">
   
 
   
-  <link rel="manifest" href="/learning-istio/en/index.webmanifest">
+  <link rel="manifest" href="/learning-istio/index.webmanifest">
   
 
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/en/categories/">
+  <link rel="canonical" href="/learning-istio/basics/install/">
 
   
   
@@ -280,29 +282,29 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/en/categories/">
-  <meta property="og:title" content="Categories | Istio 学习笔记">
-  <meta property="og:description" content=""><meta property="og:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png">
-  <meta property="twitter:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png"><meta property="og:locale" content="en-us">
+  <meta property="og:url" content="/learning-istio/basics/install/">
+  <meta property="og:title" content="安装 | Istio 学习笔记">
+  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png">
+  <meta property="twitter:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
-    
+    <meta property="og:updated_time" content="2021-01-26T00:00:00&#43;00:00">
   
-
-  
-
-
-
-
-  
-
 
   
 
 
 
 
+  
 
-  <title>Categories | Istio 学习笔记</title>
+
+  
+
+
+
+
+
+  <title>安装 | Istio 学习笔记</title>
 
 </head>
 
@@ -327,7 +329,7 @@
 
       <div class="row no-gutters justify-content-between mb-3">
         <div class="col-6">
-          <h1>Search</h1>
+          <h1>搜索</h1>
         </div>
         <div class="col-6 col-search-close">
           <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
@@ -336,9 +338,9 @@
 
       <div id="search-box">
         
-        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
         autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
-        aria-label="Search...">
+        aria-label="搜索...">
         
       </div>
 
@@ -383,7 +385,7 @@
 
     
     <button type="button" class="navbar-toggler" data-toggle="collapse"
-            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
     <span><i class="fas fa-bars"></i></span>
     </button>
     
@@ -422,7 +424,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link  active" href="/learning-istio/en"><span>主页</span></a>
+          <a class="nav-link  active" href="/learning-istio"><span>主页</span></a>
         </li>
 
         
@@ -452,7 +454,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/learning-istio/en/basics/"><span>Istio 基础</span></a>
+          <a class="nav-link  active" href="/learning-istio/basics/"><span>Istio 基础</span></a>
         </li>
 
         
@@ -482,7 +484,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/learning-istio/en/source/"><span>源码阅读</span></a>
+          <a class="nav-link " href="/learning-istio/source/"><span>源码阅读</span></a>
         </li>
 
         
@@ -498,11 +500,13 @@
 
       
       
+        
+      
 
       
       
       <li class="nav-item">
-        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
       </li>
       
 
@@ -514,34 +518,18 @@
         </a>
         <div class="dropdown-menu">
           <a href="#" class="dropdown-item js-set-theme-light">
-            <span>Light</span>
+            <span>浅色</span>
           </a>
           <a href="#" class="dropdown-item js-set-theme-dark">
-            <span>Dark</span>
+            <span>深色</span>
           </a>
           <a href="#" class="dropdown-item js-set-theme-auto">
-            <span>Automatic</span>
+            <span>自动</span>
           </a>
         </div>
       </li>
       
 
-      
-      <li class="nav-item dropdown i18n-dropdown">
-        <a href="#" class="nav-link " data-toggle="dropdown"
-           aria-haspopup="true" aria-label="Languages">
-          <i class="fas fa-globe mr-1" aria-hidden="true"></i></a>
-        <div class="dropdown-menu">
-          <div class="dropdown-item dropdown-item-active">
-            <span>English</span>
-          </div>
-          
-          <a class="dropdown-item" href="/learning-istio/categories/">
-            <span>中文 (简体)</span>
-          </a>
-          
-        </div>
-      </li>
       
 
     </ul>
@@ -559,45 +547,211 @@
 
 
 
-
-
-
-
-
-
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          Istio 基础
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
 
   
-
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
   
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
+
   
   
     
-  
-<div class="universal-wrapper pt-3">
-  <h1>Categories</h1>
+
+    
+      
+
+      
+      
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
 
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/basics/">Istio 基础</a></li>
+    
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link  active" href="/learning-istio/basics/install/"><i class="fas fa-book pr-1"></i>安装</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/basics/install/install-istioctl/">安装 istioctl</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/basics/install/install-with-operator/">使用 istio-operator 安装 istio</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
+  
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents"></nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/basics/">
+      
+        Istio 基础
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        安装
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>安装</h1>
+
+          <div class="article-style">
+            <p>先占位，后续陆续补充笔记</p>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
   
 </div>
 
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Jan 26, 2021</p>
+
+          
 
 
-<div class="universal-wrapper">
-  
 
-  
-  
 
-  
 
-</div>
-  </div>
+          
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -625,7 +779,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -634,7 +796,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Cite</h5>
+        <h5 class="modal-title">引用</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -644,10 +806,10 @@
       </div>
       <div class="modal-footer">
         <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
-          <i class="fas fa-copy"></i> Copy
+          <i class="fas fa-copy"></i> 复制
         </a>
         <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
-          <i class="fas fa-download"></i> Download
+          <i class="fas fa-download"></i> 下载
         </a>
         <div id="modal-error"></div>
       </div>
@@ -685,6 +847,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     
@@ -747,7 +914,7 @@
       
     
     
-    <script src="/learning-istio/en/js/wowchemy.min.296f88359a7807937f8ab0f7e8336d2c.js"></script>
+    <script src="/learning-istio/zh/js/wowchemy.min.05933c98769c4dd050a204f868e98974.js"></script>
 
     
 

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Istio 学习笔记</title>
-    <link>/learning-istio/</link>
-      <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
-    <description>Istio 学习笔记</description>
+    <title>安装 | Istio 学习笔记</title>
+    <link>/learning-istio/basics/install/</link>
+      <atom:link href="/learning-istio/basics/install/index.xml" rel="self" type="application/rss+xml" />
+    <description>安装</description>
     <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
-      <title>Istio 学习笔记</title>
-      <link>/learning-istio/</link>
+      <title>安装</title>
+      <link>/learning-istio/basics/install/</link>
     </image>
     
     <item>
@@ -38,15 +38,6 @@ Need more information? Visit https://istio.io/docs/reference/commands/istioctl/
 no running Istio pods in &amp;quot;istio-system&amp;quot;
 1.8.2
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>梳理架构</title>
-      <link>/learning-istio/source/arch/</link>
-      <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/source/arch/</guid>
-      <description>&lt;p&gt;先占位，后续陆续补充笔记&lt;/p&gt;
 </description>
     </item>
     
