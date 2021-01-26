@@ -671,6 +671,7 @@ $ istioctl operator init Installing operator controller in namespace: istio-oper
     <li><a href="#安装-istioctl">安装 istioctl</a></li>
     <li><a href="#使用-istioctl-安装-istio-operator">使用 istioctl 安装 istio-operator</a></li>
     <li><a href="#安装-istio">安装 istio</a></li>
+    <li><a href="#自定义安装配置">自定义安装配置</a></li>
   </ul>
 </nav>
 
@@ -774,6 +775,30 @@ istio-ingressgateway   LoadBalancer   172.21.255.248   120.53.204.198   15021:31
 istiod                 ClusterIP      172.21.254.57    &lt;none&gt;           15010/TCP,15012/TCP,443/TCP,15014/TCP                                        6m8s
 </code></pre>
 <p>拿到流量入口(LB) 的 IP 地址 <code>120.53.204.198</code>，若要通过域名访问，配置域名解析到该 IP 地址 (如果使用 80/443 访问，国内部署需要备案)。</p>
+<h2 id="自定义安装配置">自定义安装配置</h2>
+<p>上述安装使用了名为 <code>demo</code> 的内置 profile (安装配置)，资源占用较少，适合学习和演示用。通过以下命令可查看有哪些内置的 profile:</p>
+<pre><code class="language-bash">$ istioctl profile list
+Istio configuration profiles:
+    default
+    demo
+    empty
+    minimal
+    openshift
+    preview
+    remote
+</code></pre>
+<p>具体每种 profile 的解释可参考 <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/" target="_blank" rel="noopener">官方文档</a>，若需要自定义安装配置，建议基于内置的 profile 进行修改，通过以下命令导出配置:</p>
+<pre><code class="language-bash">istioctl profile dump demo &gt; istio.yaml
+</code></pre>
+<p>导出的配置是不包含 <code>metadata</code> 的，不能直接 <code>apply</code>，可以在 <code>kind</code> 下方加入 <code>metadata</code> 来指定 istio 需要安装的 namespace 和 CR (Custom Resource) 名称:</p>
+<pre><code class="language-yaml">metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+</code></pre>
+<p>导出的 <code>istio.yaml</code> 将所有字段都列出来了，我们可以根据需求进行自定义，具体字段含义可参考 <a href="https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/" target="_blank" rel="noopener">API 文档</a>。</p>
+<p>修改完后可通过 <code>apply</code> 来安装或更新:</p>
+<pre><code class="language-bash">kubectl apply -f istio.yaml
+</code></pre>
 
           </div>
 

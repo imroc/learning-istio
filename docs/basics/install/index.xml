@@ -89,6 +89,30 @@ istio-ingressgateway   LoadBalancer   172.21.255.248   120.53.204.198   15021:31
 istiod                 ClusterIP      172.21.254.57    &amp;lt;none&amp;gt;           15010/TCP,15012/TCP,443/TCP,15014/TCP                                        6m8s
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;拿到流量入口(LB) 的 IP 地址 &lt;code&gt;120.53.204.198&lt;/code&gt;，若要通过域名访问，配置域名解析到该 IP 地址 (如果使用 80/443 访问，国内部署需要备案)。&lt;/p&gt;
+&lt;h2 id=&#34;自定义安装配置&#34;&gt;自定义安装配置&lt;/h2&gt;
+&lt;p&gt;上述安装使用了名为 &lt;code&gt;demo&lt;/code&gt; 的内置 profile (安装配置)，资源占用较少，适合学习和演示用。通过以下命令可查看有哪些内置的 profile:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ istioctl profile list
+Istio configuration profiles:
+    default
+    demo
+    empty
+    minimal
+    openshift
+    preview
+    remote
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;具体每种 profile 的解释可参考 &lt;a href=&#34;https://istio.io/latest/docs/setup/additional-setup/config-profiles/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;官方文档&lt;/a&gt;，若需要自定义安装配置，建议基于内置的 profile 进行修改，通过以下命令导出配置:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;istioctl profile dump demo &amp;gt; istio.yaml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;导出的配置是不包含 &lt;code&gt;metadata&lt;/code&gt; 的，不能直接 &lt;code&gt;apply&lt;/code&gt;，可以在 &lt;code&gt;kind&lt;/code&gt; 下方加入 &lt;code&gt;metadata&lt;/code&gt; 来指定 istio 需要安装的 namespace 和 CR (Custom Resource) 名称:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;导出的 &lt;code&gt;istio.yaml&lt;/code&gt; 将所有字段都列出来了，我们可以根据需求进行自定义，具体字段含义可参考 &lt;a href=&#34;https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;API 文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;修改完后可通过 &lt;code&gt;apply&lt;/code&gt; 来安装或更新:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl apply -f istio.yaml
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

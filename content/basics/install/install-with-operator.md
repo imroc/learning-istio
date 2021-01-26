@@ -66,3 +66,39 @@ istiod                 ClusterIP      172.21.254.57    <none>           15010/TC
 ```
 
 拿到流量入口(LB) 的 IP 地址 `120.53.204.198`，若要通过域名访问，配置域名解析到该 IP 地址 (如果使用 80/443 访问，国内部署需要备案)。
+
+## 自定义安装配置
+
+上述安装使用了名为 `demo` 的内置 profile (安装配置)，资源占用较少，适合学习和演示用。通过以下命令可查看有哪些内置的 profile:
+
+``` bash
+$ istioctl profile list
+Istio configuration profiles:
+    default
+    demo
+    empty
+    minimal
+    openshift
+    preview
+    remote
+```
+
+具体每种 profile 的解释可参考 [官方文档](https://istio.io/latest/docs/setup/additional-setup/config-profiles/)，若需要自定义安装配置，建议基于内置的 profile 进行修改，通过以下命令导出配置:
+``` bash
+istioctl profile dump demo > istio.yaml
+```
+
+导出的配置是不包含 `metadata` 的，不能直接 `apply`，可以在 `kind` 下方加入 `metadata` 来指定 istio 需要安装的 namespace 和 CR (Custom Resource) 名称:
+``` yaml
+metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+```
+
+导出的 `istio.yaml` 将所有字段都列出来了，我们可以根据需求进行自定义，具体字段含义可参考 [API 文档](https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/)。
+
+修改完后可通过 `apply` 来安装或更新:
+
+``` bash
+kubectl apply -f istio.yaml
+```
