@@ -10,9 +10,19 @@
 
 [[main]]
   name = "Istio 基础"
-  url = "/basics/"
+  url = "/basics.html"
   weight = 20
 [[main]]
   name = "源码阅读"
-  url = "/source/"
+  url = "/source.html"
   weight = 30
+[[main]]
+  name = "可观测性"
+  url = "/observability.html"
+  weight = 40
+
+[[main]]
+  name = "最佳实践"
+  url = "/best-practice.html"
+  weight = 50
+

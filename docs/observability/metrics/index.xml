@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>指标监控 | Istio 学习笔记</title>
+    <link>/learning-istio/observability/metrics.html</link>
+      <atom:link href="/learning-istio/observability/metrics/index.xml" rel="self" type="application/rss+xml" />
+    <description>指标监控</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
+      <title>指标监控</title>
+      <link>/learning-istio/observability/metrics.html</link>
+    </image>
+    
+  </channel>
+</rss>

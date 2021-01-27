@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/learning-istio/en/authors/</loc>
+    <loc>/learning-istio/en/authors.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
@@ -12,21 +12,21 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/authors/"
+                href="/learning-istio/en/authors.html"
                 />
   </url>
   
   <url>
-    <loc>/learning-istio/en/categories/</loc>
+    <loc>/learning-istio/en/categories.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/categories/"
+                href="/learning-istio/categories.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/categories/"
+                href="/learning-istio/en/categories.html"
                 />
   </url>
   
@@ -45,30 +45,30 @@
   </url>
   
   <url>
-    <loc>/learning-istio/en/publication_types/</loc>
+    <loc>/learning-istio/en/publication_types.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/publication_types/"
+                href="/learning-istio/publication_types.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/publication_types/"
+                href="/learning-istio/en/publication_types.html"
                 />
   </url>
   
   <url>
-    <loc>/learning-istio/en/tags/</loc>
+    <loc>/learning-istio/en/tags.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/tags/"
+                href="/learning-istio/tags.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/tags/"
+                href="/learning-istio/en/tags.html"
                 />
   </url>
   

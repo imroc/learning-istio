@@ -1,6 +1,5 @@
 ---
 linktitle: Istio 基础
-weight: 1
 
 title: Istio 基础
 date: "2021-01-26"

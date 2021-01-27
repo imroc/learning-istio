@@ -7,7 +7,7 @@ weight: 3
 
 ## 安装 istioctl
 
-需要先安装 istioctl，参考 [安装 istioctl](../install-istioctl/)
+需要先安装 istioctl，参考 [安装 istioctl](install-istioctl.html)
 
 
 ## 使用 istioctl 安装 istio-operator

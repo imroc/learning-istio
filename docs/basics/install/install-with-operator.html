@@ -1,0 +1,1084 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.2 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="安装 istioctl 需要先安装 istioctl，参考 安装 istioctl
+使用 istioctl 安装 istio-operator 一键安装:
+$ istioctl operator init Installing operator controller in namespace: istio-operator using image: docker.io/istio/operator:1.8.2 Operator controller will watch namespaces: istio-system ✔ Istio operator installed ✔ Installation complete  检查 operator 是否 running:">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/install/install-with-operator.html">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/learning-istio/css/wowchemy.abdf02d4151a2ec9418e0f2bec10cef4.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/learning-istio/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_180x180_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/learning-istio/basics/install/install-with-operator.html">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="Istio 学习笔记">
+  <meta property="og:url" content="/learning-istio/basics/install/install-with-operator.html">
+  <meta property="og:title" content="使用 istio-operator 安装 istio | Istio 学习笔记">
+  <meta property="og:description" content="安装 istioctl 需要先安装 istioctl，参考 安装 istioctl
+使用 istioctl 安装 istio-operator 一键安装:
+$ istioctl operator init Installing operator controller in namespace: istio-operator using image: docker.io/istio/operator:1.8.2 Operator controller will watch namespaces: istio-system ✔ Istio operator installed ✔ Installation complete  检查 operator 是否 running:"><meta property="og:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png">
+  <meta property="twitter:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>使用 istio-operator 安装 istio | Istio 学习笔记</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/learning-istio/js/wowchemy-init.min.d876f1a6b98701f9238f2313b512a26f.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/learning-istio"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/basics.html"><span>Istio 基础</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/source.html"><span>源码阅读</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/observability.html"><span>可观测性</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/best-practice.html"><span>最佳实践</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    
+
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          安装
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
+
+  
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
+
+  
+  
+    
+
+    
+      
+
+      
+      
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/basics.html">Istio 基础</a></li>
+    
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link " href="/learning-istio/basics/install.html"><i class="fas fa-book pr-1"></i>安装</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
+
+
+
+  <li class="active"><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
+  
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装-istioctl">安装 istioctl</a></li>
+    <li><a href="#使用-istioctl-安装-istio-operator">使用 istioctl 安装 istio-operator</a></li>
+    <li><a href="#安装-istio">安装 istio</a></li>
+    <li><a href="#自定义安装配置">自定义安装配置</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
+  
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/basics.html">
+      
+        Istio 基础
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/basics/install.html">
+      
+        安装
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        使用 istio-operator 安装 istio
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>使用 istio-operator 安装 istio</h1>
+
+          <div class="article-style">
+            <h2 id="安装-istioctl">安装 istioctl</h2>
+<p>需要先安装 istioctl，参考 <a href="install-istioctl.html">安装 istioctl</a></p>
+<h2 id="使用-istioctl-安装-istio-operator">使用 istioctl 安装 istio-operator</h2>
+<p>一键安装:</p>
+<pre><code class="language-bash">$ istioctl operator init
+Installing operator controller in namespace: istio-operator using image: docker.io/istio/operator:1.8.2
+Operator controller will watch namespaces: istio-system
+✔ Istio operator installed
+✔ Installation complete
+</code></pre>
+<p>检查 operator 是否 running:</p>
+<pre><code class="language-bash">$ kubectl -n istio-operator get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+istio-operator-675b8ff647-n4bvc   1/1     Running   0          75s
+</code></pre>
+<h2 id="安装-istio">安装 istio</h2>
+<p>准备 <code>istio.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+spec:
+  profile: demo
+</code></pre>
+<p>安装:</p>
+<pre><code class="language-bash">kubectl apply -f istio.yaml
+</code></pre>
+<p>查看是否安装成功:</p>
+<pre><code class="language-bash">$ kubectl -n istio-system get pods
+NAME                                    READY   STATUS    RESTARTS   AGE
+istio-egressgateway-69d75b5f96-jrsd9    1/1     Running   0          3m9s
+istio-ingressgateway-674d7d9bb5-cthhs   1/1     Running   0          3m9s
+istiod-57799dfcf9-wftrt                 1/1     Running   0          3m35s
+</code></pre>
+<p>查看 ingressgateway 的 LB 是否正常创建:</p>
+<pre><code class="language-bash">$ kubectl -n istio-system get svc
+NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                                                                      AGE
+istio-egressgateway    ClusterIP      172.21.254.245   &lt;none&gt;           80/TCP,443/TCP,15443/TCP                                                     5m41s
+istio-ingressgateway   LoadBalancer   172.21.255.248   120.53.204.198   15021:31590/TCP,80:30547/TCP,443:30701/TCP,31400:30329/TCP,15443:31790/TCP   5m41s
+istiod                 ClusterIP      172.21.254.57    &lt;none&gt;           15010/TCP,15012/TCP,443/TCP,15014/TCP                                        6m8s
+</code></pre>
+<p>拿到流量入口(LB) 的 IP 地址 <code>120.53.204.198</code>，若要通过域名访问，配置域名解析到该 IP 地址 (如果使用 80/443 访问，国内部署需要备案)。</p>
+<h2 id="自定义安装配置">自定义安装配置</h2>
+<p>上述安装使用了名为 <code>demo</code> 的内置 profile (安装配置)，资源占用较少，适合学习和演示用。通过以下命令可查看有哪些内置的 profile:</p>
+<pre><code class="language-bash">$ istioctl profile list
+Istio configuration profiles:
+    default
+    demo
+    empty
+    minimal
+    openshift
+    preview
+    remote
+</code></pre>
+<p>具体每种 profile 的解释可参考 <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/" target="_blank" rel="noopener">官方文档</a>，若需要自定义安装配置，建议基于内置的 profile 进行修改，通过以下命令导出配置:</p>
+<pre><code class="language-bash">istioctl profile dump demo &gt; istio.yaml
+</code></pre>
+<p>导出的配置是不包含 <code>metadata</code> 的，不能直接 <code>apply</code>，可以在 <code>kind</code> 下方加入 <code>metadata</code> 来指定 istio 需要安装的 namespace 和 CR (Custom Resource) 名称:</p>
+<pre><code class="language-yaml">metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+</code></pre>
+<p>导出的 <code>istio.yaml</code> 将所有字段都列出来了，我们可以根据需求进行自定义，具体字段含义可参考 <a href="https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/" target="_blank" rel="noopener">API 文档</a>。</p>
+<p>修改完后可通过 <code>apply</code> 来安装或更新:</p>
+<pre><code class="language-bash">kubectl apply -f istio.yaml
+</code></pre>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/learning-istio/basics/install/install-istioctl.html" rel="next">安装 istioctl</a>
+  </div>
+  
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Jan 26, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/learning-istio/zh/js/wowchemy.min.05933c98769c4dd050a204f868e98974.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

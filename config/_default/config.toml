@@ -15,7 +15,7 @@ baseurl = "/learning-istio/"
 # Enter a copyright notice to display in the site footer.
 # To display a copyright symbol, type `&copy;`. For current year, type `{year}`.
 copyright = "roc &copy; {year}"
-
+uglyurls = true
 ############################
 ## Advanced options below ##
 ############################

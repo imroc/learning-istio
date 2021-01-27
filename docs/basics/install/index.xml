@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>安装 | Istio 学习笔记</title>
-    <link>/learning-istio/basics/install/</link>
+    <link>/learning-istio/basics/install.html</link>
       <atom:link href="/learning-istio/basics/install/index.xml" rel="self" type="application/rss+xml" />
     <description>安装</description>
     <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
       <title>安装</title>
-      <link>/learning-istio/basics/install/</link>
+      <link>/learning-istio/basics/install.html</link>
     </image>
     
     <item>
       <title>安装 istioctl</title>
-      <link>/learning-istio/basics/install/install-istioctl/</link>
+      <link>/learning-istio/basics/install/install-istioctl.html</link>
       <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/basics/install/install-istioctl/</guid>
+      <guid>/learning-istio/basics/install/install-istioctl.html</guid>
       <description>&lt;p&gt;一键下载:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ curl -sL https://istio.io/downloadIstioctl | sh -
  Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ...
@@ -43,11 +43,11 @@ no running Istio pods in &amp;quot;istio-system&amp;quot;
     
     <item>
       <title>使用 istio-operator 安装 istio</title>
-      <link>/learning-istio/basics/install/install-with-operator/</link>
+      <link>/learning-istio/basics/install/install-with-operator.html</link>
       <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/basics/install/install-with-operator/</guid>
+      <guid>/learning-istio/basics/install/install-with-operator.html</guid>
       <description>&lt;h2 id=&#34;安装-istioctl&#34;&gt;安装 istioctl&lt;/h2&gt;
-&lt;p&gt;需要先安装 istioctl，参考 &lt;a href=&#34;../install-istioctl/&#34;&gt;安装 istioctl&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;需要先安装 istioctl，参考 &lt;a href=&#34;install-istioctl.html&#34;&gt;安装 istioctl&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;使用-istioctl-安装-istio-operator&#34;&gt;使用 istioctl 安装 istio-operator&lt;/h2&gt;
 &lt;p&gt;一键安装:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ istioctl operator init

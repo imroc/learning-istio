@@ -3,33 +3,53 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/learning-istio/basics/</loc>
+    <loc>/learning-istio/basics/install.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/basics/install/</loc>
+    <loc>/learning-istio/observability/metrics.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/basics/install/install-istioctl/</loc>
+    <loc>/learning-istio/best-practice/sidecar-order.html</loc>
+    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/install/install-istioctl.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/source/arch/</loc>
+    <loc>/learning-istio/observability/logging.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/source/arch.html</loc>
     <lastmod>2021-01-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/basics/install/install-with-operator/</loc>
+    <loc>/learning-istio/best-practice/improve-controlplane.html</loc>
+    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/install/install-with-operator.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/observability/tracing.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/learning-istio/</loc>
-    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -43,7 +63,22 @@
   </url>
   
   <url>
-    <loc>/learning-istio/source/</loc>
+    <loc>/learning-istio/best-practice.html</loc>
+    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/observability.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/source.html</loc>
     <lastmod>2021-01-24T00:00:00+00:00</lastmod>
   </url>
   
@@ -52,7 +87,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/authors/"
+                href="/learning-istio/en/authors.html"
                 />
     <xhtml:link
                 rel="alternate"
@@ -62,30 +97,30 @@
   </url>
   
   <url>
-    <loc>/learning-istio/categories/</loc>
+    <loc>/learning-istio/categories.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/categories/"
+                href="/learning-istio/en/categories.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/categories/"
+                href="/learning-istio/categories.html"
                 />
   </url>
   
   <url>
-    <loc>/learning-istio/publication_types/</loc>
+    <loc>/learning-istio/publication_types.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/publication_types/"
+                href="/learning-istio/en/publication_types.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/publication_types/"
+                href="/learning-istio/publication_types.html"
                 />
   </url>
   
@@ -94,16 +129,16 @@
   </url>
   
   <url>
-    <loc>/learning-istio/tags/</loc>
+    <loc>/learning-istio/tags.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/learning-istio/en/tags/"
+                href="/learning-istio/en/tags.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="/learning-istio/tags/"
+                href="/learning-istio/tags.html"
                 />
   </url>
   

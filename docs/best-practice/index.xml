@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>最佳实践 | Istio 学习笔记</title>
+    <link>/learning-istio/best-practice.html</link>
+      <atom:link href="/learning-istio/best-practice/index.xml" rel="self" type="application/rss+xml" />
+    <description>最佳实践</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
+      <title>最佳实践</title>
+      <link>/learning-istio/best-practice.html</link>
+    </image>
+    
+    <item>
+      <title>解决 Sidecar 启动顺序问题</title>
+      <link>/learning-istio/best-practice/sidecar-order.html</link>
+      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/best-practice/sidecar-order.html</guid>
+      <description>&lt;h2 id=&#34;让-istio-injector-将-sidecar-注入到第一个-container&#34;&gt;让 istio-injector 将 sidecar 注入到第一个 container&lt;/h2&gt;
+&lt;p&gt;在 istio 1.7，社区通过给 istio-injector 注入逻辑增加一个顺序开关来解决了该问题，开关打开后，proxy 将会注入到第一个 container。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;img/sidecar-order-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;img/sidecar-order-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;开关打开方法是配置 istio 的 configmap 全局配置:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl -n istio-system edit cm istio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在 &lt;code&gt;defaultConfig&lt;/code&gt; 下加入 &lt;code&gt;holdApplicationUntilProxyStarts: true&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: v1
+data:
+  mesh: |-
+    defaultConfig:
+      holdApplicationUntilProxyStarts: true
+  meshNetworks: &#39;networks: {}&#39;
+kind: ConfigMap
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;若使用 IstioOperator，defaultConfig 修改 CR 字段 &lt;code&gt;meshConfig&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  namespace: istio-system
+  name: example-istiocontrolplane
+spec:
+  meshConfig:
+    defaultConfig:
+      holdApplicationUntilProxyStarts: true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhaohuabing.com/post/2020-09-05-istio-sidecar-dependency/#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Istio 运维实战系列（1）：应用容器对 Envoy Sidecar 的启动依赖问题&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/istio/istio/pull/24737&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;PR: Allow users to delay application start until proxy is ready&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>控制面性能优化</title>
+      <link>/learning-istio/best-practice/improve-controlplane.html</link>
+      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/best-practice/improve-controlplane.html</guid>
+      <description>&lt;h2 id=&#34;istiod-负载均衡&#34;&gt;istiod 负载均衡&lt;/h2&gt;
+&lt;p&gt;envoy 定时重连&lt;/p&gt;
+&lt;h2 id=&#34;istiod-hpa&#34;&gt;istiod HPA&lt;/h2&gt;
+&lt;p&gt;istiod 无状态，可水平扩展&lt;/p&gt;
+&lt;h2 id=&#34;xds-按需下发&#34;&gt;xDS 按需下发&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lazy loading&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;batch-推送间隔优化&#34;&gt;batch 推送间隔优化&lt;/h2&gt;
+&lt;p&gt;istiod推送流控规则有合并推送策略，目前这个时间间隔默认值为100ms。可配，一般很少用户会关心这个，在 mesh 全局配置中可以改: PILOT_DEBOUNCE_AFTER 和 PILOT_DEBOUNCE_MAX。  主要取决于：用户期望流控规则更新的实时性，以及 istiod 稳定性的权衡，如果期望实时性高，则把防抖动时间设置短些，如果mesh规模大，希望istiod提高稳定性，则把防抖动时间设置长些。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
