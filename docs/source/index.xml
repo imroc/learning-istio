@@ -5,7 +5,7 @@
     <link>/learning-istio/source.html</link>
       <atom:link href="/learning-istio/source/index.xml" rel="self" type="application/rss+xml" />
     <description>源码阅读</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Sun, 24 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Fri, 29 Jan 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
       <title>源码阅读</title>
@@ -18,6 +18,30 @@
       <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/source/arch.html</guid>
       <description>&lt;p&gt;先占位，后续陆续补充笔记&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>使用 Clion 阅读 Envoy 源码</title>
+      <link>/learning-istio/source/envoy.html</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/source/envoy.html</guid>
+      <description>&lt;h2 id=&#34;生成-cmakeliststxt&#34;&gt;生成 CMakeLists.txt&lt;/h2&gt;
+&lt;p&gt;参考:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://atbug.com/read-envoy-source-code-in-clion/&#34;&gt;https://atbug.com/read-envoy-source-code-in-clion/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
+&lt;p&gt;从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来，比如:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;加压后进入源码目录，下载依赖，编译，安装:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;./contrib/download_prerequisites
+./configure
+make -j5
+make install
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
