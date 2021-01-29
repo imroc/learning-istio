@@ -33,14 +33,65 @@
 &lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
-&lt;p&gt;从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来，比如:&lt;/p&gt;
+&lt;p&gt;envoy 使用 &lt;code&gt;c++ 17&lt;/code&gt;，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来自行编译安装，比如。&lt;/p&gt;
+&lt;p&gt;下载:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;加压后进入源码目录，下载依赖，编译，安装:&lt;/p&gt;
+&lt;p&gt;解压后进入源码目录，下载依赖，编译，安装:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;./contrib/download_prerequisites
 ./configure
 make -j5
 make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;安装高版本-make&#34;&gt;安装高版本 make&lt;/h2&gt;
+&lt;p&gt;通过源码安装，在&lt;a href=&#34;http://ftp.gnu.org/gnu/make/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 下载，如:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解压后编译安装:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;tar -zxvf make-4.3.tar.gz
+cd make-4.3
+./configure
+make
+make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;备份旧的 make 命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mv /usr/bin/make /usr/bin/make-3.82
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;建立软连接:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ln -s -f /usr/local/bin/make  /usr/bin/make
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;检查版本:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ make --version
+GNU Make 4.3
+为 x86_64-pc-linux-gnu 编译
+Copyright (C) 1988-2020 Free Software Foundation, Inc.
+许可证：GPLv3+：GNU 通用公共许可证第 3 版或更新版本&amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;。
+本软件是自由软件：您可以自由修改和重新发布它。
+在法律允许的范围内没有其他保证
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;安装高版本-glibc&#34;&gt;安装高版本 glibc&lt;/h2&gt;
+&lt;p&gt;编译 envoy 需要 glibc 版本较高，如果报类似的错误:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;buildtools/linux64/gn: /lib64/libc.so.6: version `GLIBC_2.18&#39; not found (required by buildtools/linux64/gn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以从 [这里] 下载高版本 glibc 源码，如:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解压后进入源码目录，编译安装:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir build  # 在glibc-2.32目录下建立build文件夹
+cd build  # 进入build目录
+../configure --prefix=/opt/glibc-2.32  # 配置glibc并设置当前glibc-2.32安装目录
+make &amp;amp;&amp;amp; make install  # 编译安装glibc-2.32库
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看 so 文件是否安装成功:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -alh /opt/glibc-2.32/lib/libc-2.32.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;建立软链:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;rm -rf /lib64/libc.so.6 // 先删除先前的libc.so.6软链
+ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;使用-docker&#34;&gt;使用 Docker&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Dockerfile&#34;&gt;FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
+COPY bazel-cmakelists /bin/bazel-cmakelists
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
