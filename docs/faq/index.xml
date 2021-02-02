@@ -138,5 +138,15 @@ spec:
 </description>
     </item>
     
+    <item>
+      <title>kubeflow on istio 相关问题</title>
+      <link>/learning-istio/faq/kubeflow-on-istio.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/kubeflow-on-istio.html</guid>
+      <description>&lt;h2 id=&#34;版本最高支持到-istio-15&#34;&gt;版本最高支持到 istio 1.5&lt;/h2&gt;
+&lt;p&gt;目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: &lt;a href=&#34;https://github.com/kubeflow/kubeflow/issues/5313&#34;&gt;https://github.com/kubeflow/kubeflow/issues/5313&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
