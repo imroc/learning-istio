@@ -38,6 +38,11 @@
   </url>
   
   <url>
+    <loc>/learning-istio/faq/why-istio-token-setup-failed.html</loc>
+    <lastmod>2021-02-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/source/envoy.html</loc>
     <lastmod>2021-01-29T00:00:00+00:00</lastmod>
   </url>

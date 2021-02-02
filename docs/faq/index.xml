@@ -87,5 +87,56 @@ spec:
 </description>
     </item>
     
+    <item>
+      <title>为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？</title>
+      <link>/learning-istio/faq/why-istio-token-setup-failed.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/why-istio-token-setup-failed.html</guid>
+      <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
+&lt;p&gt;Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 &lt;code&gt;MountVolume.SetUp failed for volume &amp;quot;istio-token&amp;quot; : failed to fetch token: the server could not find the requested resource&lt;/code&gt;:
+&lt;img src=&#34;why-istio-token-setup-failed-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;根据官方文档(&lt;a href=&#34;https://istio.io/latest/docs/ops/best-practices/security/#configure-third-party-service-account-tokens&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Configure third party service account tokens&lt;/a&gt;) 的描述可以得知:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;istio-proxy 需要使用 K8S 的 ServiceAccount token，而 K8S 支持 &lt;code&gt;third party&lt;/code&gt; 和 &lt;code&gt;first party&lt;/code&gt; 两种 token。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;third party token&lt;/code&gt; 安全性更高，istio 默认使用这种类型。&lt;/li&gt;
+&lt;li&gt;不是所有集群都支持这种 token，取决于 K8S 版本和 apiserver 配置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果集群不支持 &lt;code&gt;third party token&lt;/code&gt;，就会导致 ServiceAccount token 不自动创建出来，从而出现上面这种报错。&lt;/p&gt;
+&lt;h2 id=&#34;什么是-third-party-token-&#34;&gt;什么是 third party token ?&lt;/h2&gt;
+&lt;p&gt;其实就是 &lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;ServiceAccountTokenVolumeProjection&lt;/a&gt; 这个特性，在 1.12 beta，1.20 GA。&lt;/p&gt;
+&lt;p&gt;推出该特性是为了增强 ServiceAccount token 的安全性，可以设置有效期(会自动轮转)，避免 token 泄露带来的安全风险，还可以控制 token 的受众。&lt;/p&gt;
+&lt;p&gt;该特性在 istio 中用来配合 SDS 以增强安全性，参考 &lt;a href=&#34;https://developer.aliyun.com/article/742572&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Istio私钥管理利器SDS浅析&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;如何判断集群是否启用了该特性呢？可通过一下命令查询:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl get --raw /api/v1 | jq &#39;.resources[] | select(.name | index(&amp;quot;serviceaccounts/token&amp;quot;))&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;若返回空，说明不支持；若返回如下 json，说明支持:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;name&amp;quot;: &amp;quot;serviceaccounts/token&amp;quot;,
+    &amp;quot;singularName&amp;quot;: &amp;quot;&amp;quot;,
+    &amp;quot;namespaced&amp;quot;: true,
+    &amp;quot;group&amp;quot;: &amp;quot;authentication.k8s.io&amp;quot;,
+    &amp;quot;version&amp;quot;: &amp;quot;v1&amp;quot;,
+    &amp;quot;kind&amp;quot;: &amp;quot;TokenRequest&amp;quot;,
+    &amp;quot;verbs&amp;quot;: [
+        &amp;quot;create&amp;quot;
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;h3 id=&#34;方案一安装-istio-时不使用-third-party-token&#34;&gt;方案一：安装 istio 时不使用 third party token&lt;/h3&gt;
+&lt;p&gt;官方称使用 istioctl 安装会自动检测集群是否支持 &lt;code&gt;third party token&lt;/code&gt;，但据 &lt;a href=&#34;https://github.com/istio/istio/issues/21968#issuecomment-607474174&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;issue&lt;/a&gt; 反馈可能有 bug，还是建议强制指定用 &lt;code&gt;first party token&lt;/code&gt;，用参数 &lt;code&gt;--set values.global.jwtPolicy=first-party-jwt&lt;/code&gt; 来显示指定，示例:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;istioctl manifest generate  --set profile=demo  --set values.global.jwtPolicy=first-party-jwtm &amp;gt; istio.yaml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;方案二集群启用-serviceaccounttokenvolumeprojection&#34;&gt;方案二：集群启用 ServiceAccountTokenVolumeProjection&lt;/h3&gt;
+&lt;p&gt;如何启用 ServiceAccountTokenVolumeProjection 这个特性呢？需要给 apiserver 配置类似如下的参数:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;--service-account-key-file=/etc/kubernetes/pki/sa.key # 这个一般都会配，重要的是下面三个参数
+--service-account-issuer=kubernetes.default.svc
+--service-account-signing-key-file=/etc/kubernetes/pki/sa.key # 注意替换实际路径
+--api-audiences=kubernetes.default.svc
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
