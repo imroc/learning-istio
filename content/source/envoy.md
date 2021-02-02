@@ -10,6 +10,7 @@ weight: 3
 参考:
 * https://atbug.com/read-envoy-source-code-in-clion/
 * https://istio.cn/t/topic/112
+* https://zhuanlan.zhihu.com/p/258777260
 
 
 ## 安装高版本 gcc
@@ -101,4 +102,10 @@ ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
 ``` Dockerfile
 FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
 COPY bazel-cmakelists /bin/bazel-cmakelists
+```
+
+## 生成
+
+``` bash
+bazel-cmakelists --targets //source/exe:envoy-static --skip_build
 ```

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>常见问题 | Istio 学习笔记</title>
+    <link>/learning-istio/faq.html</link>
+      <atom:link href="/learning-istio/faq/index.xml" rel="self" type="application/rss+xml" />
+    <description>常见问题</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 02 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
+      <title>常见问题</title>
+      <link>/learning-istio/faq.html</link>
+    </image>
+    
+    <item>
+      <title>为什么我的 GRPC 服务负载不均 ？</title>
+      <link>/learning-istio/faq/why-not-grpc-loadbalancing.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/why-not-grpc-loadbalancing.html</guid>
+      <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
+&lt;p&gt;grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。&lt;/p&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;grpc 是基于 http2 的长连接，多次请求复用同一个连接。在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 就只能在连接级别进行负载均衡了，通常这也是造成负载不均的原因。&lt;/p&gt;
+&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;如果要对外暴露，gateway 里 protocal 配置 GRPC 不用 TCP，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: grpc-gw
+  namespace: demo
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - &#39;*&#39;
+    port:
+      name: grpc-demo-server
+      number: 9000
+      protocol: GRPC # 这里使用 GRPC 不用 TCP
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;如果定义了 vs，需要使用 http 匹配而不用 tcp，因为 grpc 在 istio 中匹配也是用的 http 字段，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grpc-svc
+  namespace: demo
+spec:
+  gateways:
+  - demo/grpc-gw
+  hosts:
+  - &#39;*&#39;
+  http: # 这里使用 http 不用 tcp
+  - match:
+    - port: 9000
+    route:
+    - destination:
+        host: grpc.demo.svc.cluster.local
+        port:
+          number: 9000
+      weight: 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;部署服务的 service 的 port name 需要使用 &amp;ldquo;grpc-&amp;rdquo; 开头定义，让 istio 能够正确识别，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+  namespace: demo
+spec:
+  ports:
+  - name: grpc-9000 # 以 grpc- 开头
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: grpc
+  type: ClusterIP
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

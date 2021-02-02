@@ -35,7 +35,7 @@
     
   
   <meta name="description" content="生成 CMakeLists.txt 参考:
- https://atbug.com/read-envoy-source-code-in-clion/ https://istio.cn/t/topic/112  安装高版本 gcc envoy 使用 c&#43;&#43; 17，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从这里 找新版本 gcc 源码包，下载下来自行编译安装，比如。
+ https://atbug.com/read-envoy-source-code-in-clion/ https://istio.cn/t/topic/112 https://zhuanlan.zhihu.com/p/258777260  安装高版本 gcc envoy 使用 c&#43;&#43; 17，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从这里 找新版本 gcc 源码包，下载下来自行编译安装，比如。
 下载:
 wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz  解压后进入源码目录，下载依赖，编译，安装:
 ./contrib/download_prerequisites ./configure make -j5 make install  安装高版本 make 通过源码安装，在这里 下载，如:">
@@ -287,7 +287,7 @@ wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz 
   <meta property="og:url" content="/learning-istio/source/envoy.html">
   <meta property="og:title" content="使用 Clion 阅读 Envoy 源码 | Istio 学习笔记">
   <meta property="og:description" content="生成 CMakeLists.txt 参考:
- https://atbug.com/read-envoy-source-code-in-clion/ https://istio.cn/t/topic/112  安装高版本 gcc envoy 使用 c&#43;&#43; 17，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从这里 找新版本 gcc 源码包，下载下来自行编译安装，比如。
+ https://atbug.com/read-envoy-source-code-in-clion/ https://istio.cn/t/topic/112 https://zhuanlan.zhihu.com/p/258777260  安装高版本 gcc envoy 使用 c&#43;&#43; 17，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从这里 找新版本 gcc 源码包，下载下来自行编译安装，比如。
 下载:
 wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz  解压后进入源码目录，下载依赖，编译，安装:
 ./contrib/download_prerequisites ./configure make -j5 make install  安装高版本 make 通过源码安装，在这里 下载，如:"><meta property="og:image" content="/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png">
@@ -561,6 +561,36 @@ wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz 
         
         
 
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/faq.html"><span>常见问题</span></a>
+        </li>
+
+        
+        
+
       
 
         
@@ -710,6 +740,7 @@ wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz 
     <li><a href="#安装高版本-make">安装高版本 make</a></li>
     <li><a href="#安装高版本-glibc">安装高版本 glibc</a></li>
     <li><a href="#使用-docker">使用 Docker</a></li>
+    <li><a href="#生成">生成</a></li>
   </ul>
 </nav>
 
@@ -765,6 +796,7 @@ wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz 
 <ul>
 <li><a href="https://atbug.com/read-envoy-source-code-in-clion/">https://atbug.com/read-envoy-source-code-in-clion/</a></li>
 <li><a href="https://istio.cn/t/topic/112">https://istio.cn/t/topic/112</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/258777260">https://zhuanlan.zhihu.com/p/258777260</a></li>
 </ul>
 <h2 id="安装高版本-gcc">安装高版本 gcc</h2>
 <p>envoy 使用 <code>c++ 17</code>，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从<a href="http://mirror.linux-ia64.org/gnu/gcc/releases/" target="_blank" rel="noopener">这里</a> 找新版本 gcc 源码包，下载下来自行编译安装，比如。</p>
@@ -826,6 +858,9 @@ ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
 <h2 id="使用-docker">使用 Docker</h2>
 <pre><code class="language-Dockerfile">FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
 COPY bazel-cmakelists /bin/bazel-cmakelists
+</code></pre>
+<h2 id="生成">生成</h2>
+<pre><code class="language-bash">bazel-cmakelists --targets //source/exe:envoy-static --skip_build
 </code></pre>
 
           </div>

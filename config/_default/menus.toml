@@ -26,3 +26,7 @@
   url = "/best-practice.html"
   weight = 50
 
+[[main]]
+  name = "常见问题"
+  url = "/faq.html"
+  weight = 60

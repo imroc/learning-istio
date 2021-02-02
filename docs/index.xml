@@ -5,12 +5,86 @@
     <link>/learning-istio/</link>
       <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
     <description>Istio 学习笔记</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Fri, 29 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 02 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_300x300_fit_lanczos_2.png</url>
       <title>Istio 学习笔记</title>
       <link>/learning-istio/</link>
     </image>
+    
+    <item>
+      <title>为什么我的 GRPC 服务负载不均 ？</title>
+      <link>/learning-istio/faq/why-not-grpc-loadbalancing.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/why-not-grpc-loadbalancing.html</guid>
+      <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
+&lt;p&gt;grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。&lt;/p&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;grpc 是基于 http2 的长连接，多次请求复用同一个连接。在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 就只能在连接级别进行负载均衡了，通常这也是造成负载不均的原因。&lt;/p&gt;
+&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;如果要对外暴露，gateway 里 protocal 配置 GRPC 不用 TCP，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: grpc-gw
+  namespace: demo
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - &#39;*&#39;
+    port:
+      name: grpc-demo-server
+      number: 9000
+      protocol: GRPC # 这里使用 GRPC 不用 TCP
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;如果定义了 vs，需要使用 http 匹配而不用 tcp，因为 grpc 在 istio 中匹配也是用的 http 字段，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grpc-svc
+  namespace: demo
+spec:
+  gateways:
+  - demo/grpc-gw
+  hosts:
+  - &#39;*&#39;
+  http: # 这里使用 http 不用 tcp
+  - match:
+    - port: 9000
+    route:
+    - destination:
+        host: grpc.demo.svc.cluster.local
+        port:
+          number: 9000
+      weight: 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;部署服务的 service 的 port name 需要使用 &amp;ldquo;grpc-&amp;rdquo; 开头定义，让 istio 能够正确识别，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+  namespace: demo
+spec:
+  ports:
+  - name: grpc-9000 # 以 grpc- 开头
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: grpc
+  type: ClusterIP
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>解决 Sidecar 启动顺序问题</title>
@@ -100,6 +174,7 @@ no running Istio pods in &amp;quot;istio-system&amp;quot;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://atbug.com/read-envoy-source-code-in-clion/&#34;&gt;https://atbug.com/read-envoy-source-code-in-clion/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/258777260&#34;&gt;https://zhuanlan.zhihu.com/p/258777260&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
 &lt;p&gt;envoy 使用 &lt;code&gt;c++ 17&lt;/code&gt;，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来自行编译安装，比如。&lt;/p&gt;
@@ -161,6 +236,9 @@ ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
 &lt;h2 id=&#34;使用-docker&#34;&gt;使用 Docker&lt;/h2&gt;
 &lt;pre&gt;&lt;code class=&#34;language-Dockerfile&#34;&gt;FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
 COPY bazel-cmakelists /bin/bazel-cmakelists
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;生成&#34;&gt;生成&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;bazel-cmakelists --targets //source/exe:envoy-static --skip_build
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

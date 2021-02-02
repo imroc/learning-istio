@@ -31,6 +31,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://atbug.com/read-envoy-source-code-in-clion/&#34;&gt;https://atbug.com/read-envoy-source-code-in-clion/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/258777260&#34;&gt;https://zhuanlan.zhihu.com/p/258777260&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
 &lt;p&gt;envoy 使用 &lt;code&gt;c++ 17&lt;/code&gt;，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来自行编译安装，比如。&lt;/p&gt;
@@ -92,6 +93,9 @@ ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
 &lt;h2 id=&#34;使用-docker&#34;&gt;使用 Docker&lt;/h2&gt;
 &lt;pre&gt;&lt;code class=&#34;language-Dockerfile&#34;&gt;FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
 COPY bazel-cmakelists /bin/bazel-cmakelists
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;生成&#34;&gt;生成&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;bazel-cmakelists --targets //source/exe:envoy-static --skip_build
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
