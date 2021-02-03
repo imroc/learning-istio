@@ -34,10 +34,13 @@
   
     
   
-  <meta name="description" content="现象 Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource: 分析 根据官方文档(Configure third party service account tokens) 的描述可以得知:">
+  <meta name="description" content="gRPC config stream closed: 13 这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。
+参考 Common Issues。
+gRPC config stream closed: 14 如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。
+参考 Common Issues。">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/faq/why-istio-token-setup-failed.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/faq/proxy-error-log.html">
 
   
 
@@ -261,7 +264,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/faq/why-istio-token-setup-failed.html">
+  <link rel="canonical" href="/learning-istio/faq/proxy-error-log.html">
 
   
   
@@ -280,15 +283,18 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/faq/why-istio-token-setup-failed.html">
-  <meta property="og:title" content="为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？ | Istio 学习笔记">
-  <meta property="og:description" content="现象 Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource: 分析 根据官方文档(Configure third party service account tokens) 的描述可以得知:"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/faq/proxy-error-log.html">
+  <meta property="og:title" content="Sidecar/Gateway 常见报错 | Istio 学习笔记">
+  <meta property="og:description" content="gRPC config stream closed: 13 这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。
+参考 Common Issues。
+gRPC config stream closed: 14 如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。
+参考 Common Issues。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
-      <meta property="article:published_time" content="2021-02-02T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2021-02-03T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-02-02T00:00:00&#43;00:00">
+    <meta property="article:modified_time" content="2021-02-03T00:00:00&#43;00:00">
   
 
   
@@ -307,7 +313,7 @@
 
 
 
-  <title>为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？ | Istio 学习笔记</title>
+  <title>Sidecar/Gateway 常见报错 | Istio 学习笔记</title>
 
 </head>
 
@@ -712,7 +718,7 @@
 
 
 
-  <li class="active"><a href="/learning-istio/faq/why-istio-token-setup-failed.html">为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？</a></li>
+  <li class=""><a href="/learning-istio/faq/why-istio-token-setup-failed.html">为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？</a></li>
 
 
 
@@ -724,7 +730,7 @@
 
 
 
-  <li class=""><a href="/learning-istio/faq/proxy-error-log.html">Sidecar/Gateway 常见报错</a></li>
+  <li class="active"><a href="/learning-istio/faq/proxy-error-log.html">Sidecar/Gateway 常见报错</a></li>
 
       
     
@@ -747,15 +753,8 @@
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#现象">现象</a></li>
-    <li><a href="#分析">分析</a></li>
-    <li><a href="#什么是-third-party-token-">什么是 third party token ?</a></li>
-    <li><a href="#解决方案">解决方案</a>
-      <ul>
-        <li><a href="#方案一安装-istio-时不使用-third-party-token">方案一：安装 istio 时不使用 third party token</a></li>
-        <li><a href="#方案二集群启用-serviceaccounttokenvolumeprojection">方案二：集群启用 ServiceAccountTokenVolumeProjection</a></li>
-      </ul>
-    </li>
+    <li><a href="#grpc-config-stream-closed-13">gRPC config stream closed: 13</a></li>
+    <li><a href="#grpc-config-stream-closed-14">gRPC config stream closed: 14</a></li>
   </ul>
 </nav>
 
@@ -795,7 +794,7 @@
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        为什么会报错 MountVolume.SetUp failed for volume "istio-token"？
+        Sidecar/Gateway 常见报错
       </li>
     </ol>
   </nav>
@@ -803,52 +802,16 @@
 
           
 
-          <h1>为什么会报错 MountVolume.SetUp failed for volume &#34;istio-token&#34;？</h1>
+          <h1>Sidecar/Gateway 常见报错</h1>
 
           <div class="article-style">
-            <h2 id="现象">现象</h2>
-<p>Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 <code>MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource</code>:
-<img src="why-istio-token-setup-failed-1.png" alt=""></p>
-<h2 id="分析">分析</h2>
-<p>根据官方文档(<a href="https://istio.io/latest/docs/ops/best-practices/security/#configure-third-party-service-account-tokens" target="_blank" rel="noopener">Configure third party service account tokens</a>) 的描述可以得知:</p>
-<ul>
-<li>istio-proxy 需要使用 K8S 的 ServiceAccount token，而 K8S 支持 <code>third party</code> 和 <code>first party</code> 两种 token。</li>
-<li><code>third party token</code> 安全性更高，istio 默认使用这种类型。</li>
-<li>不是所有集群都支持这种 token，取决于 K8S 版本和 apiserver 配置。</li>
-</ul>
-<p>如果集群不支持 <code>third party token</code>，就会导致 ServiceAccount token 不自动创建出来，从而出现上面这种报错。</p>
-<h2 id="什么是-third-party-token-">什么是 third party token ?</h2>
-<p>其实就是 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection" target="_blank" rel="noopener">ServiceAccountTokenVolumeProjection</a> 这个特性，在 1.12 beta，1.20 GA。</p>
-<p>推出该特性是为了增强 ServiceAccount token 的安全性，可以设置有效期(会自动轮转)，避免 token 泄露带来的安全风险，还可以控制 token 的受众。</p>
-<p>该特性在 istio 中用来配合 SDS 以增强安全性，参考 <a href="https://developer.aliyun.com/article/742572" target="_blank" rel="noopener">Istio私钥管理利器SDS浅析</a>。</p>
-<p>如何判断集群是否启用了该特性呢？可通过一下命令查询:</p>
-<pre><code class="language-bash">kubectl get --raw /api/v1 | jq '.resources[] | select(.name | index(&quot;serviceaccounts/token&quot;))'
-</code></pre>
-<p>若返回空，说明不支持；若返回如下 json，说明支持:</p>
-<pre><code class="language-json">{
-    &quot;name&quot;: &quot;serviceaccounts/token&quot;,
-    &quot;singularName&quot;: &quot;&quot;,
-    &quot;namespaced&quot;: true,
-    &quot;group&quot;: &quot;authentication.k8s.io&quot;,
-    &quot;version&quot;: &quot;v1&quot;,
-    &quot;kind&quot;: &quot;TokenRequest&quot;,
-    &quot;verbs&quot;: [
-        &quot;create&quot;
-    ]
-}
-</code></pre>
-<h2 id="解决方案">解决方案</h2>
-<h3 id="方案一安装-istio-时不使用-third-party-token">方案一：安装 istio 时不使用 third party token</h3>
-<p>官方称使用 istioctl 安装会自动检测集群是否支持 <code>third party token</code>，但据 <a href="https://github.com/istio/istio/issues/21968#issuecomment-607474174" target="_blank" rel="noopener">issue</a> 反馈可能有 bug，还是建议强制指定用 <code>first party token</code>，用参数 <code>--set values.global.jwtPolicy=first-party-jwt</code> 来显示指定，示例:</p>
-<pre><code class="language-bash">istioctl manifest generate  --set profile=demo  --set values.global.jwtPolicy=first-party-jwtm &gt; istio.yaml
-</code></pre>
-<h3 id="方案二集群启用-serviceaccounttokenvolumeprojection">方案二：集群启用 ServiceAccountTokenVolumeProjection</h3>
-<p>如何启用 ServiceAccountTokenVolumeProjection 这个特性呢？需要给 apiserver 配置类似如下的参数:</p>
-<pre><code class="language-yaml">--service-account-key-file=/etc/kubernetes/pki/sa.key # 这个一般都会配，重要的是下面三个参数
---service-account-issuer=kubernetes.default.svc
---service-account-signing-key-file=/etc/kubernetes/pki/sa.key # 注意替换实际路径
---api-audiences=kubernetes.default.svc
-</code></pre>
+            <h2 id="grpc-config-stream-closed-13">gRPC config stream closed: 13</h2>
+<p><img src="image-20210203150405399.png" alt="image-20210203150405399"></p>
+<p>这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。</p>
+<p>参考 <a href="https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues" target="_blank" rel="noopener">Common Issues</a>。</p>
+<h2 id="grpc-config-stream-closed-14">gRPC config stream closed: 14</h2>
+<p>如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。</p>
+<p>参考 <a href="https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues" target="_blank" rel="noopener">Common Issues</a>。</p>
 
           </div>
 
@@ -866,15 +829,9 @@
   
   <div class="post-nav-item">
     <div class="meta-nav">上一页</div>
-    <a href="/learning-istio/faq/why-not-grpc-loadbalancing.html" rel="next">为什么我的 GRPC 服务负载不均 ？</a>
+    <a href="/learning-istio/faq/graceful-shutdown.html" rel="next">优雅停止</a>
   </div>
   
-  
-  
-  <div class="post-nav-item">
-    <div class="meta-nav">下一页</div>
-    <a href="/learning-istio/faq/kubeflow-on-istio.html" rel="prev">kubeflow on istio 相关问题</a>
-  </div>
   
 </div>
 
@@ -883,7 +840,7 @@
         </div>
 
         <div class="body-footer">
-          <p>最近更新于 Feb 2, 2021</p>
+          <p>最近更新于 Feb 3, 2021</p>
 
           
 

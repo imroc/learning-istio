@@ -5,7 +5,7 @@
     <link>/learning-istio/</link>
       <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
     <description>Istio 学习笔记</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 02 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 03 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>Istio 学习笔记</title>
@@ -395,6 +395,35 @@ Istio configuration profiles:
       <guid>/learning-istio/faq/kubeflow-on-istio.html</guid>
       <description>&lt;h2 id=&#34;版本最高支持到-istio-15&#34;&gt;版本最高支持到 istio 1.5&lt;/h2&gt;
 &lt;p&gt;目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: &lt;a href=&#34;https://github.com/kubeflow/kubeflow/issues/5313&#34;&gt;https://github.com/kubeflow/kubeflow/issues/5313&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>优雅停止</title>
+      <link>/learning-istio/faq/graceful-shutdown.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/graceful-shutdown.html</guid>
+      <description>&lt;h2 id=&#34;issue&#34;&gt;issue&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;istio issue: &lt;a href=&#34;https://github.com/istio/istio/issues/7136&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#7136&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;k8s issue: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/65502&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#65502&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;graceful-shutdown-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sidecar/Gateway 常见报错</title>
+      <link>/learning-istio/faq/proxy-error-log.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/proxy-error-log.html</guid>
+      <description>&lt;h2 id=&#34;grpc-config-stream-closed-13&#34;&gt;gRPC config stream closed: 13&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;image-20210203150405399.png&#34; alt=&#34;image-20210203150405399&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;grpc-config-stream-closed-14&#34;&gt;gRPC config stream closed: 14&lt;/h2&gt;
+&lt;p&gt;如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
 </description>
     </item>
     
