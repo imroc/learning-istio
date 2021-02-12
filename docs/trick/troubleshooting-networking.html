@@ -34,11 +34,14 @@
   
     
   
-  <meta name="description" content="一键下载:
-$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?">
+  <meta name="description" content="网络性能问题 现象:
+ P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快  思路:
+ 看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)  client 端看是否有重传:
+检查是否有 conntrack 插入失败 watch:
+watch &#39;conntrack -S | awk -F &quot;insert_failed=&quot; &quot;{print \$2}&quot; | awk -F &quot; &quot; &quot;{print \$1}&quot; | awk &quot;{sum &#43;= \$1} END {print sum}&quot;&#39;  执行一次:">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/install/install-istioctl.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick/troubleshooting-networking.html">
 
   
 
@@ -262,7 +265,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/basics/install/install-istioctl.html">
+  <link rel="canonical" href="/learning-istio/trick/troubleshooting-networking.html">
 
   
   
@@ -281,16 +284,19 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/basics/install/install-istioctl.html">
-  <meta property="og:title" content="安装 istioctl | Istio 学习笔记">
-  <meta property="og:description" content="一键下载:
-$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/trick/troubleshooting-networking.html">
+  <meta property="og:title" content="网络排障 | Istio 学习笔记">
+  <meta property="og:description" content="网络性能问题 现象:
+ P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快  思路:
+ 看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)  client 端看是否有重传:
+检查是否有 conntrack 插入失败 watch:
+watch &#39;conntrack -S | awk -F &quot;insert_failed=&quot; &quot;{print \$2}&quot; | awk -F &quot; &quot; &quot;{print \$1}&quot; | awk &quot;{sum &#43;= \$1} END {print sum}&quot;&#39;  执行一次:"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
-      <meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2021-02-03T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00">
+    <meta property="article:modified_time" content="2021-02-03T00:00:00&#43;00:00">
   
 
   
@@ -309,7 +315,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
 
 
-  <title>安装 istioctl | Istio 学习笔记</title>
+  <title>网络排障 | Istio 学习笔记</title>
 
 </head>
 
@@ -658,7 +664,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
     <div class="d-flex">
       <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
         
-          安装
+          实用技巧
         
       </span>
       <span><i class="fas fa-chevron-down"></i></span>
@@ -705,43 +711,16 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
     
       <ul class="nav docs-sidenav">
-        <li class=""><a href="/learning-istio/basics.html">Istio 基础</a></li>
+        <li class=""><a href="/learning-istio/trick.html">实用技巧</a></li>
     
       
 
 
-  
-    
-    
-    
-    
-      
-    
-    
-
-    
-      <div class="docs-toc-item">
-        <a class="docs-toc-link " href="/learning-istio/basics/install.html"><i class="fas fa-book pr-1"></i>安装</a>
-    
-      
-        <ul class="nav docs-sidenav">
-      
-
-
-  <li class="active"><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
+  <li class="active"><a href="/learning-istio/trick/troubleshooting-networking.html">网络排障</a></li>
 
 
 
-  <li class=""><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-
-      
-        </ul>
-      
-    
-
-    
-      </div>
-    
+  <li class=""><a href="/learning-istio/trick/check.html">常规检查</a></li>
 
       
     
@@ -762,7 +741,12 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
         <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
       </ul>
 
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#网络性能问题">网络性能问题</a></li>
+    <li><a href="#检查是否有-conntrack-插入失败">检查是否有 conntrack 插入失败</a></li>
+  </ul>
+</nav>
 
       
     </div>
@@ -780,7 +764,6 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
       
   
   
-  
 
   <li class="breadcrumb-item">
     <a href="/learning-istio/">
@@ -792,25 +775,16 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
 
   <li class="breadcrumb-item">
-    <a href="/learning-istio/basics.html">
+    <a href="/learning-istio/trick.html">
       
-        Istio 基础
-      
-    </a>
-  </li>
-
-
-  <li class="breadcrumb-item">
-    <a href="/learning-istio/basics/install.html">
-      
-        安装
+        实用技巧
       
     </a>
   </li>
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        安装 istioctl
+        网络排障
       </li>
     </ol>
   </nav>
@@ -818,29 +792,26 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
           
 
-          <h1>安装 istioctl</h1>
+          <h1>网络排障</h1>
 
           <div class="article-style">
-            <p>一键下载:</p>
-<pre><code class="language-bash">$ curl -sL https://istio.io/downloadIstioctl | sh -
- Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ...
-istioctl-1.8.2-osx.tar.gz download complete!
-
-Add the istioctl to your path with:
-  export PATH=$PATH:$HOME/.istioctl/bin
-
-Begin the Istio pre-installation check by running:
-	 istioctl x precheck
-
-Need more information? Visit https://istio.io/docs/reference/commands/istioctl/
+            <h2 id="网络性能问题">网络性能问题</h2>
+<p>现象:</p>
+<ul>
+<li>P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快</li>
+</ul>
+<p>思路:</p>
+<ul>
+<li>看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)</li>
+</ul>
+<p>client 端看是否有重传:</p>
+<p><img src="image-20210203165254809.png" alt="image-20210203165254809"></p>
+<h2 id="检查是否有-conntrack-插入失败">检查是否有 conntrack 插入失败</h2>
+<p>watch:</p>
+<pre><code class="language-bash">watch 'conntrack -S | awk -F &quot;insert_failed=&quot; &quot;{print \$2}&quot; | awk -F &quot; &quot; &quot;{print \$1}&quot; | awk &quot;{sum += \$1} END {print sum}&quot;'
 </code></pre>
-<p>二进制会被下载到 <code>~/.istioctl/bin/istioctl</code>，在我们的 shell 启动脚本里 (<code>~/.bashrc</code> 或 <code>~/.zshrc</code>) 加入:</p>
-<pre><code class="language-bash">export PATH=$PATH:$HOME/.istioctl/bin
-</code></pre>
-<p>新开终端，检测是否安装成功:</p>
-<pre><code class="language-bash">$ istioctl version
-no running Istio pods in &quot;istio-system&quot;
-1.8.2
+<p>执行一次:</p>
+<pre><code class="language-bash">conntrack -S | awk -F 'insert_failed=' '{print $2}' | awk -F ' ' '{print $1}' | awk '{sum += $1} END {print sum}'
 </code></pre>
 
           </div>
@@ -859,7 +830,7 @@ no running Istio pods in &quot;istio-system&quot;
   
   <div class="post-nav-item">
     <div class="meta-nav">下一页</div>
-    <a href="/learning-istio/basics/install/install-with-operator.html" rel="prev">使用 istio-operator 安装 istio</a>
+    <a href="/learning-istio/trick/check.html" rel="prev">常规检查</a>
   </div>
   
 </div>
@@ -869,7 +840,7 @@ no running Istio pods in &quot;istio-system&quot;
         </div>
 
         <div class="body-footer">
-          <p>最近更新于 Jan 26, 2021</p>
+          <p>最近更新于 Feb 3, 2021</p>
 
           
 

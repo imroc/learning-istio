@@ -13,6 +13,32 @@
     </image>
     
     <item>
+      <title>网络排障</title>
+      <link>/learning-istio/trick/troubleshooting-networking.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/trick/troubleshooting-networking.html</guid>
+      <description>&lt;h2 id=&#34;网络性能问题&#34;&gt;网络性能问题&lt;/h2&gt;
+&lt;p&gt;现象:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;思路:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;client 端看是否有重传:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;image-20210203165254809.png&#34; alt=&#34;image-20210203165254809&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;检查是否有-conntrack-插入失败&#34;&gt;检查是否有 conntrack 插入失败&lt;/h2&gt;
+&lt;p&gt;watch:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;watch &#39;conntrack -S | awk -F &amp;quot;insert_failed=&amp;quot; &amp;quot;{print \$2}&amp;quot; | awk -F &amp;quot; &amp;quot; &amp;quot;{print \$1}&amp;quot; | awk &amp;quot;{sum += \$1} END {print sum}&amp;quot;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;执行一次:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;conntrack -S | awk -F &#39;insert_failed=&#39; &#39;{print $2}&#39; | awk -F &#39; &#39; &#39;{print $1}&#39; | awk &#39;{sum += $1} END {print sum}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>为什么我的 GRPC 服务负载不均 ？</title>
       <link>/learning-istio/faq/why-not-grpc-loadbalancing.html</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
@@ -162,6 +188,16 @@ no running Istio pods in &amp;quot;istio-system&amp;quot;
       <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/source/arch.html</guid>
       <description>&lt;p&gt;先占位，后续陆续补充笔记&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>常规检查</title>
+      <link>/learning-istio/trick/check.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/trick/check.html</guid>
+      <description>&lt;h2 id=&#34;检查-port-name-是否符合规则&#34;&gt;检查 port name 是否符合规则&lt;/h2&gt;
+&lt;p&gt;istio 需要根据 svc 的 port name 来检查后端服务用的哪种协议，如果定义不正确，走到了不符合预期的 filter，就会造成一些异常现象。&lt;/p&gt;
 </description>
     </item>
     

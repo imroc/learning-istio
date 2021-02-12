@@ -13,6 +13,11 @@
   </url>
   
   <url>
+    <loc>/learning-istio/trick/troubleshooting-networking.html</loc>
+    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/faq/why-not-grpc-loadbalancing.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
@@ -35,6 +40,11 @@
   <url>
     <loc>/learning-istio/source/arch.html</loc>
     <lastmod>2021-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/trick/check.html</loc>
+    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -90,6 +100,11 @@
                 hreflang="zh"
                 href="/learning-istio/"
                 />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/trick.html</loc>
+    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
