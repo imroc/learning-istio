@@ -5,7 +5,7 @@
     <link>/learning-istio/</link>
       <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
     <description>Istio 学习笔记</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 03 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>Istio 学习笔记</title>
@@ -443,6 +443,7 @@ Istio configuration profiles:
 &lt;ul&gt;
 &lt;li&gt;istio issue: &lt;a href=&#34;https://github.com/istio/istio/issues/7136&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#7136&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;k8s issue: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/65502&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#65502&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/istio/istio/pull/11485&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Envoy Graceful Shutdown&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;graceful-shutdown-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 </description>
@@ -460,6 +461,75 @@ Istio configuration profiles:
 &lt;h2 id=&#34;grpc-config-stream-closed-14&#34;&gt;gRPC config stream closed: 14&lt;/h2&gt;
 &lt;p&gt;如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。&lt;/p&gt;
 &lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Envoy 异常状态码</title>
+      <link>/learning-istio/faq/envoy-error-code.html</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/faq/envoy-error-code.html</guid>
+      <description>&lt;h2 id=&#34;431-request-header-fields-too-large&#34;&gt;431: Request Header Fields Too Large&lt;/h2&gt;
+&lt;p&gt;此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，可以通过 EnvoyFilter 调整 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段，最大可调至 96 KiB&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;envoy-error-code-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;EnvoyFilter 示例 (istio 1.6 验证通过):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&amp;quot;
+          max_request_headers_kb: 96
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;高版本兼容上面的 v2 配置，但建议用 v3 的 配置 (istio 1.8 验证通过):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager&amp;quot;
+          max_request_headers_kb: 96
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>已知 BUG</title>
+      <link>/learning-istio/ref/bug.html</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/ref/bug.html</guid>
+      <description>&lt;h2 id=&#34;envoy-内存不释放&#34;&gt;envoy 内存不释放&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;已知受影响的版本: istio 1.5.4&lt;/li&gt;
+&lt;li&gt;已解决版本: istio 1.6.0&lt;/li&gt;
+&lt;li&gt;issue: &lt;a href=&#34;https://github.com/istio/istio/issues/25145&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#25145&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

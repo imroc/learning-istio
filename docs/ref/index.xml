@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>参考手册 | Istio 学习笔记</title>
+    <link>/learning-istio/ref.html</link>
+      <atom:link href="/learning-istio/ref/index.xml" rel="self" type="application/rss+xml" />
+    <description>参考手册</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
+      <title>参考手册</title>
+      <link>/learning-istio/ref.html</link>
+    </image>
+    
+    <item>
+      <title>已知 BUG</title>
+      <link>/learning-istio/ref/bug.html</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/ref/bug.html</guid>
+      <description>&lt;h2 id=&#34;envoy-内存不释放&#34;&gt;envoy 内存不释放&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;已知受影响的版本: istio 1.5.4&lt;/li&gt;
+&lt;li&gt;已解决版本: istio 1.6.0&lt;/li&gt;
+&lt;li&gt;issue: &lt;a href=&#34;https://github.com/istio/istio/issues/25145&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#25145&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

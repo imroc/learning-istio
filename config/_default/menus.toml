@@ -30,3 +30,8 @@
   name = "常见问题"
   url = "/faq.html"
   weight = 60
+
+[[main]]
+name = "参考手册"
+url = "/ref.html"
+weight = 70
