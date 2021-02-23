@@ -18,7 +18,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq/why-not-grpc-loadbalancing.html</loc>
+    <loc>/learning-istio/faq/grpc-not-loadbalancing.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
   
@@ -48,7 +48,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq/why-istio-token-setup-failed.html</loc>
+    <loc>/learning-istio/faq/istio-token-setup-failed.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
   
@@ -85,6 +85,11 @@
   <url>
     <loc>/learning-istio/faq/proxy-error-log.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/faq/404-status-code.html</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>

@@ -1,5 +1,5 @@
 ---
-title: 为什么我的 GRPC 服务负载不均 ？
+title: GRPC 服务负载不均
 type: book
 date: "2021-02-02"
 weight: 2
@@ -34,6 +34,7 @@ spec:
       number: 9000
       protocol: GRPC # 这里使用 GRPC 不用 TCP
 ```
+
 2. 如果定义了 vs，需要使用 http 匹配而不用 tcp，因为 grpc 在 istio 中匹配也是用的 http 字段，示例:
 ``` yaml
 apiVersion: networking.istio.io/v1beta1
@@ -56,6 +57,7 @@ spec:
           number: 9000
       weight: 100
 ```
+
 3. 部署服务的 service 的 port name 需要使用 "grpc-" 开头定义，让 istio 能够正确识别，示例:
 ``` yaml
 apiVersion: v1

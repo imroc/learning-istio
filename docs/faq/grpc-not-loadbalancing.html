@@ -34,11 +34,11 @@
   
     
   
-  <meta name="description" content="问题描述 istio 中 http 请求，envoy 返回 431 异常状态码:
-HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 HttpConnectionManager 配置的 max_request_headers_kb 字段决定，最大可调整到 96 KiB: 解决方案 可以通过 EnvoyFilter 调整 max_request_headers_kb 字段来提升 header 大小限制。">
+  <meta name="description" content="现象 grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。
+分析 grpc 是基于 http2 的长连接，多次请求复用同一个连接。如果不用 istio，只用普通的 k8s service，是不会感知 grpc 协议的，只当成 tcp 来转发，在连接层面做负载均衡，不会在请求层面做负载均衡。但在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果发现负载不均，通常是没有正确配置。 要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 的话就只能在连接级别进行负载均衡了，请求级别可能就会负载不均。">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/faq/431-status-code.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/faq/grpc-not-loadbalancing.html">
 
   
 
@@ -262,7 +262,7 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/faq/431-status-code.html">
+  <link rel="canonical" href="/learning-istio/faq/grpc-not-loadbalancing.html">
 
   
   
@@ -281,16 +281,16 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/faq/431-status-code.html">
-  <meta property="og:title" content="Envoy 状态码: 431 Request Header Fields Too Large | Istio 学习笔记">
-  <meta property="og:description" content="问题描述 istio 中 http 请求，envoy 返回 431 异常状态码:
-HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 HttpConnectionManager 配置的 max_request_headers_kb 字段决定，最大可调整到 96 KiB: 解决方案 可以通过 EnvoyFilter 调整 max_request_headers_kb 字段来提升 header 大小限制。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/faq/grpc-not-loadbalancing.html">
+  <meta property="og:title" content="GRPC 服务负载不均 | Istio 学习笔记">
+  <meta property="og:description" content="现象 grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。
+分析 grpc 是基于 http2 的长连接，多次请求复用同一个连接。如果不用 istio，只用普通的 k8s service，是不会感知 grpc 协议的，只当成 tcp 来转发，在连接层面做负载均衡，不会在请求层面做负载均衡。但在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果发现负载不均，通常是没有正确配置。 要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 的话就只能在连接级别进行负载均衡了，请求级别可能就会负载不均。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
-      <meta property="article:published_time" content="2021-02-23T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2021-02-02T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-02-23T00:00:00&#43;00:00">
+    <meta property="article:modified_time" content="2021-02-02T00:00:00&#43;00:00">
   
 
   
@@ -309,7 +309,7 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
 
 
 
-  <title>Envoy 状态码: 431 Request Header Fields Too Large | Istio 学习笔记</title>
+  <title>GRPC 服务负载不均 | Istio 学习笔记</title>
 
 </head>
 
@@ -740,7 +740,7 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
       
 
 
-  <li class=""><a href="/learning-istio/faq/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
+  <li class="active"><a href="/learning-istio/faq/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
 
 
 
@@ -764,7 +764,7 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
 
 
 
-  <li class="active"><a href="/learning-istio/faq/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
+  <li class=""><a href="/learning-istio/faq/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
 
       
     
@@ -787,9 +787,9 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#问题描述">问题描述</a></li>
-    <li><a href="#原因分析">原因分析</a></li>
-    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#现象">现象</a></li>
+    <li><a href="#分析">分析</a></li>
+    <li><a href="#解决方法">解决方法</a></li>
   </ul>
 </nav>
 
@@ -829,7 +829,7 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        Envoy 状态码: 431 Request Header Fields Too Large
+        GRPC 服务负载不均
       </li>
     </ol>
   </nav>
@@ -837,63 +837,76 @@ HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 ht
 
           
 
-          <h1>Envoy 状态码: 431 Request Header Fields Too Large</h1>
+          <h1>GRPC 服务负载不均</h1>
 
           <div class="article-style">
-            <h2 id="问题描述">问题描述</h2>
-<p>istio 中 http 请求，envoy 返回 431 异常状态码:</p>
-<pre><code class="language-txt">HTTP/1.1 431 Request Header Fields Too Large
-</code></pre>
-<h2 id="原因分析">原因分析</h2>
-<p>此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 <code>HttpConnectionManager</code> 配置的 <code>max_request_headers_kb</code> 字段决定，最大可调整到 96 KiB:
-<img src="max_request_headers_kb.png" alt=""></p>
-<h2 id="解决方案">解决方案</h2>
-<p>可以通过 EnvoyFilter 调整 <code>max_request_headers_kb</code> 字段来提升 header 大小限制。</p>
-<p>EnvoyFilter 示例 (istio 1.6 验证通过):</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
+            <h2 id="现象">现象</h2>
+<p>grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。</p>
+<h2 id="分析">分析</h2>
+<p>grpc 是基于 http2 的长连接，多次请求复用同一个连接。如果不用 istio，只用普通的 k8s service，是不会感知 grpc 协议的，只当成 tcp 来转发，在连接层面做负载均衡，不会在请求层面做负载均衡。但在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果发现负载不均，通常是没有正确配置。
+要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 的话就只能在连接级别进行负载均衡了，请求级别可能就会负载不均。</p>
+<h2 id="解决方法">解决方法</h2>
+<ol>
+<li>如果要对外暴露，gateway 里 protocal 配置 GRPC 不用 TCP，示例:</li>
+</ol>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
+kind: Gateway
 metadata:
-  name: max-header
-  namespace: istio-system
+  name: grpc-gw
+  namespace: demo
 spec:
-  configPatches:
-  - applyTo: NETWORK_FILTER
-    match:
-      context: ANY
-      listener:
-        filterChain:
-          filter:
-            name: &quot;envoy.http_connection_manager&quot;
-    patch:
-      operation: MERGE
-      value:
-        typed_config:
-          &quot;@type&quot;: &quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&quot;
-          max_request_headers_kb: 96
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*'
+    port:
+      name: grpc-demo-server
+      number: 9000
+      protocol: GRPC # 这里使用 GRPC 不用 TCP
 </code></pre>
-<p>高版本兼容上面的 v2 配置，但建议用 v3 的 配置 (istio 1.8 验证通过):</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
+<ol start="2">
+<li>如果定义了 vs，需要使用 http 匹配而不用 tcp，因为 grpc 在 istio 中匹配也是用的 http 字段，示例:</li>
+</ol>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
 metadata:
-  name: max-header
-  namespace: istio-system
+  name: grpc-svc
+  namespace: demo
 spec:
-  configPatches:
-  - applyTo: NETWORK_FILTER
-    match:
-      context: ANY
-      listener:
-        filterChain:
-          filter:
-            name: &quot;envoy.http_connection_manager&quot;
-    patch:
-      operation: MERGE
-      value:
-        typed_config:
-          &quot;@type&quot;: &quot;type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager&quot;
-          max_request_headers_kb: 96
+  gateways:
+  - demo/grpc-gw
+  hosts:
+  - '*'
+  http: # 这里使用 http 不用 tcp
+  - match:
+    - port: 9000
+    route:
+    - destination:
+        host: grpc.demo.svc.cluster.local
+        port:
+          number: 9000
+      weight: 100
 </code></pre>
-<p>若 header 大小超过 96 KiB，这种情况本身也很不正常，建议将这部分数据放到 body。</p>
+<ol start="3">
+<li>部署服务的 service 的 port name 需要使用 &ldquo;grpc-&rdquo; 开头定义，让 istio 能够正确识别，示例:</li>
+</ol>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+  namespace: demo
+spec:
+  ports:
+  - name: grpc-9000 # 以 grpc- 开头
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: grpc
+  type: ClusterIP
+</code></pre>
 
           </div>
 
@@ -910,10 +923,9 @@ spec:
   
   
   <div class="post-nav-item">
-    <div class="meta-nav">上一页</div>
-    <a href="/learning-istio/faq/404-status-code.html" rel="next">Envoy 状态码: 404 Not Found</a>
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/faq/istio-token-setup-failed.html" rel="prev">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a>
   </div>
-  
   
 </div>
 
@@ -922,7 +934,7 @@ spec:
         </div>
 
         <div class="body-footer">
-          <p>最近更新于 Feb 23, 2021</p>
+          <p>最近更新于 Feb 2, 2021</p>
 
           
 

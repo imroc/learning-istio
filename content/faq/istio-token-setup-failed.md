@@ -1,5 +1,5 @@
 ---
-title: 为什么会报错 MountVolume.SetUp failed for volume "istio-token"？
+title: 'Pod 启动卡住: MountVolume.SetUp failed for volume "istio-token"'
 type: book
 date: "2021-02-02"
 weight: 3
@@ -7,7 +7,7 @@ weight: 3
 
 ## 现象
 Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 `MountVolume.SetUp failed for volume "istio-token" : failed to fetch token: the server could not find the requested resource`:
-![](why-istio-token-setup-failed-1.png)
+![](istio-token-setup-failed-1.png)
 
 ## 分析
 
