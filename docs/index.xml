@@ -465,13 +465,19 @@ Istio configuration profiles:
     </item>
     
     <item>
-      <title>Envoy 异常状态码</title>
-      <link>/learning-istio/faq/envoy-error-code.html</link>
+      <title>Envoy 状态码: 431 Request Header Fields Too Large</title>
+      <link>/learning-istio/faq/431-status-code.html</link>
       <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/envoy-error-code.html</guid>
-      <description>&lt;h2 id=&#34;431-request-header-fields-too-large&#34;&gt;431: Request Header Fields Too Large&lt;/h2&gt;
-&lt;p&gt;此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，可以通过 EnvoyFilter 调整 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段，最大可调至 96 KiB&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;envoy-error-code-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+      <guid>/learning-istio/faq/431-status-code.html</guid>
+      <description>&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
+&lt;p&gt;istio 中 http 请求，envoy 返回 431 异常状态码:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;HTTP/1.1 431 Request Header Fields Too Large
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;原因分析&#34;&gt;原因分析&lt;/h2&gt;
+&lt;p&gt;此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 &lt;code&gt;HttpConnectionManager&lt;/code&gt; 配置的 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段决定，最大可调整到 96 KiB:
+&lt;img src=&#34;max_request_headers_kb.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;可以通过 EnvoyFilter 调整 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段来提升 header 大小限制。&lt;/p&gt;
 &lt;p&gt;EnvoyFilter 示例 (istio 1.6 验证通过):&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -516,6 +522,7 @@ spec:
           &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager&amp;quot;
           max_request_headers_kb: 96
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;若 header 大小超过 96 KiB，这种情况本身也很不正常，建议将这部分数据放到 body。&lt;/p&gt;
 </description>
     </item>
     
