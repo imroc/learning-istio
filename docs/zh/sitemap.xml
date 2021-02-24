@@ -113,6 +113,11 @@
   </url>
   
   <url>
+    <loc>/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html</loc>
+    <lastmod>2021-02-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/troubleshooting/problem/404-status-code.html</loc>
     <lastmod>2021-02-23T00:00:00+00:00</lastmod>
   </url>

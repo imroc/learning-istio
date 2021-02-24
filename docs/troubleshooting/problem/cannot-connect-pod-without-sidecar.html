@@ -34,11 +34,13 @@
   
     
   
-  <meta name="description" content="背景 Envoy 在转发 HTTP 请求时，会对 HTTP Header 进行处理，统一转为小写。这个在正常情况下没问题，RFC 2616 规范也说明了处理 HTTP Header 应该是大小写不敏感的。 但在某些特殊场景可能会有问题，比如腾讯云 COS SDK 判断 Context_Lenght header 时使用的时首字母大写的方式，转成小写会导致 COS SDK 不能正确判断返回的 HTTP Response 内容的长度。
-解决方案 方案一: 使用 ServiceEntry 将服务指定为 TCP 类型 可以通过一个类似如下 ServiceEntry 将服务强制指定为 TCP Service，以避免 envoy 对其进行七层的处理。">
+  <meta name="description" content="问题现象 不能从一个带sidecar proxy的pod访问到Redis服务
+问题分析 Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。
+解决方案 在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: exportTo: - &#39;*&#39; host: redis-service subsets: [] trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在Isitio 1.">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">
 
   
 
@@ -262,7 +264,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">
 
   
   
@@ -281,10 +283,12 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html">
-  <meta property="og:title" content="Envoy 强转 HTTP Header 为小写导致的问题 | Istio 学习笔记">
-  <meta property="og:description" content="背景 Envoy 在转发 HTTP 请求时，会对 HTTP Header 进行处理，统一转为小写。这个在正常情况下没问题，RFC 2616 规范也说明了处理 HTTP Header 应该是大小写不敏感的。 但在某些特殊场景可能会有问题，比如腾讯云 COS SDK 判断 Context_Lenght header 时使用的时首字母大写的方式，转成小写会导致 COS SDK 不能正确判断返回的 HTTP Response 内容的长度。
-解决方案 方案一: 使用 ServiceEntry 将服务指定为 TCP 类型 可以通过一个类似如下 ServiceEntry 将服务强制指定为 TCP Service，以避免 envoy 对其进行七层的处理。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">
+  <meta property="og:title" content="无法访问不带 sidecar 的Pod | Istio 学习笔记">
+  <meta property="og:description" content="问题现象 不能从一个带sidecar proxy的pod访问到Redis服务
+问题分析 Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。
+解决方案 在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: exportTo: - &#39;*&#39; host: redis-service subsets: [] trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在Isitio 1."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
@@ -309,7 +313,7 @@
 
 
 
-  <title>Envoy 强转 HTTP Header 为小写导致的问题 | Istio 学习笔记</title>
+  <title>无法访问不带 sidecar 的Pod | Istio 学习笔记</title>
 
 </head>
 
@@ -774,11 +778,11 @@
 
 
 
-  <li class="active"><a href="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html">Envoy 强转 HTTP Header 为小写导致的问题</a></li>
+  <li class=""><a href="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html">Envoy 强转 HTTP Header 为小写导致的问题</a></li>
 
 
 
-  <li class=""><a href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的Pod</a></li>
+  <li class="active"><a href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的Pod</a></li>
 
 
 
@@ -818,13 +822,9 @@
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#背景">背景</a></li>
-    <li><a href="#解决方案">解决方案</a>
-      <ul>
-        <li><a href="#方案一-使用-serviceentry-将服务指定为-tcp-类型">方案一: 使用 ServiceEntry 将服务指定为 TCP 类型</a></li>
-        <li><a href="#方案二-使用-envoyfilter-控制-envoy-处理-header-的行为">方案二: 使用 EnvoyFilter 控制 Envoy 处理 Header 的行为</a></li>
-      </ul>
-    </li>
+    <li><a href="#问题现象">问题现象</a></li>
+    <li><a href="#问题分析">问题分析</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
   </ul>
 </nav>
 
@@ -874,7 +874,7 @@
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        Envoy 强转 HTTP Header 为小写导致的问题
+        无法访问不带 sidecar 的Pod
       </li>
     </ol>
   </nav>
@@ -882,71 +882,32 @@
 
           
 
-          <h1>Envoy 强转 HTTP Header 为小写导致的问题</h1>
+          <h1>无法访问不带 sidecar 的Pod</h1>
 
           <div class="article-style">
-            <h2 id="背景">背景</h2>
-<p>Envoy 在转发 HTTP 请求时，会对 HTTP Header 进行处理，统一转为小写。这个在正常情况下没问题，<a href="https://www.ietf.org/rfc/rfc2616.txt" target="_blank" rel="noopener">RFC 2616</a>  规范也说明了处理 HTTP Header 应该是大小写不敏感的。
-但在某些特殊场景可能会有问题，比如腾讯云 COS SDK 判断 Context_Lenght header 时使用的时首字母大写的方式，转成小写会导致 COS SDK 不能正确判断返回的 HTTP Response 内容的长度。</p>
+            <h2 id="问题现象">问题现象</h2>
+<p>不能从一个带sidecar proxy的pod访问到Redis服务</p>
+<h2 id="问题分析">问题分析</h2>
+<p>Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。</p>
 <h2 id="解决方案">解决方案</h2>
-<h3 id="方案一-使用-serviceentry-将服务指定为-tcp-类型">方案一: 使用 ServiceEntry 将服务指定为 TCP 类型</h3>
-<p>可以通过一个类似如下 ServiceEntry 将服务强制指定为 TCP Service，以避免 envoy 对其进行七层的处理。</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
-kind: ServiceEntry
-metadata:
-  name: qcloud-cos
+<p>在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+name: mysql-service
+namespace: test
 spec:
-  hosts:
-  - &quot;private-1251349835.cos.ap-guangzhou.myqcloud.com&quot;
-  location: MESH_INTERNAL
-  addresses:
-  - 169.254.0.47
-  ports:
-  - number: 80
-    name: tcp
-    protocol: TCP
-  resolution: DNS
+  exportTo:
+  - '*'
+  host: redis-service
+  subsets: []
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+    tls:
+      mode: DISABLE
+
 </code></pre>
-<h3 id="方案二-使用-envoyfilter-控制-envoy-处理-header-的行为">方案二: 使用 EnvoyFilter 控制 Envoy 处理 Header 的行为</h3>
-<p>方案一的处理方法把 HTTP 作为 TCP 处理了，会损失一些 HTTP 层面的能力，例如 HTTP 的路由，遥测等。我们还可以通过 EnvoyFilter 设置 http_option 选项，要求 Envoy 采用首字母大写的方式进行处理。</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: http-header-proper-case-words
-  namespace: istio-system
-spec:
-  configPatches:
-  - applyTo: NETWORK_FILTER # http connection manager is a filter in Envoy
-    match:
-      # context omitted so that this applies to both sidecars and gateways
-      listener:
-        name: 指定 cos使用的listener name，可以从config_dump中查询到
-        filterChain:
-          filter:
-            name: &quot;envoy.http_connection_manager&quot;
-    patch:
-      operation: MERGE
-      value:
-        name: &quot;envoy.http_connection_manager&quot;
-        typed_config:
-          &quot;@type&quot;: &quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&quot;
-          http_protocol_options:
-            header_key_format:
-              proper_case_words: {}
-</code></pre>
-<p>要注意的是 Envoy 只支持两种规则：</p>
-<ol>
-<li>全小写</li>
-<li>首字母大写</li>
-</ol>
-<p>如果应用的 http header 的大小写完全没有规律，就没有办法兼容了。</p>
-<p>这两种是可以的：</p>
-<pre><code>test-upper-case-header: some-value
-Test-Upper-Case-Header: some-value
-</code></pre>
-<p>类似这种就没有办法兼容了：</p>
-<pre><code>Test-UPPER-CASE-Header: some-value
-</code></pre>
+<p>该问题在Isitio 1.7中已经修复: <a href="https://github.com/istio/istio/pull/24319">https://github.com/istio/istio/pull/24319</a></p>
 
           </div>
 
@@ -964,14 +925,14 @@ Test-Upper-Case-Header: some-value
   
   <div class="post-nav-item">
     <div class="meta-nav">上一页</div>
-    <a href="/learning-istio/troubleshooting/problem/proxy-error-log.html" rel="next">Sidecar/Gateway 常见报错</a>
+    <a href="/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html" rel="next">Envoy 强转 HTTP Header 为小写导致的问题</a>
   </div>
   
   
   
   <div class="post-nav-item">
     <div class="meta-nav">下一页</div>
-    <a href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html" rel="prev">无法访问不带 sidecar 的Pod</a>
+    <a href="/learning-istio/troubleshooting/problem/404-status-code.html" rel="prev">Envoy 状态码: 404 Not Found</a>
   </div>
   
 </div>
