@@ -5,7 +5,7 @@
     <link>/learning-istio/</link>
       <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
     <description>Istio 学习笔记</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>Istio 学习笔记</title>
@@ -461,6 +461,76 @@ Istio configuration profiles:
 &lt;h2 id=&#34;grpc-config-stream-closed-14&#34;&gt;gRPC config stream closed: 14&lt;/h2&gt;
 &lt;p&gt;如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。&lt;/p&gt;
 &lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Envoy 强转 HTTP Header 为小写导致的问题</title>
+      <link>/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/envoy-lowercase-http-header.html</guid>
+      <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;Envoy 在转发 HTTP 请求时，会对 HTTP Header 进行处理，统一转为小写。这个在正常情况下没问题，&lt;a href=&#34;https://www.ietf.org/rfc/rfc2616.txt&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;RFC 2616&lt;/a&gt;  规范也说明了处理 HTTP Header 应该是大小写不敏感的。
+但在某些特殊场景可能会有问题，比如腾讯云 COS SDK 判断 Context_Lenght header 时使用的时首字母大写的方式，转成小写会导致 COS SDK 不能正确判断返回的 HTTP Response 内容的长度。&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;h3 id=&#34;方案一-使用-serviceentry-将服务指定为-tcp-类型&#34;&gt;方案一: 使用 ServiceEntry 将服务指定为 TCP 类型&lt;/h3&gt;
+&lt;p&gt;可以通过一个类似如下 ServiceEntry 将服务强制指定为 TCP Service，以避免 envoy 对其进行七层的处理。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: qcloud-cos
+spec:
+  hosts:
+  - &amp;quot;private-1251349835.cos.ap-guangzhou.myqcloud.com&amp;quot;
+  location: MESH_INTERNAL
+  addresses:
+  - 169.254.0.47
+  ports:
+  - number: 80
+    name: tcp
+    protocol: TCP
+  resolution: DNS
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;方案二-使用-envoyfilter-控制-envoy-处理-header-的行为&#34;&gt;方案二: 使用 EnvoyFilter 控制 Envoy 处理 Header 的行为&lt;/h3&gt;
+&lt;p&gt;方案一的处理方法把 HTTP 作为 TCP 处理了，会损失一些 HTTP 层面的能力，例如 HTTP 的路由，遥测等。我们还可以通过 EnvoyFilter 设置 http_option 选项，要求 Envoy 采用首字母大写的方式进行处理。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: http-header-proper-case-words
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER # http connection manager is a filter in Envoy
+    match:
+      # context omitted so that this applies to both sidecars and gateways
+      listener:
+        name: 指定 cos使用的listener name，可以从config_dump中查询到
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        name: &amp;quot;envoy.http_connection_manager&amp;quot;
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&amp;quot;
+          http_protocol_options:
+            header_key_format:
+              proper_case_words: {}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;要注意的是 Envoy 只支持两种规则：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;全小写&lt;/li&gt;
+&lt;li&gt;首字母大写&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果应用的 http header 的大小写完全没有规律，就没有办法兼容了。&lt;/p&gt;
+&lt;p&gt;这两种是可以的：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;test-upper-case-header: some-value
+Test-Upper-Case-Header: some-value
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;类似这种就没有办法兼容了：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Test-UPPER-CASE-Header: some-value
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
