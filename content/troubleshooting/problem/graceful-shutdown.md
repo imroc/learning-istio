@@ -3,6 +3,7 @@ title: 优雅停止
 type: book
 date: "2021-02-03"
 weight: 5
+draft: true
 ---
 
 ## issue

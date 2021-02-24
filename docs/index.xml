@@ -435,21 +435,6 @@ Istio configuration profiles:
     </item>
     
     <item>
-      <title>优雅停止</title>
-      <link>/learning-istio/troubleshooting/problem/graceful-shutdown.html</link>
-      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/troubleshooting/problem/graceful-shutdown.html</guid>
-      <description>&lt;h2 id=&#34;issue&#34;&gt;issue&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;istio issue: &lt;a href=&#34;https://github.com/istio/istio/issues/7136&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#7136&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;k8s issue: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/65502&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#65502&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/istio/istio/pull/11485&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Envoy Graceful Shutdown&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;graceful-shutdown-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Sidecar/Gateway 常见报错</title>
       <link>/learning-istio/troubleshooting/problem/proxy-error-log.html</link>
       <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
