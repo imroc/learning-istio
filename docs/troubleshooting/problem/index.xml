@@ -243,16 +243,13 @@ Test-Upper-Case-Header: some-value
 &lt;h2 id=&#34;问题分析&#34;&gt;问题分析&lt;/h2&gt;
 &lt;p&gt;Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。&lt;/p&gt;
 &lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
-&lt;p&gt;在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:&lt;/p&gt;
+&lt;p&gt;在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 name: mysql-service
 namespace: test
 spec:
-  exportTo:
-  - &#39;*&#39;
   host: redis-service
-  subsets: []
   trafficPolicy:
     loadBalancer:
       simple: ROUND_ROBIN
@@ -260,7 +257,7 @@ spec:
       mode: DISABLE
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;该问题在Isitio 1.7中已经修复: &lt;a href=&#34;https://github.com/istio/istio/pull/24319&#34;&gt;https://github.com/istio/istio/pull/24319&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;该问题在 isitio 1.6 中已经修复: &lt;a href=&#34;https://github.com/istio/istio/pull/24319&#34;&gt;https://github.com/istio/istio/pull/24319&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

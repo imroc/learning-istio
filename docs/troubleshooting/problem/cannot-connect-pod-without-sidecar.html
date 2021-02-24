@@ -36,8 +36,8 @@
   
   <meta name="description" content="问题现象 不能从一个带sidecar proxy的pod访问到Redis服务
 问题分析 Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。
-解决方案 在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: exportTo: - &#39;*&#39; host: redis-service subsets: [] trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在Isitio 1.">
+解决方案 在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: host: redis-service trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在 isitio 1.">
 
   
   <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/problem/cannot-connect-pod-without-sidecar.html">
@@ -287,8 +287,8 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
   <meta property="og:title" content="无法访问不带 sidecar 的Pod | Istio 学习笔记">
   <meta property="og:description" content="问题现象 不能从一个带sidecar proxy的pod访问到Redis服务
 问题分析 Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。
-解决方案 在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: exportTo: - &#39;*&#39; host: redis-service subsets: [] trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在Isitio 1."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+解决方案 在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: host: redis-service trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在 isitio 1."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
@@ -890,16 +890,13 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 <h2 id="问题分析">问题分析</h2>
 <p>Redis是一个Headless服务，而Istio 1.7 之前的版本对Headless服务的处理有问题，会缺省启用mTLS。</p>
 <h2 id="解决方案">解决方案</h2>
-<p>在 1.7 之前可以采用DR规则禁用该服务的mTLS 来规避:</p>
+<p>在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:</p>
 <pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 name: mysql-service
 namespace: test
 spec:
-  exportTo:
-  - '*'
   host: redis-service
-  subsets: []
   trafficPolicy:
     loadBalancer:
       simple: ROUND_ROBIN
@@ -907,7 +904,7 @@ spec:
       mode: DISABLE
 
 </code></pre>
-<p>该问题在Isitio 1.7中已经修复: <a href="https://github.com/istio/istio/pull/24319">https://github.com/istio/istio/pull/24319</a></p>
+<p>该问题在 isitio 1.6 中已经修复: <a href="https://github.com/istio/istio/pull/24319">https://github.com/istio/istio/pull/24319</a></p>
 
           </div>
 
