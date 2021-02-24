@@ -1,5 +1,5 @@
 ---
-title: 无法访问不带 sidecar 的Pod
+title: 无法访问不带 sidecar 的 Pod
 type: book
 date: "2021-02-24"
 ---

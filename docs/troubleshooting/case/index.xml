@@ -234,7 +234,7 @@ Test-Upper-Case-Header: some-value
     </item>
     
     <item>
-      <title>无法访问不带 sidecar 的Pod</title>
+      <title>无法访问不带 sidecar 的 Pod</title>
       <link>/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html</link>
       <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html</guid>
