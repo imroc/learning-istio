@@ -40,9 +40,9 @@
     
     <item>
       <title>GRPC 服务负载不均</title>
-      <link>/learning-istio/faq/grpc-not-loadbalancing.html</link>
+      <link>/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/grpc-not-loadbalancing.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html</guid>
       <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
 &lt;p&gt;grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。&lt;/p&gt;
 &lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
@@ -203,9 +203,9 @@ no running Istio pods in &amp;quot;istio-system&amp;quot;
     
     <item>
       <title>Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</title>
-      <link>/learning-istio/faq/istio-token-setup-failed.html</link>
+      <link>/learning-istio/troubleshooting/problem/istio-token-setup-failed.html</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/istio-token-setup-failed.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/istio-token-setup-failed.html</guid>
       <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
 &lt;p&gt;Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 &lt;code&gt;MountVolume.SetUp failed for volume &amp;quot;istio-token&amp;quot; : failed to fetch token: the server could not find the requested resource&lt;/code&gt;:
 &lt;img src=&#34;istio-token-setup-failed-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
@@ -426,9 +426,9 @@ Istio configuration profiles:
     
     <item>
       <title>kubeflow on istio 相关问题</title>
-      <link>/learning-istio/faq/kubeflow-on-istio.html</link>
+      <link>/learning-istio/troubleshooting/problem/kubeflow-on-istio.html</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/kubeflow-on-istio.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/kubeflow-on-istio.html</guid>
       <description>&lt;h2 id=&#34;版本最高支持到-istio-15&#34;&gt;版本最高支持到 istio 1.5&lt;/h2&gt;
 &lt;p&gt;目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: &lt;a href=&#34;https://github.com/kubeflow/kubeflow/issues/5313&#34;&gt;https://github.com/kubeflow/kubeflow/issues/5313&lt;/a&gt;&lt;/p&gt;
 </description>
@@ -436,9 +436,9 @@ Istio configuration profiles:
     
     <item>
       <title>优雅停止</title>
-      <link>/learning-istio/faq/graceful-shutdown.html</link>
+      <link>/learning-istio/troubleshooting/problem/graceful-shutdown.html</link>
       <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/graceful-shutdown.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/graceful-shutdown.html</guid>
       <description>&lt;h2 id=&#34;issue&#34;&gt;issue&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;istio issue: &lt;a href=&#34;https://github.com/istio/istio/issues/7136&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#7136&lt;/a&gt;&lt;/li&gt;
@@ -451,9 +451,9 @@ Istio configuration profiles:
     
     <item>
       <title>Sidecar/Gateway 常见报错</title>
-      <link>/learning-istio/faq/proxy-error-log.html</link>
+      <link>/learning-istio/troubleshooting/problem/proxy-error-log.html</link>
       <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/proxy-error-log.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/proxy-error-log.html</guid>
       <description>&lt;h2 id=&#34;grpc-config-stream-closed-13&#34;&gt;gRPC config stream closed: 13&lt;/h2&gt;
 &lt;p&gt;&lt;img src=&#34;image-20210203150405399.png&#34; alt=&#34;image-20210203150405399&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。&lt;/p&gt;
@@ -466,9 +466,9 @@ Istio configuration profiles:
     
     <item>
       <title>Envoy 状态码: 404 Not Found</title>
-      <link>/learning-istio/faq/404-status-code.html</link>
+      <link>/learning-istio/troubleshooting/problem/404-status-code.html</link>
       <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/404-status-code.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/404-status-code.html</guid>
       <description>&lt;h2 id=&#34;访问-statefulset-pod-ip-返回-404&#34;&gt;访问 StatefulSet Pod IP 返回 404&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;问题描述：在 istio 中业务容器访问同集群一 Pod IP 返回 404，在 istio-proxy 中访问却正常&lt;/li&gt;
@@ -481,9 +481,9 @@ Istio configuration profiles:
     
     <item>
       <title>Envoy 状态码: 431 Request Header Fields Too Large</title>
-      <link>/learning-istio/faq/431-status-code.html</link>
+      <link>/learning-istio/troubleshooting/problem/431-status-code.html</link>
       <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/faq/431-status-code.html</guid>
+      <guid>/learning-istio/troubleshooting/problem/431-status-code.html</guid>
       <description>&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
 &lt;p&gt;istio 中 http 请求，envoy 返回 431 异常状态码:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;HTTP/1.1 431 Request Header Fields Too Large

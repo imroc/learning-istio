@@ -34,12 +34,10 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="版本最高支持到 istio 1.5 目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: https://github.com/kubeflow/kubeflow/issues/5313">
 
   
-  <link rel="alternate" hreflang="en" href="/learning-istio/en/categories.html">
-  
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/categories.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/problem/kubeflow-on-istio.html">
 
   
 
@@ -255,8 +253,6 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/categories/index.xml" type="application/rss+xml" title="Istio 学习笔记">
-  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -265,7 +261,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/categories.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/problem/kubeflow-on-istio.html">
 
   
   
@@ -284,29 +280,34 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/categories.html">
-  <meta property="og:title" content="Categories | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/troubleshooting/problem/kubeflow-on-istio.html">
+  <meta property="og:title" content="kubeflow on istio 相关问题 | Istio 学习笔记">
+  <meta property="og:description" content="版本最高支持到 istio 1.5 目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: https://github.com/kubeflow/kubeflow/issues/5313"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
+      <meta property="article:published_time" content="2021-02-02T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-02-02T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>Categories | Istio 学习笔记</title>
+
+
+  <title>kubeflow on istio 相关问题 | Istio 学习笔记</title>
 
 </head>
 
@@ -661,22 +662,6 @@
       
 
       
-      <li class="nav-item dropdown i18n-dropdown">
-        <a href="#" class="nav-link " data-toggle="dropdown"
-           aria-haspopup="true" aria-label="Languages">
-          <i class="fas fa-globe mr-1" aria-hidden="true"></i></a>
-        <div class="dropdown-menu">
-          <div class="dropdown-item dropdown-item-active">
-            <span>中文 (简体)</span>
-          </div>
-          
-          <a class="dropdown-item" href="/learning-istio/en/categories.html">
-            <span>English</span>
-          </a>
-          
-        </div>
-      </li>
-      
 
     </ul>
 
@@ -693,45 +678,259 @@
 
 
 
-
-
-
-
-
-
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          问题速查
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
 
   
-
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
   
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
+
   
   
     
-  
-<div class="universal-wrapper pt-3">
-  <h1>Categories</h1>
 
-  
+    
+      
 
-  
-</div>
+      
+      
+      
 
-
-
-<div class="universal-wrapper">
-  
 
   
-  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/troubleshooting.html">排错指南</a></li>
+    
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
 
-</div>
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link " href="/learning-istio/troubleshooting/problem.html"><i class="fas fa-tools pr-1"></i>问题速查</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
+
+
+
+  <li class="active"><a href="/learning-istio/troubleshooting/problem/kubeflow-on-istio.html">kubeflow on istio 相关问题</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/graceful-shutdown.html">优雅停止</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/proxy-error-log.html">Sidecar/Gateway 常见报错</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/404-status-code.html">Envoy 状态码: 404 Not Found</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/problem/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
+  
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#版本最高支持到-istio-15">版本最高支持到 istio 1.5</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
+  
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting.html">
+      
+        排错指南
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting/problem.html">
+      
+        问题速查
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        kubeflow on istio 相关问题
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>kubeflow on istio 相关问题</h1>
+
+          <div class="article-style">
+            <h2 id="版本最高支持到-istio-15">版本最高支持到 istio 1.5</h2>
+<p>目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: <a href="https://github.com/kubeflow/kubeflow/issues/5313">https://github.com/kubeflow/kubeflow/issues/5313</a></p>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/learning-istio/troubleshooting/problem/istio-token-setup-failed.html" rel="next">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a>
   </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/troubleshooting/problem/graceful-shutdown.html" rel="prev">优雅停止</a>
+  </div>
+  
+</div>
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Feb 2, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -759,7 +958,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -819,6 +1026,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     

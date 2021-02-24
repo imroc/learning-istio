@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>问题速查 | Istio 学习笔记</title>
+    <link>/learning-istio/troubleshooting/problem.html</link>
+      <atom:link href="/learning-istio/troubleshooting/problem/index.xml" rel="self" type="application/rss+xml" />
+    <description>问题速查</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
+      <title>问题速查</title>
+      <link>/learning-istio/troubleshooting/problem.html</link>
+    </image>
+    
+    <item>
+      <title>GRPC 服务负载不均</title>
+      <link>/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html</guid>
+      <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
+&lt;p&gt;grpc 调用，同一个 client 的请求始终只打到同一个 server 的 pod，造成负载不均。&lt;/p&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;grpc 是基于 http2 的长连接，多次请求复用同一个连接。如果不用 istio，只用普通的 k8s service，是不会感知 grpc 协议的，只当成 tcp 来转发，在连接层面做负载均衡，不会在请求层面做负载均衡。但在 istio 中，默认会对 grpc 的请求进行请求级别的负载均衡，如果发现负载不均，通常是没有正确配置。
+要让 grpc 在请求级别进行负载均衡，核心就是让 istio 正确识别是 grpc 协议，不要配置成 tcp，用 tcp 的话就只能在连接级别进行负载均衡了，请求级别可能就会负载不均。&lt;/p&gt;
+&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;如果要对外暴露，gateway 里 protocal 配置 GRPC 不用 TCP，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: grpc-gw
+  namespace: demo
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - &#39;*&#39;
+    port:
+      name: grpc-demo-server
+      number: 9000
+      protocol: GRPC # 这里使用 GRPC 不用 TCP
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;如果定义了 vs，需要使用 http 匹配而不用 tcp，因为 grpc 在 istio 中匹配也是用的 http 字段，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grpc-svc
+  namespace: demo
+spec:
+  gateways:
+  - demo/grpc-gw
+  hosts:
+  - &#39;*&#39;
+  http: # 这里使用 http 不用 tcp
+  - match:
+    - port: 9000
+    route:
+    - destination:
+        host: grpc.demo.svc.cluster.local
+        port:
+          number: 9000
+      weight: 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;部署服务的 service 的 port name 需要使用 &amp;ldquo;grpc-&amp;rdquo; 开头定义，让 istio 能够正确识别，示例:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+  namespace: demo
+spec:
+  ports:
+  - name: grpc-9000 # 以 grpc- 开头
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: grpc
+  type: ClusterIP
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</title>
+      <link>/learning-istio/troubleshooting/problem/istio-token-setup-failed.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/istio-token-setup-failed.html</guid>
+      <description>&lt;h2 id=&#34;现象&#34;&gt;现象&lt;/h2&gt;
+&lt;p&gt;Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 &lt;code&gt;MountVolume.SetUp failed for volume &amp;quot;istio-token&amp;quot; : failed to fetch token: the server could not find the requested resource&lt;/code&gt;:
+&lt;img src=&#34;istio-token-setup-failed-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;根据官方文档(&lt;a href=&#34;https://istio.io/latest/docs/ops/best-practices/security/#configure-third-party-service-account-tokens&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Configure third party service account tokens&lt;/a&gt;) 的描述可以得知:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;istio-proxy 需要使用 K8S 的 ServiceAccount token，而 K8S 支持 &lt;code&gt;third party&lt;/code&gt; 和 &lt;code&gt;first party&lt;/code&gt; 两种 token。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;third party token&lt;/code&gt; 安全性更高，istio 默认使用这种类型。&lt;/li&gt;
+&lt;li&gt;不是所有集群都支持这种 token，取决于 K8S 版本和 apiserver 配置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果集群不支持 &lt;code&gt;third party token&lt;/code&gt;，就会导致 ServiceAccount token 不自动创建出来，从而出现上面这种报错。&lt;/p&gt;
+&lt;h2 id=&#34;什么是-third-party-token-&#34;&gt;什么是 third party token ?&lt;/h2&gt;
+&lt;p&gt;其实就是 &lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;ServiceAccountTokenVolumeProjection&lt;/a&gt; 这个特性，在 1.12 beta，1.20 GA。&lt;/p&gt;
+&lt;p&gt;推出该特性是为了增强 ServiceAccount token 的安全性，可以设置有效期(会自动轮转)，避免 token 泄露带来的安全风险，还可以控制 token 的受众。&lt;/p&gt;
+&lt;p&gt;该特性在 istio 中用来配合 SDS 以增强安全性，参考 &lt;a href=&#34;https://developer.aliyun.com/article/742572&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Istio私钥管理利器SDS浅析&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;如何判断集群是否启用了该特性呢？可通过一下命令查询:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl get --raw /api/v1 | jq &#39;.resources[] | select(.name | index(&amp;quot;serviceaccounts/token&amp;quot;))&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;若返回空，说明不支持；若返回如下 json，说明支持:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;name&amp;quot;: &amp;quot;serviceaccounts/token&amp;quot;,
+    &amp;quot;singularName&amp;quot;: &amp;quot;&amp;quot;,
+    &amp;quot;namespaced&amp;quot;: true,
+    &amp;quot;group&amp;quot;: &amp;quot;authentication.k8s.io&amp;quot;,
+    &amp;quot;version&amp;quot;: &amp;quot;v1&amp;quot;,
+    &amp;quot;kind&amp;quot;: &amp;quot;TokenRequest&amp;quot;,
+    &amp;quot;verbs&amp;quot;: [
+        &amp;quot;create&amp;quot;
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;h3 id=&#34;方案一安装-istio-时不使用-third-party-token&#34;&gt;方案一：安装 istio 时不使用 third party token&lt;/h3&gt;
+&lt;p&gt;官方称使用 istioctl 安装会自动检测集群是否支持 &lt;code&gt;third party token&lt;/code&gt;，但据 &lt;a href=&#34;https://github.com/istio/istio/issues/21968#issuecomment-607474174&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;issue&lt;/a&gt; 反馈可能有 bug，还是建议强制指定用 &lt;code&gt;first party token&lt;/code&gt;，用参数 &lt;code&gt;--set values.global.jwtPolicy=first-party-jwt&lt;/code&gt; 来显示指定，示例:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;istioctl manifest generate  --set profile=demo  --set values.global.jwtPolicy=first-party-jwtm &amp;gt; istio.yaml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;方案二集群启用-serviceaccounttokenvolumeprojection&#34;&gt;方案二：集群启用 ServiceAccountTokenVolumeProjection&lt;/h3&gt;
+&lt;p&gt;如何启用 ServiceAccountTokenVolumeProjection 这个特性呢？需要给 apiserver 配置类似如下的参数:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;--service-account-key-file=/etc/kubernetes/pki/sa.key # 这个一般都会配，重要的是下面三个参数
+--service-account-issuer=kubernetes.default.svc
+--service-account-signing-key-file=/etc/kubernetes/pki/sa.key # 注意替换实际路径
+--api-audiences=kubernetes.default.svc
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>kubeflow on istio 相关问题</title>
+      <link>/learning-istio/troubleshooting/problem/kubeflow-on-istio.html</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/kubeflow-on-istio.html</guid>
+      <description>&lt;h2 id=&#34;版本最高支持到-istio-15&#34;&gt;版本最高支持到 istio 1.5&lt;/h2&gt;
+&lt;p&gt;目前 kubeflow 最新版对 istio 的支持最高只到 1.5，issue: &lt;a href=&#34;https://github.com/kubeflow/kubeflow/issues/5313&#34;&gt;https://github.com/kubeflow/kubeflow/issues/5313&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>优雅停止</title>
+      <link>/learning-istio/troubleshooting/problem/graceful-shutdown.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/graceful-shutdown.html</guid>
+      <description>&lt;h2 id=&#34;issue&#34;&gt;issue&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;istio issue: &lt;a href=&#34;https://github.com/istio/istio/issues/7136&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#7136&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;k8s issue: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/65502&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#65502&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/istio/istio/pull/11485&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Envoy Graceful Shutdown&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;graceful-shutdown-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sidecar/Gateway 常见报错</title>
+      <link>/learning-istio/troubleshooting/problem/proxy-error-log.html</link>
+      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/proxy-error-log.html</guid>
+      <description>&lt;h2 id=&#34;grpc-config-stream-closed-13&#34;&gt;gRPC config stream closed: 13&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;image-20210203150405399.png&#34; alt=&#34;image-20210203150405399&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这通常是正常的，因为控制面(istiod)默认每 30 分钟强制断开 xDS 连接，然后数据面(proxy)再自动重连。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;grpc-config-stream-closed-14&#34;&gt;gRPC config stream closed: 14&lt;/h2&gt;
+&lt;p&gt;如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。&lt;/p&gt;
+&lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Envoy 状态码: 404 Not Found</title>
+      <link>/learning-istio/troubleshooting/problem/404-status-code.html</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/404-status-code.html</guid>
+      <description>&lt;h2 id=&#34;访问-statefulset-pod-ip-返回-404&#34;&gt;访问 StatefulSet Pod IP 返回 404&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;问题描述：在 istio 中业务容器访问同集群一 Pod IP 返回 404，在 istio-proxy 中访问却正常&lt;/li&gt;
+&lt;li&gt;原因: Pod 属于 StatefulSet，使用 headless svc，在 istio 中对 headless svc 的支持跟普通 svc 不太一样，如果 pod 用的普通 svc，对应的 listener 有兜底的 passthrough，即转发到报文对应的真实目的IP+Port，但 headless svc 的就没有，我们理解是因为 headless svc 没有 vip，它的路由是确定的，只指向后端固定的 pod，如果路由匹配不上就肯定出了问题，如果也用 passthrough 兜底路由，只会掩盖问题，所以就没有为 headless svc 创建 passthrough 兜底路由。&lt;/li&gt;
+&lt;li&gt;示例场景: 使用了自己的服务发现，业务直接使用 Pod IP 调用 StatefulSet 的 Pod IP&lt;/li&gt;
+&lt;li&gt;解决方案: 同集群访问 statefulset pod ip 带上 host，以匹配上 headless svc 路由，避免匹配不到就 4&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Envoy 状态码: 431 Request Header Fields Too Large</title>
+      <link>/learning-istio/troubleshooting/problem/431-status-code.html</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/problem/431-status-code.html</guid>
+      <description>&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
+&lt;p&gt;istio 中 http 请求，envoy 返回 431 异常状态码:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;HTTP/1.1 431 Request Header Fields Too Large
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;原因分析&#34;&gt;原因分析&lt;/h2&gt;
+&lt;p&gt;此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 &lt;code&gt;HttpConnectionManager&lt;/code&gt; 配置的 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段决定，最大可调整到 96 KiB:
+&lt;img src=&#34;max_request_headers_kb.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;可以通过 EnvoyFilter 调整 &lt;code&gt;max_request_headers_kb&lt;/code&gt; 字段来提升 header 大小限制。&lt;/p&gt;
+&lt;p&gt;EnvoyFilter 示例 (istio 1.6 验证通过):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&amp;quot;
+          max_request_headers_kb: 96
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;高版本兼容上面的 v2 配置，但建议用 v3 的 配置 (istio 1.8 验证通过):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager&amp;quot;
+          max_request_headers_kb: 96
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;若 header 大小超过 96 KiB，这种情况本身也很不正常，建议将这部分数据放到 body。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

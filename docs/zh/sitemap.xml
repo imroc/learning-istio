@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/learning-istio/troubleshooting/problem.html</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/basics/install.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
@@ -18,7 +23,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq/grpc-not-loadbalancing.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/grpc-not-loadbalancing.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
   
@@ -48,7 +53,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq/istio-token-setup-failed.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/istio-token-setup-failed.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
   
@@ -73,27 +78,27 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq/kubeflow-on-istio.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/kubeflow-on-istio.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/faq/graceful-shutdown.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/graceful-shutdown.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/faq/proxy-error-log.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/proxy-error-log.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/faq/404-status-code.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/404-status-code.html</loc>
     <lastmod>2021-02-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/learning-istio/faq/431-status-code.html</loc>
+    <loc>/learning-istio/troubleshooting/problem/431-status-code.html</loc>
     <lastmod>2021-02-23T00:00:00+00:00</lastmod>
   </url>
   
@@ -123,7 +128,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/faq.html</loc>
+    <loc>/learning-istio/troubleshooting.html</loc>
     <lastmod>2021-02-23T00:00:00+00:00</lastmod>
   </url>
   

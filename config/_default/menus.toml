@@ -27,8 +27,8 @@
   weight = 50
 
 [[main]]
-  name = "常见问题"
-  url = "/faq.html"
+  name = "排错指南"
+  url = "/troubleshooting.html"
   weight = 60
 
 [[main]]
