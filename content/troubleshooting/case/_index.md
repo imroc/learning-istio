@@ -1,5 +1,5 @@
 ---
-title: 问题速查
+title: 案例分享
 type: book  # Do not modify.
 
 weight: 1

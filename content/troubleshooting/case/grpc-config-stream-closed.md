@@ -1,5 +1,5 @@
 ---
-title: Sidecar/Gateway 常见报错
+title: 'Envoy 报错: gRPC config stream closed'
 type: book
 date: "2021-02-03"
 weight: 6

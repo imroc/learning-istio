@@ -1,5 +1,5 @@
 ---
-title: Envoy 强转 HTTP Header 为小写导致的问题
+title: Envoy 将 HTTP Header 转换为小写
 type: book
 date: "2021-02-24"
 ---

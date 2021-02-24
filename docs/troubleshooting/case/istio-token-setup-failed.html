@@ -34,10 +34,10 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="现象 Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource: 分析 根据官方文档(Configure third party service account tokens) 的描述可以得知:">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/404.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">
 
   
 
@@ -261,7 +261,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/404.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">
 
   
   
@@ -280,29 +280,34 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/404.html">
-  <meta property="og:title" content="404 Page not found | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">
+  <meta property="og:title" content="Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34; | Istio 学习笔记">
+  <meta property="og:description" content="现象 Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource: 分析 根据官方文档(Configure third party service account tokens) 的描述可以得知:"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
+      <meta property="article:published_time" content="2021-02-02T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-02-02T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>404 Page not found | Istio 学习笔记</title>
+
+
+  <title>Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34; | Istio 学习笔记</title>
 
 </head>
 
@@ -667,57 +672,318 @@
   </div>
 
   <div class="page-body">
-    <div class="universal-wrapper pt-3">
+    
 
-  <h1>找不到页面</h1>
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          案例分享
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
+
+  
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
 
   
   
-  <form class="d-flex align-items-center mb-3">
-    <input name="q" type="search" class="form-control" placeholder="搜索..." autocomplete="off">
-  </form>
-  
+    
+
+    
+      
+
+      
+      
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
 
-  <p>也许你在找？</p>
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/troubleshooting.html">排错指南</a></li>
+    
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link " href="/learning-istio/troubleshooting/case.html"><i class="fas fa-tools pr-1"></i>案例分享</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
+
+
+
+  <li class="active"><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/kubeflow-on-istio.html">kubeflow on istio 相关问题</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-config-stream-closed.html">Envoy 报错: gRPC config stream closed</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/envoy-lowercase-http-header.html">Envoy 将 HTTP Header 转换为小写</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的Pod</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/404-status-code.html">Envoy 状态码: 404 Not Found</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
   
-  
-  <h2>最新</h2>
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
   <ul>
-    
-      <li><a href="/learning-istio/trick/troubleshooting-networking.html">网络排障</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
-    
-      <li><a href="/learning-istio/best-practice/sidecar-order.html">解决 Sidecar 启动顺序问题</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
-    
-      <li><a href="/learning-istio/source/arch.html">梳理架构</a></li>
-    
-      <li><a href="/learning-istio/trick/check.html">常规检查</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
-    
-      <li><a href="/learning-istio/source/envoy.html">使用 Clion 阅读 Envoy 源码</a></li>
-    
-      <li><a href="/learning-istio/best-practice/improve-controlplane.html">控制面性能优化</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-    
+    <li><a href="#现象">现象</a></li>
+    <li><a href="#分析">分析</a></li>
+    <li><a href="#什么是-third-party-token-">什么是 third party token ?</a></li>
+    <li><a href="#解决方案">解决方案</a>
+      <ul>
+        <li><a href="#方案一安装-istio-时不使用-third-party-token">方案一：安装 istio 时不使用 third party token</a></li>
+        <li><a href="#方案二集群启用-serviceaccounttokenvolumeprojection">方案二：集群启用 ServiceAccountTokenVolumeProjection</a></li>
+      </ul>
+    </li>
   </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
   
 
-</div>
-  </div>
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting.html">
+      
+        排错指南
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting/case.html">
+      
+        案例分享
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        Pod 启动卡住: MountVolume.SetUp failed for volume "istio-token"
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</h1>
+
+          <div class="article-style">
+            <h2 id="现象">现象</h2>
+<p>Istio 相关的 Pod (包括注入了 sidecar 的 Pod) 一直卡在 ContainerCreating，起不来，describe pod 报错 <code>MountVolume.SetUp failed for volume &quot;istio-token&quot; : failed to fetch token: the server could not find the requested resource</code>:
+<img src="istio-token-setup-failed-1.png" alt=""></p>
+<h2 id="分析">分析</h2>
+<p>根据官方文档(<a href="https://istio.io/latest/docs/ops/best-practices/security/#configure-third-party-service-account-tokens" target="_blank" rel="noopener">Configure third party service account tokens</a>) 的描述可以得知:</p>
+<ul>
+<li>istio-proxy 需要使用 K8S 的 ServiceAccount token，而 K8S 支持 <code>third party</code> 和 <code>first party</code> 两种 token。</li>
+<li><code>third party token</code> 安全性更高，istio 默认使用这种类型。</li>
+<li>不是所有集群都支持这种 token，取决于 K8S 版本和 apiserver 配置。</li>
+</ul>
+<p>如果集群不支持 <code>third party token</code>，就会导致 ServiceAccount token 不自动创建出来，从而出现上面这种报错。</p>
+<h2 id="什么是-third-party-token-">什么是 third party token ?</h2>
+<p>其实就是 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection" target="_blank" rel="noopener">ServiceAccountTokenVolumeProjection</a> 这个特性，在 1.12 beta，1.20 GA。</p>
+<p>推出该特性是为了增强 ServiceAccount token 的安全性，可以设置有效期(会自动轮转)，避免 token 泄露带来的安全风险，还可以控制 token 的受众。</p>
+<p>该特性在 istio 中用来配合 SDS 以增强安全性，参考 <a href="https://developer.aliyun.com/article/742572" target="_blank" rel="noopener">Istio私钥管理利器SDS浅析</a>。</p>
+<p>如何判断集群是否启用了该特性呢？可通过一下命令查询:</p>
+<pre><code class="language-bash">kubectl get --raw /api/v1 | jq '.resources[] | select(.name | index(&quot;serviceaccounts/token&quot;))'
+</code></pre>
+<p>若返回空，说明不支持；若返回如下 json，说明支持:</p>
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;serviceaccounts/token&quot;,
+    &quot;singularName&quot;: &quot;&quot;,
+    &quot;namespaced&quot;: true,
+    &quot;group&quot;: &quot;authentication.k8s.io&quot;,
+    &quot;version&quot;: &quot;v1&quot;,
+    &quot;kind&quot;: &quot;TokenRequest&quot;,
+    &quot;verbs&quot;: [
+        &quot;create&quot;
+    ]
+}
+</code></pre>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="方案一安装-istio-时不使用-third-party-token">方案一：安装 istio 时不使用 third party token</h3>
+<p>官方称使用 istioctl 安装会自动检测集群是否支持 <code>third party token</code>，但据 <a href="https://github.com/istio/istio/issues/21968#issuecomment-607474174" target="_blank" rel="noopener">issue</a> 反馈可能有 bug，还是建议强制指定用 <code>first party token</code>，用参数 <code>--set values.global.jwtPolicy=first-party-jwt</code> 来显示指定，示例:</p>
+<pre><code class="language-bash">istioctl manifest generate  --set profile=demo  --set values.global.jwtPolicy=first-party-jwtm &gt; istio.yaml
+</code></pre>
+<h3 id="方案二集群启用-serviceaccounttokenvolumeprojection">方案二：集群启用 ServiceAccountTokenVolumeProjection</h3>
+<p>如何启用 ServiceAccountTokenVolumeProjection 这个特性呢？需要给 apiserver 配置类似如下的参数:</p>
+<pre><code class="language-yaml">--service-account-key-file=/etc/kubernetes/pki/sa.key # 这个一般都会配，重要的是下面三个参数
+--service-account-issuer=kubernetes.default.svc
+--service-account-signing-key-file=/etc/kubernetes/pki/sa.key # 注意替换实际路径
+--api-audiences=kubernetes.default.svc
+</code></pre>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html" rel="next">GRPC 服务负载不均</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/troubleshooting/case/kubeflow-on-istio.html" rel="prev">kubeflow on istio 相关问题</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Feb 2, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -745,7 +1011,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -805,6 +1079,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     

@@ -37,7 +37,7 @@
   <meta name="description" content="腾讯云高级工程师">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/404.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/case.html">
 
   
 
@@ -253,6 +253,8 @@
   
 
   
+  <link rel="alternate" href="/learning-istio/troubleshooting/case/index.xml" type="application/rss+xml" title="Istio 学习笔记">
+  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -261,7 +263,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/404.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/case.html">
 
   
   
@@ -280,12 +282,12 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/404.html">
-  <meta property="og:title" content="404 Page not found | Istio 学习笔记">
+  <meta property="og:url" content="/learning-istio/troubleshooting/case.html">
+  <meta property="og:title" content="案例分享 | Istio 学习笔记">
   <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
-    
+    <meta property="og:updated_time" content="2021-02-24T00:00:00&#43;00:00">
   
 
   
@@ -302,7 +304,7 @@
 
 
 
-  <title>404 Page not found | Istio 学习笔记</title>
+  <title>案例分享 | Istio 学习笔记</title>
 
 </head>
 
@@ -667,57 +669,241 @@
   </div>
 
   <div class="page-body">
-    <div class="universal-wrapper pt-3">
+    
 
-  <h1>找不到页面</h1>
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          排错指南
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
 
   
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
   
-  <form class="d-flex align-items-center mb-3">
-    <input name="q" type="search" class="form-control" placeholder="搜索..." autocomplete="off">
-  </form>
-  
+</form>
 
-  
-
-  <p>也许你在找？</p>
-
+<nav class="collapse docs-links" id="docs-nav">
   
   
   
-  <h2>最新</h2>
-  <ul>
-    
-      <li><a href="/learning-istio/trick/troubleshooting-networking.html">网络排障</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
-    
-      <li><a href="/learning-istio/best-practice/sidecar-order.html">解决 Sidecar 启动顺序问题</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
-    
-      <li><a href="/learning-istio/source/arch.html">梳理架构</a></li>
-    
-      <li><a href="/learning-istio/trick/check.html">常规检查</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
-    
-      <li><a href="/learning-istio/source/envoy.html">使用 Clion 阅读 Envoy 源码</a></li>
-    
-      <li><a href="/learning-istio/best-practice/improve-controlplane.html">控制面性能优化</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-    
-  </ul>
+  
+  
   
 
+  
+  
+    
+
+    
+      
+
+      
+      
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/troubleshooting.html">排错指南</a></li>
+    
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link  active" href="/learning-istio/troubleshooting/case.html"><i class="fas fa-tools pr-1"></i>案例分享</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/kubeflow-on-istio.html">kubeflow on istio 相关问题</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-config-stream-closed.html">Envoy 报错: gRPC config stream closed</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/envoy-lowercase-http-header.html">Envoy 将 HTTP Header 转换为小写</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的Pod</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/404-status-code.html">Envoy 状态码: 404 Not Found</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
+  
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents"></nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting.html">
+      
+        排错指南
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        案例分享
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>案例分享</h1>
+
+          <div class="article-style">
+            <p>先占位，后续陆续补充笔记</p>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
 </div>
-  </div>
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Feb 24, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -745,7 +931,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -805,6 +999,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     

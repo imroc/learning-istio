@@ -34,10 +34,11 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="问题描述 istio 中 http 请求，envoy 返回 431 异常状态码:
+HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 HttpConnectionManager 配置的 max_request_headers_kb 字段决定，最大可调整到 96 KiB: 解决方案 可以通过 EnvoyFilter 调整 max_request_headers_kb 字段来提升 header 大小限制。">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/404.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/case/431-status-code.html">
 
   
 
@@ -261,7 +262,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/404.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/case/431-status-code.html">
 
   
   
@@ -280,29 +281,35 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/404.html">
-  <meta property="og:title" content="404 Page not found | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/troubleshooting/case/431-status-code.html">
+  <meta property="og:title" content="Envoy 状态码: 431 Request Header Fields Too Large | Istio 学习笔记">
+  <meta property="og:description" content="问题描述 istio 中 http 请求，envoy 返回 431 异常状态码:
+HTTP/1.1 431 Request Header Fields Too Large  原因分析 此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 HttpConnectionManager 配置的 max_request_headers_kb 字段决定，最大可调整到 96 KiB: 解决方案 可以通过 EnvoyFilter 调整 max_request_headers_kb 字段来提升 header 大小限制。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
+      <meta property="article:published_time" content="2021-02-23T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-02-23T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>404 Page not found | Istio 学习笔记</title>
+
+
+  <title>Envoy 状态码: 431 Request Header Fields Too Large | Istio 学习笔记</title>
 
 </head>
 
@@ -667,57 +674,317 @@
   </div>
 
   <div class="page-body">
-    <div class="universal-wrapper pt-3">
+    
 
-  <h1>找不到页面</h1>
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          案例分享
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
+
+  
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
 
   
   
-  <form class="d-flex align-items-center mb-3">
-    <input name="q" type="search" class="form-control" placeholder="搜索..." autocomplete="off">
-  </form>
-  
+    
+
+    
+      
+
+      
+      
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
 
-  <p>也许你在找？</p>
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/troubleshooting.html">排错指南</a></li>
+    
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <div class="docs-toc-item">
+        <a class="docs-toc-link " href="/learning-istio/troubleshooting/case.html"><i class="fas fa-tools pr-1"></i>案例分享</a>
+    
+      
+        <ul class="nav docs-sidenav">
+      
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/kubeflow-on-istio.html">kubeflow on istio 相关问题</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/grpc-config-stream-closed.html">Envoy 报错: gRPC config stream closed</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/envoy-lowercase-http-header.html">Envoy 将 HTTP Header 转换为小写</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的Pod</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/troubleshooting/case/404-status-code.html">Envoy 状态码: 404 Not Found</a></li>
+
+
+
+  <li class="active"><a href="/learning-istio/troubleshooting/case/431-status-code.html">Envoy 状态码: 431 Request Header Fields Too Large</a></li>
+
+      
+        </ul>
+      
+    
+
+    
+      </div>
+    
+
+      
+    
+
+    
+      </ul>
+    
+
   
-  
-  <h2>最新</h2>
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
   <ul>
-    
-      <li><a href="/learning-istio/trick/troubleshooting-networking.html">网络排障</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
-    
-      <li><a href="/learning-istio/best-practice/sidecar-order.html">解决 Sidecar 启动顺序问题</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
-    
-      <li><a href="/learning-istio/source/arch.html">梳理架构</a></li>
-    
-      <li><a href="/learning-istio/trick/check.html">常规检查</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
-    
-      <li><a href="/learning-istio/source/envoy.html">使用 Clion 阅读 Envoy 源码</a></li>
-    
-      <li><a href="/learning-istio/best-practice/improve-controlplane.html">控制面性能优化</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-    
+    <li><a href="#问题描述">问题描述</a></li>
+    <li><a href="#原因分析">原因分析</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
   </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
   
 
-</div>
-  </div>
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting.html">
+      
+        排错指南
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/troubleshooting/case.html">
+      
+        案例分享
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        Envoy 状态码: 431 Request Header Fields Too Large
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>Envoy 状态码: 431 Request Header Fields Too Large</h1>
+
+          <div class="article-style">
+            <h2 id="问题描述">问题描述</h2>
+<p>istio 中 http 请求，envoy 返回 431 异常状态码:</p>
+<pre><code class="language-txt">HTTP/1.1 431 Request Header Fields Too Large
+</code></pre>
+<h2 id="原因分析">原因分析</h2>
+<p>此状态码说明 http 请求 header 大小超限了，默认限制为 60 KiB，由 <code>HttpConnectionManager</code> 配置的 <code>max_request_headers_kb</code> 字段决定，最大可调整到 96 KiB:
+<img src="max_request_headers_kb.png" alt=""></p>
+<h2 id="解决方案">解决方案</h2>
+<p>可以通过 EnvoyFilter 调整 <code>max_request_headers_kb</code> 字段来提升 header 大小限制。</p>
+<p>EnvoyFilter 示例 (istio 1.6 验证通过):</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &quot;envoy.http_connection_manager&quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &quot;@type&quot;: &quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&quot;
+          max_request_headers_kb: 96
+</code></pre>
+<p>高版本兼容上面的 v2 配置，但建议用 v3 的 配置 (istio 1.8 验证通过):</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: max-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &quot;envoy.http_connection_manager&quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &quot;@type&quot;: &quot;type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager&quot;
+          max_request_headers_kb: 96
+</code></pre>
+<p>若 header 大小超过 96 KiB，这种情况本身也很不正常，建议将这部分数据放到 body。</p>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/learning-istio/troubleshooting/case/404-status-code.html" rel="next">Envoy 状态码: 404 Not Found</a>
+  </div>
+  
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Feb 23, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -745,7 +1012,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -805,6 +1080,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     

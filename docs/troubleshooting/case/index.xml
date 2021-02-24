@@ -1,42 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Istio 学习笔记</title>
-    <link>/learning-istio/</link>
-      <atom:link href="/learning-istio/index.xml" rel="self" type="application/rss+xml" />
-    <description>Istio 学习笔记</description>
+    <title>案例分享 | Istio 学习笔记</title>
+    <link>/learning-istio/troubleshooting/case.html</link>
+      <atom:link href="/learning-istio/troubleshooting/case/index.xml" rel="self" type="application/rss+xml" />
+    <description>案例分享</description>
     <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
-      <title>Istio 学习笔记</title>
-      <link>/learning-istio/</link>
+      <title>案例分享</title>
+      <link>/learning-istio/troubleshooting/case.html</link>
     </image>
-    
-    <item>
-      <title>网络排障</title>
-      <link>/learning-istio/trick/troubleshooting-networking.html</link>
-      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/trick/troubleshooting-networking.html</guid>
-      <description>&lt;h2 id=&#34;网络性能问题&#34;&gt;网络性能问题&lt;/h2&gt;
-&lt;p&gt;现象:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;思路:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;client 端看是否有重传:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;image-20210203165254809.png&#34; alt=&#34;image-20210203165254809&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;检查是否有-conntrack-插入失败&#34;&gt;检查是否有 conntrack 插入失败&lt;/h2&gt;
-&lt;p&gt;watch:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;watch &#39;conntrack -S | awk -F &amp;quot;insert_failed=&amp;quot; &amp;quot;{print \$2}&amp;quot; | awk -F &amp;quot; &amp;quot; &amp;quot;{print \$1}&amp;quot; | awk &amp;quot;{sum += \$1} END {print sum}&amp;quot;&#39;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;执行一次:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;conntrack -S | awk -F &#39;insert_failed=&#39; &#39;{print $2}&#39; | awk -F &#39; &#39; &#39;{print $1}&#39; | awk &#39;{sum += $1} END {print sum}&#39;
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
     
     <item>
       <title>GRPC 服务负载不均</title>
@@ -114,94 +88,6 @@ spec:
     </item>
     
     <item>
-      <title>解决 Sidecar 启动顺序问题</title>
-      <link>/learning-istio/best-practice/sidecar-order.html</link>
-      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/best-practice/sidecar-order.html</guid>
-      <description>&lt;h2 id=&#34;让-istio-injector-将-sidecar-注入到第一个-container&#34;&gt;让 istio-injector 将 sidecar 注入到第一个 container&lt;/h2&gt;
-&lt;p&gt;在 istio 1.7，社区通过给 istio-injector 注入逻辑增加一个顺序开关来解决了该问题，开关打开后，proxy 将会注入到第一个 container。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;img/sidecar-order-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;img/sidecar-order-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;开关打开方法是配置 istio 的 configmap 全局配置:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl -n istio-system edit cm istio
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在 &lt;code&gt;defaultConfig&lt;/code&gt; 下加入 &lt;code&gt;holdApplicationUntilProxyStarts: true&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: v1
-data:
-  mesh: |-
-    defaultConfig:
-      holdApplicationUntilProxyStarts: true
-  meshNetworks: &#39;networks: {}&#39;
-kind: ConfigMap
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;若使用 IstioOperator，defaultConfig 修改 CR 字段 &lt;code&gt;meshConfig&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-metadata:
-  namespace: istio-system
-  name: example-istiocontrolplane
-spec:
-  meshConfig:
-    defaultConfig:
-      holdApplicationUntilProxyStarts: true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://zhaohuabing.com/post/2020-09-05-istio-sidecar-dependency/#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Istio 运维实战系列（1）：应用容器对 Envoy Sidecar 的启动依赖问题&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/istio/istio/pull/24737&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;PR: Allow users to delay application start until proxy is ready&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>安装 istioctl</title>
-      <link>/learning-istio/basics/install/install-istioctl.html</link>
-      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/basics/install/install-istioctl.html</guid>
-      <description>&lt;p&gt;一键下载:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ curl -sL https://istio.io/downloadIstioctl | sh -
- Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ...
-istioctl-1.8.2-osx.tar.gz download complete!
-
-Add the istioctl to your path with:
-  export PATH=$PATH:$HOME/.istioctl/bin
-
-Begin the Istio pre-installation check by running:
-	 istioctl x precheck
-
-Need more information? Visit https://istio.io/docs/reference/commands/istioctl/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;二进制会被下载到 &lt;code&gt;~/.istioctl/bin/istioctl&lt;/code&gt;，在我们的 shell 启动脚本里 (&lt;code&gt;~/.bashrc&lt;/code&gt; 或 &lt;code&gt;~/.zshrc&lt;/code&gt;) 加入:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;export PATH=$PATH:$HOME/.istioctl/bin
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;新开终端，检测是否安装成功:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ istioctl version
-no running Istio pods in &amp;quot;istio-system&amp;quot;
-1.8.2
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>梳理架构</title>
-      <link>/learning-istio/source/arch.html</link>
-      <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/source/arch.html</guid>
-      <description>&lt;p&gt;先占位，后续陆续补充笔记&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>常规检查</title>
-      <link>/learning-istio/trick/check.html</link>
-      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/trick/check.html</guid>
-      <description>&lt;h2 id=&#34;检查-port-name-是否符合规则&#34;&gt;检查 port name 是否符合规则&lt;/h2&gt;
-&lt;p&gt;istio 需要根据 svc 的 port name 来检查后端服务用的哪种协议，如果定义不正确，走到了不符合预期的 filter，就会造成一些异常现象。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</title>
       <link>/learning-istio/troubleshooting/case/istio-token-setup-failed.html</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
@@ -248,178 +134,6 @@ no running Istio pods in &amp;quot;istio-system&amp;quot;
 --service-account-issuer=kubernetes.default.svc
 --service-account-signing-key-file=/etc/kubernetes/pki/sa.key # 注意替换实际路径
 --api-audiences=kubernetes.default.svc
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>使用 Clion 阅读 Envoy 源码</title>
-      <link>/learning-istio/source/envoy.html</link>
-      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/source/envoy.html</guid>
-      <description>&lt;h2 id=&#34;生成-cmakeliststxt&#34;&gt;生成 CMakeLists.txt&lt;/h2&gt;
-&lt;p&gt;参考:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://atbug.com/read-envoy-source-code-in-clion/&#34;&gt;https://atbug.com/read-envoy-source-code-in-clion/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/258777260&#34;&gt;https://zhuanlan.zhihu.com/p/258777260&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
-&lt;p&gt;envoy 使用 &lt;code&gt;c++ 17&lt;/code&gt;，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来自行编译安装，比如。&lt;/p&gt;
-&lt;p&gt;下载:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后进入源码目录，下载依赖，编译，安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;./contrib/download_prerequisites
-./configure
-make -j5
-make install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;安装高版本-make&#34;&gt;安装高版本 make&lt;/h2&gt;
-&lt;p&gt;通过源码安装，在&lt;a href=&#34;http://ftp.gnu.org/gnu/make/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 下载，如:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后编译安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;tar -zxvf make-4.3.tar.gz
-cd make-4.3
-./configure
-make
-make install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;备份旧的 make 命令:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mv /usr/bin/make /usr/bin/make-3.82
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;建立软连接:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ln -s -f /usr/local/bin/make  /usr/bin/make
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;检查版本:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ make --version
-GNU Make 4.3
-为 x86_64-pc-linux-gnu 编译
-Copyright (C) 1988-2020 Free Software Foundation, Inc.
-许可证：GPLv3+：GNU 通用公共许可证第 3 版或更新版本&amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;。
-本软件是自由软件：您可以自由修改和重新发布它。
-在法律允许的范围内没有其他保证
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;安装高版本-glibc&#34;&gt;安装高版本 glibc&lt;/h2&gt;
-&lt;p&gt;编译 envoy 需要 glibc 版本较高，如果报类似的错误:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;buildtools/linux64/gn: /lib64/libc.so.6: version `GLIBC_2.18&#39; not found (required by buildtools/linux64/gn)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;可以从 [这里] 下载高版本 glibc 源码，如:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后进入源码目录，编译安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir build  # 在glibc-2.32目录下建立build文件夹
-cd build  # 进入build目录
-../configure --prefix=/opt/glibc-2.32  # 配置glibc并设置当前glibc-2.32安装目录
-make &amp;amp;&amp;amp; make install  # 编译安装glibc-2.32库
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看 so 文件是否安装成功:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -alh /opt/glibc-2.32/lib/libc-2.32.so
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;建立软链:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;rm -rf /lib64/libc.so.6 // 先删除先前的libc.so.6软链
-ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;使用-docker&#34;&gt;使用 Docker&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-Dockerfile&#34;&gt;FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
-COPY bazel-cmakelists /bin/bazel-cmakelists
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;生成&#34;&gt;生成&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;bazel-cmakelists --targets //source/exe:envoy-static --skip_build
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>控制面性能优化</title>
-      <link>/learning-istio/best-practice/improve-controlplane.html</link>
-      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/best-practice/improve-controlplane.html</guid>
-      <description>&lt;h2 id=&#34;istiod-负载均衡&#34;&gt;istiod 负载均衡&lt;/h2&gt;
-&lt;p&gt;envoy 定时重连&lt;/p&gt;
-&lt;h2 id=&#34;istiod-hpa&#34;&gt;istiod HPA&lt;/h2&gt;
-&lt;p&gt;istiod 无状态，可水平扩展&lt;/p&gt;
-&lt;h2 id=&#34;xds-按需下发&#34;&gt;xDS 按需下发&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;lazy loading&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;batch-推送间隔优化&#34;&gt;batch 推送间隔优化&lt;/h2&gt;
-&lt;p&gt;istiod推送流控规则有合并推送策略，目前这个时间间隔默认值为100ms。可配，一般很少用户会关心这个，在 mesh 全局配置中可以改: PILOT_DEBOUNCE_AFTER 和 PILOT_DEBOUNCE_MAX。  主要取决于：用户期望流控规则更新的实时性，以及 istiod 稳定性的权衡，如果期望实时性高，则把防抖动时间设置短些，如果mesh规模大，希望istiod提高稳定性，则把防抖动时间设置长些。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>使用 istio-operator 安装 istio</title>
-      <link>/learning-istio/basics/install/install-with-operator.html</link>
-      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/basics/install/install-with-operator.html</guid>
-      <description>&lt;h2 id=&#34;安装-istioctl&#34;&gt;安装 istioctl&lt;/h2&gt;
-&lt;p&gt;需要先安装 istioctl，参考 &lt;a href=&#34;install-istioctl.html&#34;&gt;安装 istioctl&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;使用-istioctl-安装-istio-operator&#34;&gt;使用 istioctl 安装 istio-operator&lt;/h2&gt;
-&lt;p&gt;一键安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ istioctl operator init
-Installing operator controller in namespace: istio-operator using image: docker.io/istio/operator:1.8.2
-Operator controller will watch namespaces: istio-system
-✔ Istio operator installed
-✔ Installation complete
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;检查 operator 是否 running:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ kubectl -n istio-operator get pods
-NAME                              READY   STATUS    RESTARTS   AGE
-istio-operator-675b8ff647-n4bvc   1/1     Running   0          75s
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;安装-istio&#34;&gt;安装 istio&lt;/h2&gt;
-&lt;p&gt;准备 &lt;code&gt;istio.yaml&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-metadata:
-  namespace: istio-system
-  name: example-istiocontrolplane
-spec:
-  profile: demo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl apply -f istio.yaml
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看是否安装成功:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ kubectl -n istio-system get pods
-NAME                                    READY   STATUS    RESTARTS   AGE
-istio-egressgateway-69d75b5f96-jrsd9    1/1     Running   0          3m9s
-istio-ingressgateway-674d7d9bb5-cthhs   1/1     Running   0          3m9s
-istiod-57799dfcf9-wftrt                 1/1     Running   0          3m35s
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看 ingressgateway 的 LB 是否正常创建:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ kubectl -n istio-system get svc
-NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)                                                                      AGE
-istio-egressgateway    ClusterIP      172.21.254.245   &amp;lt;none&amp;gt;           80/TCP,443/TCP,15443/TCP                                                     5m41s
-istio-ingressgateway   LoadBalancer   172.21.255.248   120.53.204.198   15021:31590/TCP,80:30547/TCP,443:30701/TCP,31400:30329/TCP,15443:31790/TCP   5m41s
-istiod                 ClusterIP      172.21.254.57    &amp;lt;none&amp;gt;           15010/TCP,15012/TCP,443/TCP,15014/TCP                                        6m8s
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;拿到流量入口(LB) 的 IP 地址 &lt;code&gt;120.53.204.198&lt;/code&gt;，若要通过域名访问，配置域名解析到该 IP 地址 (如果使用 80/443 访问，国内部署需要备案)。&lt;/p&gt;
-&lt;h2 id=&#34;自定义安装配置&#34;&gt;自定义安装配置&lt;/h2&gt;
-&lt;p&gt;上述安装使用了名为 &lt;code&gt;demo&lt;/code&gt; 的内置 profile (安装配置)，资源占用较少，适合学习和演示用。通过以下命令可查看有哪些内置的 profile:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ istioctl profile list
-Istio configuration profiles:
-    default
-    demo
-    empty
-    minimal
-    openshift
-    preview
-    remote
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;具体每种 profile 的解释可参考 &lt;a href=&#34;https://istio.io/latest/docs/setup/additional-setup/config-profiles/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;官方文档&lt;/a&gt;，若需要自定义安装配置，建议基于内置的 profile 进行修改，通过以下命令导出配置:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;istioctl profile dump demo &amp;gt; istio.yaml
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;导出的配置是不包含 &lt;code&gt;metadata&lt;/code&gt; 的，不能直接 &lt;code&gt;apply&lt;/code&gt;，可以在 &lt;code&gt;kind&lt;/code&gt; 下方加入 &lt;code&gt;metadata&lt;/code&gt; 来指定 istio 需要安装的 namespace 和 CR (Custom Resource) 名称:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;metadata:
-  namespace: istio-system
-  name: example-istiocontrolplane
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;导出的 &lt;code&gt;istio.yaml&lt;/code&gt; 将所有字段都列出来了，我们可以根据需求进行自定义，具体字段含义可参考 &lt;a href=&#34;https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;API 文档&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;修改完后可通过 &lt;code&gt;apply&lt;/code&gt; 来安装或更新:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;kubectl apply -f istio.yaml
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -621,20 +335,6 @@ spec:
           max_request_headers_kb: 96
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;若 header 大小超过 96 KiB，这种情况本身也很不正常，建议将这部分数据放到 body。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>已知 BUG</title>
-      <link>/learning-istio/ref/bug.html</link>
-      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/ref/bug.html</guid>
-      <description>&lt;h2 id=&#34;envoy-内存不释放&#34;&gt;envoy 内存不释放&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;已知受影响的版本: istio 1.5.4&lt;/li&gt;
-&lt;li&gt;已解决版本: istio 1.6.0&lt;/li&gt;
-&lt;li&gt;issue: &lt;a href=&#34;https://github.com/istio/istio/issues/25145&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#25145&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
