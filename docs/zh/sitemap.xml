@@ -43,11 +43,6 @@
   </url>
   
   <url>
-    <loc>/learning-istio/source/arch.html</loc>
-    <lastmod>2021-01-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/learning-istio/trick/check.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
@@ -58,7 +53,7 @@
   </url>
   
   <url>
-    <loc>/learning-istio/source/envoy.html</loc>
+    <loc>/learning-istio/source/use-clion-read-envoy-source-code.html</loc>
     <lastmod>2021-01-29T00:00:00+00:00</lastmod>
   </url>
   

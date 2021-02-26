@@ -13,90 +13,182 @@
     </image>
     
     <item>
-      <title>梳理架构</title>
-      <link>/learning-istio/source/arch.html</link>
-      <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/source/arch.html</guid>
-      <description>&lt;p&gt;先占位，后续陆续补充笔记&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>使用 Clion 阅读 Envoy 源码</title>
-      <link>/learning-istio/source/envoy.html</link>
+      <link>/learning-istio/source/use-clion-read-envoy-source-code.html</link>
       <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/source/envoy.html</guid>
-      <description>&lt;h2 id=&#34;生成-cmakeliststxt&#34;&gt;生成 CMakeLists.txt&lt;/h2&gt;
-&lt;p&gt;参考:&lt;/p&gt;
+      <guid>/learning-istio/source/use-clion-read-envoy-source-code.html</guid>
+      <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;要想深入学习 istio，还得学习下数据面的实现，istio 的数据面使用了 envoy，在 istio group 下有个叫 &lt;a href=&#34;https://github.com/istio/proxy&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;proxy&lt;/a&gt; 的仓库，包含了一些 istio 用到的一些 envoy 扩展，编译时将 envoy 代码作为库来引用，最终使用 bazel 编译出 istio 版本的 Envoy。&lt;/p&gt;
+&lt;p&gt;代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c++ 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 文件来解析项目结构，由于 c/c++ 没有统一的结构标准，不同项目结构千差万别，不太好自动生成 &lt;code&gt;CMakeLists.txt&lt;/code&gt;，需要我们先理解项目结构，然后编写 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 来让 CLion 进行解析，不太了解这方面的同学弄起来会比较麻烦，本人也折腾了好一段时间才搞定，本文记录下方法和心得，以供大家参考。&lt;/p&gt;
+&lt;h2 id=&#34;克隆代码&#34;&gt;克隆代码&lt;/h2&gt;
+&lt;p&gt;首先克隆 &lt;a href=&#34;https://github.com/istio/proxy&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;istio-proxy&lt;/a&gt; 的代码:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git clone https://github.com/istio/proxy.git istio-proxy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最好切到某个稳定的 release 分支上:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd istio-proxy
+git checkout -b release-1.9 origin/release-1.9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;项目分析&#34;&gt;项目分析&lt;/h2&gt;
+&lt;p&gt;istio-proxy 代码库中主要只包含了在 istio 里用到的一些 envoy 扩展，代码量不大，源码主要分布在 src 与 extensions 目录，但编译需要很久，因为它实际编译的是 envoy，只是利用 bazel 将自身代码作为扩展编译进 envoy (得益于 envoy 的扩展机制)，从这个 bazel 的 &lt;a href=&#34;https://github.com/istio/proxy/blob/master/src/envoy/BUILD&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;BUILD 文件&lt;/a&gt; 就能看得出来:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;envoy_cc_binary(
+    name = &amp;quot;envoy&amp;quot;,
+    repository = &amp;quot;@envoy&amp;quot;,
+    visibility = [&amp;quot;//visibility:public&amp;quot;],
+    deps = [
+        &amp;quot;//extensions/access_log_policy:access_log_policy_lib&amp;quot;,
+        &amp;quot;//extensions/attributegen:attributegen_plugin&amp;quot;,
+        &amp;quot;//extensions/metadata_exchange:metadata_exchange_lib&amp;quot;,
+        &amp;quot;//extensions/stackdriver:stackdriver_plugin&amp;quot;,
+        &amp;quot;//extensions/stats:stats_plugin&amp;quot;,
+        &amp;quot;//src/envoy/extensions/wasm:wasm_lib&amp;quot;,
+        &amp;quot;//src/envoy/http/alpn:config_lib&amp;quot;,
+        &amp;quot;//src/envoy/http/authn:filter_lib&amp;quot;,
+        &amp;quot;//src/envoy/tcp/forward_downstream_sni:config_lib&amp;quot;,
+        &amp;quot;//src/envoy/tcp/metadata_exchange:config_lib&amp;quot;,
+        &amp;quot;//src/envoy/tcp/sni_verifier:config_lib&amp;quot;,
+        &amp;quot;//src/envoy/tcp/tcp_cluster_rewrite:config_lib&amp;quot;,
+        &amp;quot;@envoy//source/exe:envoy_main_entry_lib&amp;quot;,
+    ],
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中 &lt;code&gt;@envoy&lt;/code&gt; 表示引用 envoy 代码库，main 函数也位于 envoy 代码库中。那么 envoy 代码库从哪儿来的呢？bazel 在构建时会自动下载指定的依赖，envoy 的代码来源在 &lt;a href=&#34;https://github.com/istio/proxy/blob/master/WORKSPACE&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;WORKSPACE&lt;/a&gt; 中有指定:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;http_archive(
+    name = &amp;quot;envoy&amp;quot;,
+    sha256 = ENVOY_SHA256,
+    strip_prefix = ENVOY_REPO + &amp;quot;-&amp;quot; + ENVOY_SHA,
+    url = &amp;quot;https://github.com/&amp;quot; + ENVOY_ORG + &amp;quot;/&amp;quot; + ENVOY_REPO + &amp;quot;/archive/&amp;quot; + ENVOY_SHA + &amp;quot;.tar.gz&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;bazel 会自动下载指定版本的源码包来编译。&lt;/p&gt;
+&lt;h2 id=&#34;如果获取依赖源文件&#34;&gt;如果获取依赖源文件?&lt;/h2&gt;
+&lt;p&gt;由于 istio-proxy 依赖了大量的第三方源文件，我们要阅读代码需要将这些源文件都下下来，只要将它编译一次，所有依赖源文件以及 generated 的代码都可以自动给你备好，所以我们需要对它进行一次编译。&lt;/p&gt;
+&lt;p&gt;由于编译 envoy 有复杂的工具链依赖，官方推荐使用容器进行编译，在执行 &lt;code&gt;make&lt;/code&gt; 前加个 &lt;code&gt;BUILD_WITH_CONTAINER=1&lt;/code&gt; 即可指定使用容器编译，免去复杂的环境依赖。但 bazel 编译会将依赖和 generated 的源文件都软链到临时目录，如果用容器编译，就会丢失这部分代码，而我们阅读 istio-proxy 代码时最关键的就是这部分代码了，所以不能用容器编译。&lt;/p&gt;
+&lt;h2 id=&#34;安装-bazelisk&#34;&gt;安装 bazelisk&lt;/h2&gt;
+&lt;p&gt;不用容器编译就需要本机环境基本满足工具链要求，首先是需要安装 bazel，由于 bazel 版本很多，不同 istio-proxy(envoy) 版本依赖的 bazel 版本也不一样，我们可以直接安装 &lt;a href=&#34;https://github.com/bazelbuild/bazelisk&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;bazelisk&lt;/a&gt; ，一个用于 bazel 多版本管理的工具，它可以自动识别项目中 &lt;a href=&#34;https://github.com/istio/proxy/blob/master/.bazelversion&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;.bazelversion&lt;/a&gt; 文件，选取指定版本的 bazel 来进行构建(可以自动下载对应版本的 bazel 二进制)。&lt;/p&gt;
+&lt;p&gt;如果是 macOS 用户，安装很简单:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;brew install bazelisk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果之前已安装过 bazel，可以使用 &lt;code&gt;brew link --overwrite bazelisk&lt;/code&gt; 强制覆盖。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其它平台的可以在 &lt;a href=&#34;https://github.com/bazelbuild/bazelisk/releases&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;release&lt;/a&gt; 页面下载最新的二进制，重命名为 &lt;code&gt;bazel&lt;/code&gt; 然后放到 &lt;code&gt;PATH&lt;/code&gt; 下。&lt;/p&gt;
+&lt;h2 id=&#34;其它依赖&#34;&gt;其它依赖&lt;/h2&gt;
+&lt;p&gt;如果是 macOS 用户，确保务必安装好 xcode，方便跳转系统库函数，安装命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;xcode-select --install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;另外主要还有 python3 (macOS 自带)，其它依赖通常都系统自带，可以先不用管，等如果编译报错了再看。&lt;/p&gt;
+&lt;p&gt;更多依赖可参考 &lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/start/building#requirements&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;官方文档&lt;/a&gt; 。&lt;/p&gt;
+&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
+&lt;p&gt;在 istio-proxy 代码根目录执行以下命令进行编译:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;make build_envoy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;环境没问题的话会经过漫长的构建和编译，通常可能几十分钟，取决于电脑配置。&lt;/p&gt;
+&lt;p&gt;编译完后会发现 bazel 为我们生成了一些目录软链:
+&lt;img src=&#34;use-clion-read-envoy-source-code-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;bazel 输出目录结构可参考官方文档 &lt;a href=&#34;https://docs.bazel.build/versions/master/output_directories.html#layout-diagram&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Output Directory Layout&lt;/a&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我们主要关注以下两个目录:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://atbug.com/read-envoy-source-code-in-clion/&#34;&gt;https://atbug.com/read-envoy-source-code-in-clion/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://istio.cn/t/topic/112&#34;&gt;https://istio.cn/t/topic/112&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/258777260&#34;&gt;https://zhuanlan.zhihu.com/p/258777260&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;bazel-istio-proxy&lt;/strong&gt;: 包含构建 istio-proxy 用到的源文件(包含依赖)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;bazel-bin&lt;/strong&gt;: 包含一些 generated 代码。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;安装高版本-gcc&#34;&gt;安装高版本 gcc&lt;/h2&gt;
-&lt;p&gt;envoy 使用 &lt;code&gt;c++ 17&lt;/code&gt;，需要较高版本 gcc，如果过低会报错，如果不能直接用包管理器安装新版本，可以从&lt;a href=&#34;http://mirror.linux-ia64.org/gnu/gcc/releases/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 找新版本 gcc 源码包，下载下来自行编译安装，比如。&lt;/p&gt;
-&lt;p&gt;下载:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
+&lt;h2 id=&#34;生成源码文件列表&#34;&gt;生成源码文件列表&lt;/h2&gt;
+&lt;p&gt;在 istio-proxy 根目录创建脚本文件 &lt;code&gt;generate-srcs.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
+
+set -ex
+
+bazel_dir=&amp;quot;bazel-${PWD##*/}&amp;quot;
+
+find -L -E $bazel_dir/external src extensions -regex &#39;.*\.(cc|c|cpp)&#39; &amp;gt; sourcefiles.txt
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后进入源码目录，下载依赖，编译，安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;./contrib/download_prerequisites
-./configure
-make -j5
-make install
+&lt;p&gt;执行此脚本可以生成 istio-proxy 及其依赖的源文件列表 (&lt;code&gt;sourcefiles.txt&lt;/code&gt;)，用于在 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 中引用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注:&lt;/strong&gt; &lt;code&gt;$bazel_dir/external&lt;/code&gt; 下包含内容较多，全部索引的话 CLion 可能会比较卡，很多代码基本也都不会看，可以适当缩小范围，按需来配置，比如先只添加 &lt;code&gt;$bazel_dir/external/envoy&lt;/code&gt;，后续有需要再添加其它目录，然后 &lt;code&gt;Reload Cmake Project&lt;/code&gt; 重新索引。&lt;/p&gt;
+&lt;h2 id=&#34;生成-cmakeliststxt&#34;&gt;生成 CMakeLists.txt&lt;/h2&gt;
+&lt;p&gt;然后就可以在 istio-proxy 项目根目录创建下 &lt;code&gt;CMakeLists.txt&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;cmake_minimum_required(VERSION 3.15)
+STRING( REGEX REPLACE &amp;quot;.*/(.*)&amp;quot; &amp;quot;\\1&amp;quot; CURRENT_FOLDER ${CMAKE_CURRENT_SOURCE_DIR} )
+project(istio-proxy)
+
+macro(print_all_variables)
+    message(STATUS &amp;quot;print_all_variables------------------------------------------{&amp;quot;)
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS &amp;quot;${_variableName}=${${_variableName}}&amp;quot;)
+    endforeach()
+    message(STATUS &amp;quot;print_all_variables------------------------------------------}&amp;quot;)
+endmacro()
+
+set(CMAKE_CXX_STANDARD 17)
+add_definitions(-DNULL_PLUGIN) # enable wasm nullvm navigation
+
+file(STRINGS sourcefiles.txt all_SRCS)
+
+message(STATUS &amp;quot;CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}&amp;quot;)
+message(STATUS &amp;quot;CMAKE_HOME_DIRECTORY=${CMAKE_HOME_DIRECTORY}&amp;quot;)
+
+add_executable(istio-proxy ${all_SRCS})
+
+set(istio_include_dirs
+        &amp;quot;./&amp;quot;
+        &amp;quot;./src&amp;quot;
+        &amp;quot;./extensions&amp;quot;
+
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/envoy&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/envoy/source&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/envoy/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/envoy/api/wasm/cpp&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/boringssl/src/include/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_gabime_spdlog/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_c_ares_c_ares&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_google_absl&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_google_cel_cpp&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_google_protobuf/src&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_fmtlib_fmt/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_eile_tclap/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_grpc_grpc/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_envoyproxy_protoc_gen_validate/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_tencent_rapidjson/include/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_datadog_dd_opentracing_cpp/include/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_libevent_libevent/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_mirror_tclap/include&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_grpc_grpc&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_circonus_labs_libcircllhist/src/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_nodejs_http_parser&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_nghttp2_nghttp2/lib/includes/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_cyan4973_xxhash/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_google_flatbuffers/include/&amp;quot;
+        &amp;quot;./bazel-${CURRENT_FOLDER}/external/com_github_fmtlib_fmt/test&amp;quot;
+        
+        &amp;quot;./bazel-bin&amp;quot;
+        &amp;quot;./bazel-bin/external/envoy_api&amp;quot;
+        &amp;quot;./bazel-bin/external/mixerapi_git&amp;quot;
+        &amp;quot;./bazel-bin/external/com_envoyproxy_protoc_gen_validate&amp;quot;
+        &amp;quot;./bazel-bin/external/com_google_googleapis&amp;quot;
+        &amp;quot;./bazel-bin/external/com_github_cncf_udpa&amp;quot;
+)
+
+target_include_directories(istio-proxy PUBLIC ${istio_include_dirs})
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;安装高版本-make&#34;&gt;安装高版本 make&lt;/h2&gt;
-&lt;p&gt;通过源码安装，在&lt;a href=&#34;http://ftp.gnu.org/gnu/make/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;这里&lt;/a&gt; 下载，如:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/make/make-4.3.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后编译安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;tar -zxvf make-4.3.tar.gz
-cd make-4.3
-./configure
-make
-make install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;备份旧的 make 命令:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mv /usr/bin/make /usr/bin/make-3.82
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;建立软连接:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ln -s -f /usr/local/bin/make  /usr/bin/make
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;检查版本:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ make --version
-GNU Make 4.3
-为 x86_64-pc-linux-gnu 编译
-Copyright (C) 1988-2020 Free Software Foundation, Inc.
-许可证：GPLv3+：GNU 通用公共许可证第 3 版或更新版本&amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;。
-本软件是自由软件：您可以自由修改和重新发布它。
-在法律允许的范围内没有其他保证
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;安装高版本-glibc&#34;&gt;安装高版本 glibc&lt;/h2&gt;
-&lt;p&gt;编译 envoy 需要 glibc 版本较高，如果报类似的错误:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;buildtools/linux64/gn: /lib64/libc.so.6: version `GLIBC_2.18&#39; not found (required by buildtools/linux64/gn)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;可以从 [这里] 下载高版本 glibc 源码，如:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget http://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;解压后进入源码目录，编译安装:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir build  # 在glibc-2.32目录下建立build文件夹
-cd build  # 进入build目录
-../configure --prefix=/opt/glibc-2.32  # 配置glibc并设置当前glibc-2.32安装目录
-make &amp;amp;&amp;amp; make install  # 编译安装glibc-2.32库
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看 so 文件是否安装成功:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -alh /opt/glibc-2.32/lib/libc-2.32.so
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;建立软链:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;rm -rf /lib64/libc.so.6 // 先删除先前的libc.so.6软链
-ln -s /opt/glibc-2.32/lib/libc-2.32.so /lib64/libc.so.6
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;使用-docker&#34;&gt;使用 Docker&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-Dockerfile&#34;&gt;FROM envoyproxy/envoy-build-ubuntu:c8fa4235714003ba0896287ee2f91cae06e0e407
-COPY bazel-cmakelists /bin/bazel-cmakelists
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;生成&#34;&gt;生成&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;bazel-cmakelists --targets //source/exe:envoy-static --skip_build
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解释一下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;add_executable&lt;/code&gt; 将需要索引的源文件列表 (&lt;code&gt;sourcefiles.txt&lt;/code&gt;) 加进索引。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;target_include_directories&lt;/code&gt; 将用到的一些纯头文件目录加进索引 (不包含实现代码，主要是一些接口)，这里也是可以按需进行增删。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;使用-clion-阅读&#34;&gt;使用 CLion 阅读&lt;/h2&gt;
+&lt;p&gt;不要直接打开 istio-proxy 目录，而是 Open 时选中 &lt;code&gt;CMakeLists.txt&lt;/code&gt;，然后 &lt;code&gt;Open as Project&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;弹出 &lt;code&gt;Load Project&lt;/code&gt; 时不要勾选 &lt;code&gt;Clean project&lt;/code&gt;，不然退出 CLion 时会执行 &lt;code&gt;make clean&lt;/code&gt;，导致把 bazel 生成的源文件都给删除掉，就没法跳转了:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后就会开始索引，完成后就可以愉快的看代码了，先从 main 看起吧(&lt;code&gt;bazel-istio-proxy/external/envoy/source/exe/main.cc&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-3.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;查找引用:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;跳转到实现:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-5.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;小结&#34;&gt;小结&lt;/h2&gt;
+&lt;p&gt;本文介绍了如何使用 CLion 来阅读 istio-proxy (envoy) 的代码，包含源码结构分析、环境搭建，以及生成 CLion 所需要的 &lt;code&gt;CMakeLists.txt&lt;/code&gt; 文件的方法，最后也展示了效果，希望对你有所帮助。&lt;/p&gt;
 </description>
     </item>
     

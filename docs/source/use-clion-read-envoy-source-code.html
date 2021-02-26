@@ -1,0 +1,1214 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.2 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="背景 要想深入学习 istio，还得学习下数据面的实现，istio 的数据面使用了 envoy，在 istio group 下有个叫 proxy 的仓库，包含了一些 istio 用到的一些 envoy 扩展，编译时将 envoy 代码作为库来引用，最终使用 bazel 编译出 istio 版本的 Envoy。
+代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c&#43;&#43; 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 CMakeLists.">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/source/use-clion-read-envoy-source-code.html">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/learning-istio/css/wowchemy.8d97dc9323f0e6d0f16499bab7da6299.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/learning-istio/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/learning-istio/source/use-clion-read-envoy-source-code.html">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="Istio 学习笔记">
+  <meta property="og:url" content="/learning-istio/source/use-clion-read-envoy-source-code.html">
+  <meta property="og:title" content="使用 Clion 阅读 Envoy 源码 | Istio 学习笔记">
+  <meta property="og:description" content="背景 要想深入学习 istio，还得学习下数据面的实现，istio 的数据面使用了 envoy，在 istio group 下有个叫 proxy 的仓库，包含了一些 istio 用到的一些 envoy 扩展，编译时将 envoy 代码作为库来引用，最终使用 bazel 编译出 istio 版本的 Envoy。
+代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c&#43;&#43; 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 CMakeLists."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2021-01-29T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-01-29T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>使用 Clion 阅读 Envoy 源码 | Istio 学习笔记</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/learning-istio/js/wowchemy-init.min.d876f1a6b98701f9238f2313b512a26f.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/learning-istio/"><img src="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_0x70_resize_lanczos_2.png" alt="Istio 学习笔记"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/learning-istio/"><img src="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_0x70_resize_lanczos_2.png" alt="Istio 学习笔记"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/index.html"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/basics.html"><span>Istio 基础</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/source.html"><span>源码阅读</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/observability.html"><span>可观测性</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/best-practice.html"><span>最佳实践</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/troubleshooting.html"><span>排错指南</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/learning-istio/ref.html"><span>参考手册</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    
+
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          源码阅读
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
+
+  
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
+
+  
+  
+    
+
+    
+      
+
+      
+      
+      
+
+
+  
+    
+    
+    
+    
+      
+    
+    
+
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/source.html">源码阅读</a></li>
+    
+      
+
+
+  <li class="active"><a href="/learning-istio/source/use-clion-read-envoy-source-code.html">使用 Clion 阅读 Envoy 源码</a></li>
+
+      
+    
+
+    
+      </ul>
+    
+
+  
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#克隆代码">克隆代码</a></li>
+    <li><a href="#项目分析">项目分析</a></li>
+    <li><a href="#如果获取依赖源文件">如果获取依赖源文件?</a></li>
+    <li><a href="#安装-bazelisk">安装 bazelisk</a></li>
+    <li><a href="#其它依赖">其它依赖</a></li>
+    <li><a href="#编译">编译</a></li>
+    <li><a href="#生成源码文件列表">生成源码文件列表</a></li>
+    <li><a href="#生成-cmakeliststxt">生成 CMakeLists.txt</a></li>
+    <li><a href="#使用-clion-阅读">使用 CLion 阅读</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
+  
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
+
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/source.html">
+      
+        源码阅读
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        使用 Clion 阅读 Envoy 源码
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>使用 Clion 阅读 Envoy 源码</h1>
+
+          <div class="article-style">
+            <h2 id="背景">背景</h2>
+<p>要想深入学习 istio，还得学习下数据面的实现，istio 的数据面使用了 envoy，在 istio group 下有个叫 <a href="https://github.com/istio/proxy" target="_blank" rel="noopener">proxy</a> 的仓库，包含了一些 istio 用到的一些 envoy 扩展，编译时将 envoy 代码作为库来引用，最终使用 bazel 编译出 istio 版本的 Envoy。</p>
+<p>代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c++ 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 <code>CMakeLists.txt</code> 文件来解析项目结构，由于 c/c++ 没有统一的结构标准，不同项目结构千差万别，不太好自动生成 <code>CMakeLists.txt</code>，需要我们先理解项目结构，然后编写 <code>CMakeLists.txt</code> 来让 CLion 进行解析，不太了解这方面的同学弄起来会比较麻烦，本人也折腾了好一段时间才搞定，本文记录下方法和心得，以供大家参考。</p>
+<h2 id="克隆代码">克隆代码</h2>
+<p>首先克隆 <a href="https://github.com/istio/proxy" target="_blank" rel="noopener">istio-proxy</a> 的代码:</p>
+<pre><code class="language-bash">git clone https://github.com/istio/proxy.git istio-proxy
+</code></pre>
+<p>最好切到某个稳定的 release 分支上:</p>
+<pre><code class="language-bash">cd istio-proxy
+git checkout -b release-1.9 origin/release-1.9
+</code></pre>
+<h2 id="项目分析">项目分析</h2>
+<p>istio-proxy 代码库中主要只包含了在 istio 里用到的一些 envoy 扩展，代码量不大，源码主要分布在 src 与 extensions 目录，但编译需要很久，因为它实际编译的是 envoy，只是利用 bazel 将自身代码作为扩展编译进 envoy (得益于 envoy 的扩展机制)，从这个 bazel 的 <a href="https://github.com/istio/proxy/blob/master/src/envoy/BUILD" target="_blank" rel="noopener">BUILD 文件</a> 就能看得出来:</p>
+<pre><code class="language-txt">envoy_cc_binary(
+    name = &quot;envoy&quot;,
+    repository = &quot;@envoy&quot;,
+    visibility = [&quot;//visibility:public&quot;],
+    deps = [
+        &quot;//extensions/access_log_policy:access_log_policy_lib&quot;,
+        &quot;//extensions/attributegen:attributegen_plugin&quot;,
+        &quot;//extensions/metadata_exchange:metadata_exchange_lib&quot;,
+        &quot;//extensions/stackdriver:stackdriver_plugin&quot;,
+        &quot;//extensions/stats:stats_plugin&quot;,
+        &quot;//src/envoy/extensions/wasm:wasm_lib&quot;,
+        &quot;//src/envoy/http/alpn:config_lib&quot;,
+        &quot;//src/envoy/http/authn:filter_lib&quot;,
+        &quot;//src/envoy/tcp/forward_downstream_sni:config_lib&quot;,
+        &quot;//src/envoy/tcp/metadata_exchange:config_lib&quot;,
+        &quot;//src/envoy/tcp/sni_verifier:config_lib&quot;,
+        &quot;//src/envoy/tcp/tcp_cluster_rewrite:config_lib&quot;,
+        &quot;@envoy//source/exe:envoy_main_entry_lib&quot;,
+    ],
+)
+</code></pre>
+<p>其中 <code>@envoy</code> 表示引用 envoy 代码库，main 函数也位于 envoy 代码库中。那么 envoy 代码库从哪儿来的呢？bazel 在构建时会自动下载指定的依赖，envoy 的代码来源在 <a href="https://github.com/istio/proxy/blob/master/WORKSPACE" target="_blank" rel="noopener">WORKSPACE</a> 中有指定:</p>
+<pre><code class="language-txt">http_archive(
+    name = &quot;envoy&quot;,
+    sha256 = ENVOY_SHA256,
+    strip_prefix = ENVOY_REPO + &quot;-&quot; + ENVOY_SHA,
+    url = &quot;https://github.com/&quot; + ENVOY_ORG + &quot;/&quot; + ENVOY_REPO + &quot;/archive/&quot; + ENVOY_SHA + &quot;.tar.gz&quot;,
+)
+</code></pre>
+<p>bazel 会自动下载指定版本的源码包来编译。</p>
+<h2 id="如果获取依赖源文件">如果获取依赖源文件?</h2>
+<p>由于 istio-proxy 依赖了大量的第三方源文件，我们要阅读代码需要将这些源文件都下下来，只要将它编译一次，所有依赖源文件以及 generated 的代码都可以自动给你备好，所以我们需要对它进行一次编译。</p>
+<p>由于编译 envoy 有复杂的工具链依赖，官方推荐使用容器进行编译，在执行 <code>make</code> 前加个 <code>BUILD_WITH_CONTAINER=1</code> 即可指定使用容器编译，免去复杂的环境依赖。但 bazel 编译会将依赖和 generated 的源文件都软链到临时目录，如果用容器编译，就会丢失这部分代码，而我们阅读 istio-proxy 代码时最关键的就是这部分代码了，所以不能用容器编译。</p>
+<h2 id="安装-bazelisk">安装 bazelisk</h2>
+<p>不用容器编译就需要本机环境基本满足工具链要求，首先是需要安装 bazel，由于 bazel 版本很多，不同 istio-proxy(envoy) 版本依赖的 bazel 版本也不一样，我们可以直接安装 <a href="https://github.com/bazelbuild/bazelisk" target="_blank" rel="noopener">bazelisk</a> ，一个用于 bazel 多版本管理的工具，它可以自动识别项目中 <a href="https://github.com/istio/proxy/blob/master/.bazelversion" target="_blank" rel="noopener">.bazelversion</a> 文件，选取指定版本的 bazel 来进行构建(可以自动下载对应版本的 bazel 二进制)。</p>
+<p>如果是 macOS 用户，安装很简单:</p>
+<pre><code class="language-bash">brew install bazelisk
+</code></pre>
+<blockquote>
+<p>如果之前已安装过 bazel，可以使用 <code>brew link --overwrite bazelisk</code> 强制覆盖。</p>
+</blockquote>
+<p>其它平台的可以在 <a href="https://github.com/bazelbuild/bazelisk/releases" target="_blank" rel="noopener">release</a> 页面下载最新的二进制，重命名为 <code>bazel</code> 然后放到 <code>PATH</code> 下。</p>
+<h2 id="其它依赖">其它依赖</h2>
+<p>如果是 macOS 用户，确保务必安装好 xcode，方便跳转系统库函数，安装命令:</p>
+<pre><code class="language-bash">xcode-select --install
+</code></pre>
+<p>另外主要还有 python3 (macOS 自带)，其它依赖通常都系统自带，可以先不用管，等如果编译报错了再看。</p>
+<p>更多依赖可参考 <a href="https://www.envoyproxy.io/docs/envoy/latest/start/building#requirements" target="_blank" rel="noopener">官方文档</a> 。</p>
+<h2 id="编译">编译</h2>
+<p>在 istio-proxy 代码根目录执行以下命令进行编译:</p>
+<pre><code class="language-bash">make build_envoy
+</code></pre>
+<p>环境没问题的话会经过漫长的构建和编译，通常可能几十分钟，取决于电脑配置。</p>
+<p>编译完后会发现 bazel 为我们生成了一些目录软链:
+<img src="use-clion-read-envoy-source-code-1.png" alt=""></p>
+<blockquote>
+<p>bazel 输出目录结构可参考官方文档 <a href="https://docs.bazel.build/versions/master/output_directories.html#layout-diagram" target="_blank" rel="noopener">Output Directory Layout</a> 。</p>
+</blockquote>
+<p>我们主要关注以下两个目录:</p>
+<ul>
+<li><strong>bazel-istio-proxy</strong>: 包含构建 istio-proxy 用到的源文件(包含依赖)。</li>
+<li><strong>bazel-bin</strong>: 包含一些 generated 代码。</li>
+</ul>
+<h2 id="生成源码文件列表">生成源码文件列表</h2>
+<p>在 istio-proxy 根目录创建脚本文件 <code>generate-srcs.sh</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+set -ex
+
+bazel_dir=&quot;bazel-${PWD##*/}&quot;
+
+find -L -E $bazel_dir/external src extensions -regex '.*\.(cc|c|cpp)' &gt; sourcefiles.txt
+</code></pre>
+<p>执行此脚本可以生成 istio-proxy 及其依赖的源文件列表 (<code>sourcefiles.txt</code>)，用于在 <code>CMakeLists.txt</code> 中引用。</p>
+<p><strong>注:</strong> <code>$bazel_dir/external</code> 下包含内容较多，全部索引的话 CLion 可能会比较卡，很多代码基本也都不会看，可以适当缩小范围，按需来配置，比如先只添加 <code>$bazel_dir/external/envoy</code>，后续有需要再添加其它目录，然后 <code>Reload Cmake Project</code> 重新索引。</p>
+<h2 id="生成-cmakeliststxt">生成 CMakeLists.txt</h2>
+<p>然后就可以在 istio-proxy 项目根目录创建下 <code>CMakeLists.txt</code>:</p>
+<pre><code class="language-txt">cmake_minimum_required(VERSION 3.15)
+STRING( REGEX REPLACE &quot;.*/(.*)&quot; &quot;\\1&quot; CURRENT_FOLDER ${CMAKE_CURRENT_SOURCE_DIR} )
+project(istio-proxy)
+
+macro(print_all_variables)
+    message(STATUS &quot;print_all_variables------------------------------------------{&quot;)
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS &quot;${_variableName}=${${_variableName}}&quot;)
+    endforeach()
+    message(STATUS &quot;print_all_variables------------------------------------------}&quot;)
+endmacro()
+
+set(CMAKE_CXX_STANDARD 17)
+add_definitions(-DNULL_PLUGIN) # enable wasm nullvm navigation
+
+file(STRINGS sourcefiles.txt all_SRCS)
+
+message(STATUS &quot;CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}&quot;)
+message(STATUS &quot;CMAKE_HOME_DIRECTORY=${CMAKE_HOME_DIRECTORY}&quot;)
+
+add_executable(istio-proxy ${all_SRCS})
+
+set(istio_include_dirs
+        &quot;./&quot;
+        &quot;./src&quot;
+        &quot;./extensions&quot;
+
+        &quot;./bazel-${CURRENT_FOLDER}/external/envoy&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/envoy/source&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/envoy/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/envoy/api/wasm/cpp&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/boringssl/src/include/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_gabime_spdlog/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_c_ares_c_ares&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_google_absl&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_google_cel_cpp&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_google_protobuf/src&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_fmtlib_fmt/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_eile_tclap/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_grpc_grpc/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_envoyproxy_protoc_gen_validate/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_tencent_rapidjson/include/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_datadog_dd_opentracing_cpp/include/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_libevent_libevent/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_mirror_tclap/include&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_grpc_grpc&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_circonus_labs_libcircllhist/src/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_nodejs_http_parser&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_nghttp2_nghttp2/lib/includes/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_cyan4973_xxhash/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_google_flatbuffers/include/&quot;
+        &quot;./bazel-${CURRENT_FOLDER}/external/com_github_fmtlib_fmt/test&quot;
+        
+        &quot;./bazel-bin&quot;
+        &quot;./bazel-bin/external/envoy_api&quot;
+        &quot;./bazel-bin/external/mixerapi_git&quot;
+        &quot;./bazel-bin/external/com_envoyproxy_protoc_gen_validate&quot;
+        &quot;./bazel-bin/external/com_google_googleapis&quot;
+        &quot;./bazel-bin/external/com_github_cncf_udpa&quot;
+)
+
+target_include_directories(istio-proxy PUBLIC ${istio_include_dirs})
+</code></pre>
+<p>解释一下:</p>
+<ul>
+<li><code>add_executable</code> 将需要索引的源文件列表 (<code>sourcefiles.txt</code>) 加进索引。</li>
+<li><code>target_include_directories</code> 将用到的一些纯头文件目录加进索引 (不包含实现代码，主要是一些接口)，这里也是可以按需进行增删。</li>
+</ul>
+<h2 id="使用-clion-阅读">使用 CLion 阅读</h2>
+<p>不要直接打开 istio-proxy 目录，而是 Open 时选中 <code>CMakeLists.txt</code>，然后 <code>Open as Project</code>:</p>
+<p><img src="use-clion-read-envoy-source-code-2.png" alt=""></p>
+<p>弹出 <code>Load Project</code> 时不要勾选 <code>Clean project</code>，不然退出 CLion 时会执行 <code>make clean</code>，导致把 bazel 生成的源文件都给删除掉，就没法跳转了:</p>
+<p><img src="use-clion-read-envoy-source-code-6.png" alt=""></p>
+<p>然后就会开始索引，完成后就可以愉快的看代码了，先从 main 看起吧(<code>bazel-istio-proxy/external/envoy/source/exe/main.cc</code>):</p>
+<p><img src="use-clion-read-envoy-source-code-3.gif" alt=""></p>
+<p>查找引用:</p>
+<p><img src="use-clion-read-envoy-source-code-4.png" alt=""></p>
+<p>跳转到实现:</p>
+<p><img src="use-clion-read-envoy-source-code-5.gif" alt=""></p>
+<h2 id="小结">小结</h2>
+<p>本文介绍了如何使用 CLion 来阅读 istio-proxy (envoy) 的代码，包含源码结构分析、环境搭建，以及生成 CLion 所需要的 <code>CMakeLists.txt</code> 文件的方法，最后也展示了效果，希望对你有所帮助。</p>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Jan 29, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/learning-istio/zh/js/wowchemy.min.05933c98769c4dd050a204f868e98974.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>
