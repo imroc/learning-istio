@@ -83,8 +83,8 @@ git checkout -b release-1.9 origin/release-1.9
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;make build_envoy
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;环境没问题的话会经过漫长的构建和编译，通常可能几十分钟，取决于电脑配置。&lt;/p&gt;
-&lt;p&gt;编译完后会发现 bazel 为我们生成了一些目录软链:
-&lt;img src=&#34;use-clion-read-envoy-source-code-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;编译完后会发现 bazel 为我们生成了一些目录软链:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;use-clion-read-envoy-source-code-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;bazel 输出目录结构可参考官方文档 &lt;a href=&#34;https://docs.bazel.build/versions/master/output_directories.html#layout-diagram&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Output Directory Layout&lt;/a&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;

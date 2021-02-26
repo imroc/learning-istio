@@ -99,6 +99,7 @@ make build_envoy
 环境没问题的话会经过漫长的构建和编译，通常可能几十分钟，取决于电脑配置。
 
 编译完后会发现 bazel 为我们生成了一些目录软链:
+
 ![](use-clion-read-envoy-source-code-1.png)
 > bazel 输出目录结构可参考官方文档 [Output Directory Layout](https://docs.bazel.build/versions/master/output_directories.html#layout-diagram) 。
 
