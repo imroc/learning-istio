@@ -826,7 +826,9 @@
           <div class="article-style">
             <h2 id="背景">背景</h2>
 <p>要想深入学习 istio，还得学习下数据面的实现，istio 的数据面使用了 envoy，在 istio group 下有个叫 <a href="https://github.com/istio/proxy" target="_blank" rel="noopener">proxy</a> 的仓库，包含了一些 istio 用到的一些 envoy 扩展，编译时将 envoy 代码作为库来引用，最终使用 bazel 编译出 istio 版本的 Envoy。</p>
-<p>代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c++ 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 <code>CMakeLists.txt</code> 文件来解析项目结构，由于 c/c++ 没有统一的结构标准，不同项目结构千差万别，不太好自动生成 <code>CMakeLists.txt</code>，需要我们先理解项目结构，然后编写 <code>CMakeLists.txt</code> 来让 CLion 进行解析，不太了解这方面的同学弄起来会比较麻烦，本人也折腾了好一段时间才搞定，本文记录下方法和心得，以供大家参考。</p>
+<p>代码量非常庞大，如果没有智能的代码跳转、查找引用与实现，读起来简直低效的要命。如何高效的阅读呢？关键在于 IDE/编辑器 的代码索引能力要好，需要能够准确跳转和查询，vscode 用的同学比较多，但它的 c/c++ 插件不够智能，很多情况无法跳转，而且效率极低；它还有个 clangd 的插件，基于 LSP，但不够成熟。这方面做的最好的目前还是来自 JetBrains CLion，不过它需要依赖 <code>CMakeLists.txt</code> 文件来解析项目结构，由于 c/c++ 没有统一的结构标准，不同项目结构千差万别，不太好自动生成 <code>CMakeLists.txt</code>，需要我们先理解项目结构，然后编写 <code>CMakeLists.txt</code> 来让 CLion 进行解析。</p>
+<p>虽然社区有人针对 bazel 构建的项目写了一个通用脚本 <a href="https://github.com/lizan/bazel-cmakelists" target="_blank" rel="noopener">bazel-cmakelists</a> ，但很久没维护，测试了用它来生成最新 envoy 的 <code>CMakeLists.txt</code> ，由于代码量庞大，最终会 OOM 而失败。</p>
+<p>所以我们需要另寻更好的方法，不太了解这方面的同学弄起来会比较麻烦，本人也折腾了好一段时间才搞定，本文记录下方法和心得，以供大家参考。</p>
 <h2 id="克隆代码">克隆代码</h2>
 <p>首先克隆 <a href="https://github.com/istio/proxy" target="_blank" rel="noopener">istio-proxy</a> 的代码:</p>
 <pre><code class="language-bash">git clone https://github.com/istio/proxy.git istio-proxy
