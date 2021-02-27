@@ -168,7 +168,7 @@ abstract_length = 135
 
 # Load JS plugins
 #   E.g. To load `/assets/js/custom.js`, set `plugins_js = ["custom"]`.
-plugins_js  = []
+plugins_js  = ["custom", "bigPicture"]
 
 # Breadcrumb navigation
 [breadcrumb]
