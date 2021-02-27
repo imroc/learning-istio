@@ -1,5 +1,5 @@
 ---
-title: 参考手册
+title: 参考资料
 type: book  # Do not modify.
 ---
 

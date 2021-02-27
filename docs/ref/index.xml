@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>参考手册 | Istio 学习笔记</title>
+    <title>参考资料 | Istio 学习笔记</title>
     <link>/learning-istio/ref.html</link>
       <atom:link href="/learning-istio/ref/index.xml" rel="self" type="application/rss+xml" />
-    <description>参考手册</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <description>参考资料</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
-      <title>参考手册</title>
+      <title>参考资料</title>
       <link>/learning-istio/ref.html</link>
     </image>
+    
+    <item>
+      <title>链接收集</title>
+      <link>/learning-istio/ref/link.html</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/ref/link.html</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://i.cloudnative.to/istio/release/overview&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;istio版本跟踪&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.servicemesher.com/istio-handbook/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;istio-handbook&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://space.bilibili.com/515485124&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;云原生学院B站视频&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>已知 BUG</title>
