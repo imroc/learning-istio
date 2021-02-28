@@ -13,6 +13,129 @@
     </image>
     
     <item>
+      <title>项目结构分析</title>
+      <link>/learning-istio/source/project-structure.html</link>
+      <pubDate>Sun, 24 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/source/project-structure.html</guid>
+      <description>&lt;h2 id=&#34;核心组件与代码入口&#34;&gt;核心组件与代码入口&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;make build&lt;/code&gt; 会编译出本项目的二进制可执行文件， 从 &lt;code&gt;Makefile&lt;/code&gt; 中看下 build 会编译哪些对象:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-makefile&#34;&gt;.PHONY: build
+build: depend ## Builds all go binaries.
+	GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ $(STANDARD_BINARIES)
+	GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ -tags=agent $(AGENT_BINARIES)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;分成了两批二进制(&lt;code&gt;STANDARD_BINARIES&lt;/code&gt; 和 &lt;code&gt;AGENT_BINARIES&lt;/code&gt;)，进一步查找:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-makefile&#34;&gt;AGENT_BINARIES:=./pilot/cmd/pilot-agent
+STANDARD_BINARIES:=./istioctl/cmd/istioctl \
+  ./pilot/cmd/pilot-discovery \
+  ./pkg/test/echo/cmd/client \
+  ./pkg/test/echo/cmd/server \
+  ./operator/cmd/operator \
+  ./cni/cmd/istio-cni \
+  ./cni/cmd/istio-cni-repair \
+  ./cni/cmd/istio-cni-taint \
+  ./cni/cmd/install-cni \
+  ./tools/istio-iptables \
+  ./tools/bug-report
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上面列出了本项目所有程序的 main 函数入口目录，比较重要的几个:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;./pilot/cmd/pilot-discovery&lt;/code&gt;: 这是 istio 最核心的代码入口，也就是我们常说的 istiod，控制面的核心。以前控制面还有 galley, citadel 这些组件，现在全部都合并到 istiod 了。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;./pilot/cmd/pilot-agent&lt;/code&gt;:  这是数据面生命周期管理组件 pilot-agent，它与 envoy 部署在同一容器中，主要用于管理 envoy 的生命周期 (生成 envoy 初始配置、envoy 健康探测、reload 配置等)。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/istioctl/cmd/istioctl&lt;/code&gt;: 管理 istio 的命令行工具。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>istiod 启动流程</title>
+      <link>/learning-istio/source/istiod.html</link>
+      <pubDate>Thu, 28 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/source/istiod.html</guid>
+      <description>&lt;h2 id=&#34;istiod&#34;&gt;istiod&lt;/h2&gt;
+&lt;p&gt;main 函数很简单 (&lt;code&gt;pilot/cmd/pilot-discovery/main.go&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := rootCmd.Execute(); err != nil {
+		log.Error(err)
+		os.Exit(-1)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;执行命令启动 istiod，失败如果就报错退出。跳转 &lt;code&gt;rootCmd&lt;/code&gt; 可以看到是一个全局变量:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	rootCmd = &amp;amp;cobra.Command{
+		Use:          &amp;quot;pilot-discovery&amp;quot;,
+		Short:        &amp;quot;Istio Pilot.&amp;quot;,
+		Long:         &amp;quot;Istio Pilot provides fleet-wide traffic management capabilities in the Istio Service Mesh.&amp;quot;,
+		SilenceUsage: true,
+	}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;istio 使用了 &lt;a href=&#34;https://github.com/spf13/cobra&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;cobra&lt;/a&gt; 作为 cli 库，通常也是大多其它 golang 程序的选择。命令名称是 &lt;code&gt;pilot-discovery&lt;/code&gt; (与编译出来的二进制相同，这也是 &amp;ldquo;潜规则&amp;rdquo;)，但它最核心的还是它的一个叫 &lt;code&gt;discovery&lt;/code&gt; 的子命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	rootCmd.AddCommand(discoveryCmd)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这也是我们常说的 istiod，来看看它是如何定义的:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	discoveryCmd = &amp;amp;cobra.Command{
+		Use:               &amp;quot;discovery&amp;quot;,
+		Short:             &amp;quot;Start Istio proxy discovery service.&amp;quot;,
+		...		
+		RunE: func(c *cobra.Command, args []string) error {
+			...
+			// Create the server for the discovery service.
+			discoveryServer, err := bootstrap.NewServer(serverArgs)
+			if err != nil {
+				return fmt.Errorf(&amp;quot;failed to create discovery service: %v&amp;quot;, err)
+			}
+			...
+			// Start the server
+			if err := discoveryServer.Start(stop); err != nil {
+				return fmt.Errorf(&amp;quot;failed to start discovery service: %v&amp;quot;, err)
+			}
+		},
+	}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;istiod 启动时会执行 &lt;code&gt;RunE&lt;/code&gt; 函数中的代码，可以看到核心是创建了一个 &lt;code&gt;discoveryServer&lt;/code&gt; 并启动，来看看 &lt;code&gt;Start&lt;/code&gt; 函数都做了些什么:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// Start starts all components of the Pilot discovery service on the port specified in DiscoveryServerOptions.
+// If Port == 0, a port number is automatically chosen. Content serving is started by this method,
+// but is executed asynchronously. Serving can be canceled at any time by closing the provided stop channel.
+func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
+	log.Infof(&amp;quot;Starting Istiod Server with primary cluster %s&amp;quot;, s.clusterID)
+
+	// Now start all of the components.
+	for _, fn := range s.startFuncs {
+		if err := fn(stop); err != nil {
+			return err
+		}
+	}
+	...
+	if s.SecureGrpcListener != nil {
+		go func() {
+			log.Infof(&amp;quot;starting secure gRPC discovery service at %s&amp;quot;, s.SecureGrpcListener.Addr())
+			if err := s.secureGrpcServer.Serve(s.SecureGrpcListener); err != nil {
+				log.Errorf(&amp;quot;error serving secure GRPC server: %v&amp;quot;, err)
+			}
+		}()
+	}
+
+	if s.GRPCListener != nil {
+		go func() {
+			log.Infof(&amp;quot;starting gRPC discovery service at %s&amp;quot;, s.GRPCListener.Addr())
+			if err := s.grpcServer.Serve(s.GRPCListener); err != nil {
+				log.Errorf(&amp;quot;error serving GRPC server: %v&amp;quot;, err)
+			}
+		}()
+	}
+	...
+	return nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;去除无关紧要的干扰，聚焦核心逻辑，可以看到主要是:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;启动所有内部组件。&lt;/li&gt;
+&lt;li&gt;等都启动完成后就开始监听 gRPC 端口，也就是核心的 xDS 服务。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>使用 Clion 阅读 Envoy 源码</title>
       <link>/learning-istio/source/use-clion-read-envoy-source-code.html</link>
       <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>

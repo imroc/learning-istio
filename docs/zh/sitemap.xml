@@ -43,6 +43,11 @@
   </url>
   
   <url>
+    <loc>/learning-istio/source/project-structure.html</loc>
+    <lastmod>2021-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/trick/check.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
@@ -53,8 +58,8 @@
   </url>
   
   <url>
-    <loc>/learning-istio/source/use-clion-read-envoy-source-code.html</loc>
-    <lastmod>2021-01-29T00:00:00+00:00</lastmod>
+    <loc>/learning-istio/source/istiod.html</loc>
+    <lastmod>2021-01-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -80,6 +85,11 @@
   <url>
     <loc>/learning-istio/troubleshooting/case/grpc-config-stream-closed.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/source/use-clion-read-envoy-source-code.html</loc>
+    <lastmod>2021-01-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>

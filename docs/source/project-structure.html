@@ -34,10 +34,11 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="核心组件与代码入口 make build 会编译出本项目的二进制可执行文件， 从 Makefile 中看下 build 会编译哪些对象:
+.PHONY: build build: depend ## Builds all go binaries. GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ $(STANDARD_BINARIES) GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ -tags=agent $(AGENT_BINARIES)  分成了两批二进制(STANDARD_BINARIES 和 AGENT_BINARIES)，进一步查找:">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/404.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/source/project-structure.html">
 
   
 
@@ -261,7 +262,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/404.html">
+  <link rel="canonical" href="/learning-istio/source/project-structure.html">
 
   
   
@@ -280,29 +281,35 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/404.html">
-  <meta property="og:title" content="404 Page not found | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/source/project-structure.html">
+  <meta property="og:title" content="项目结构分析 | Istio 学习笔记">
+  <meta property="og:description" content="核心组件与代码入口 make build 会编译出本项目的二进制可执行文件， 从 Makefile 中看下 build 会编译哪些对象:
+.PHONY: build build: depend ## Builds all go binaries. GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ $(STANDARD_BINARIES) GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ -tags=agent $(AGENT_BINARIES)  分成了两批二进制(STANDARD_BINARIES 和 AGENT_BINARIES)，进一步查找:"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
+      <meta property="article:published_time" content="2021-01-24T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-01-24T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>404 Page not found | Istio 学习笔记</title>
+
+
+  <title>项目结构分析 | Istio 学习笔记</title>
 
 </head>
 
@@ -667,57 +674,230 @@
   </div>
 
   <div class="page-body">
-    <div class="universal-wrapper pt-3">
+    
 
-  <h1>找不到页面</h1>
+
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      <form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-md-3 w-100" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <div class="d-flex">
+      <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
+        
+          源码阅读
+        
+      </span>
+      <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+  </button>
+
+  
+  <button class="form-control sidebar-search js-search d-none d-md-flex">
+    <i class="fas fa-search pr-2"></i>
+    <span class="sidebar-search-text">搜索...</span>
+    <span class="sidebar-search-shortcut">/</span>
+  </button>
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  
+  
+  
+  
 
   
   
-  <form class="d-flex align-items-center mb-3">
-    <input name="q" type="search" class="form-control" placeholder="搜索..." autocomplete="off">
-  </form>
-  
+    
+
+    
+      
+
+      
+      
+      
+
 
   
+    
+    
+    
+    
+      
+    
+    
 
-  <p>也许你在找？</p>
+    
+      <ul class="nav docs-sidenav">
+        <li class=""><a href="/learning-istio/source.html">源码阅读</a></li>
+    
+      
+
+
+  <li class="active"><a href="/learning-istio/source/project-structure.html">项目结构分析</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/source/istiod.html">istiod 启动流程</a></li>
+
+
+
+  <li class=""><a href="/learning-istio/source/use-clion-read-envoy-source-code.html">使用 Clion 阅读 Envoy 源码</a></li>
+
+      
+    
+
+    
+      </ul>
+    
 
   
-  
-  
-  <h2>最新</h2>
+</nav>
+
+    </div>
+
+    
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
   <ul>
-    
-      <li><a href="/learning-istio/trick/troubleshooting-networking.html">网络排障</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html">GRPC 服务负载不均</a></li>
-    
-      <li><a href="/learning-istio/best-practice/sidecar-order.html">解决 Sidecar 启动顺序问题</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-istioctl.html">安装 istioctl</a></li>
-    
-      <li><a href="/learning-istio/source/project-structure.html">项目结构分析</a></li>
-    
-      <li><a href="/learning-istio/trick/check.html">常规检查</a></li>
-    
-      <li><a href="/learning-istio/troubleshooting/case/istio-token-setup-failed.html">Pod 启动卡住: MountVolume.SetUp failed for volume &#34;istio-token&#34;</a></li>
-    
-      <li><a href="/learning-istio/source/istiod.html">istiod 启动流程</a></li>
-    
-      <li><a href="/learning-istio/best-practice/improve-controlplane.html">控制面性能优化</a></li>
-    
-      <li><a href="/learning-istio/basics/install/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-    
+    <li><a href="#核心组件与代码入口">核心组件与代码入口</a></li>
   </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          
+            
+  <nav class="d-none d-md-flex" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      
+  
   
 
-</div>
-  </div>
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/">
+      
+        Home
+      
+    </a>
+  </li>
 
-  <div class="page-footer">
-    
-    
-    <div class="container">
+
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/source.html">
+      
+        源码阅读
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        项目结构分析
+      </li>
+    </ol>
+  </nav>
+
+
+          
+
+          <h1>项目结构分析</h1>
+
+          <div class="article-style">
+            <h2 id="核心组件与代码入口">核心组件与代码入口</h2>
+<p><code>make build</code> 会编译出本项目的二进制可执行文件， 从 <code>Makefile</code> 中看下 build 会编译哪些对象:</p>
+<pre><code class="language-makefile">.PHONY: build
+build: depend ## Builds all go binaries.
+	GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ $(STANDARD_BINARIES)
+	GOOS=$(GOOS_LOCAL) GOARCH=$(GOARCH_LOCAL) LDFLAGS=$(RELEASE_LDFLAGS) common/scripts/gobuild.sh $(ISTIO_OUT)/ -tags=agent $(AGENT_BINARIES)
+</code></pre>
+<p>分成了两批二进制(<code>STANDARD_BINARIES</code> 和 <code>AGENT_BINARIES</code>)，进一步查找:</p>
+<pre><code class="language-makefile">AGENT_BINARIES:=./pilot/cmd/pilot-agent
+STANDARD_BINARIES:=./istioctl/cmd/istioctl \
+  ./pilot/cmd/pilot-discovery \
+  ./pkg/test/echo/cmd/client \
+  ./pkg/test/echo/cmd/server \
+  ./operator/cmd/operator \
+  ./cni/cmd/istio-cni \
+  ./cni/cmd/istio-cni-repair \
+  ./cni/cmd/istio-cni-taint \
+  ./cni/cmd/install-cni \
+  ./tools/istio-iptables \
+  ./tools/bug-report
+</code></pre>
+<p>上面列出了本项目所有程序的 main 函数入口目录，比较重要的几个:</p>
+<ul>
+<li><code>./pilot/cmd/pilot-discovery</code>: 这是 istio 最核心的代码入口，也就是我们常说的 istiod，控制面的核心。以前控制面还有 galley, citadel 这些组件，现在全部都合并到 istiod 了。</li>
+<li><code>./pilot/cmd/pilot-agent</code>:  这是数据面生命周期管理组件 pilot-agent，它与 envoy 部署在同一容器中，主要用于管理 envoy 的生命周期 (生成 envoy 初始配置、envoy 健康探测、reload 配置等)。</li>
+<li><code>/istioctl/cmd/istioctl</code>: 管理 istio 的命令行工具。</li>
+</ul>
+
+          </div>
+
+          
+
+
+
+          
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/source/istiod.html" rel="prev">istiod 启动流程</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>最近更新于 Jan 24, 2021</p>
+
+          
+
+
+
+
+
+          
+
+
+
+
+          
+
+
+
+
+        </div>
+
+      </article>
+
       <footer class="site-footer">
   
 
@@ -745,7 +925,15 @@
   </p>
 </footer>
 
-    </div>
+
+    </main>
+  </div>
+</div>
+
+  </div>
+
+  <div class="page-footer">
+    
     
   </div>
 
@@ -805,6 +993,11 @@
     
 
     
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
     
 
     
