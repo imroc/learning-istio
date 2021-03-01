@@ -396,11 +396,14 @@ STANDARD_BINARIES:=./istioctl/cmd/istioctl \
     </item>
     
     <item>
-      <title>控制面性能优化</title>
-      <link>/learning-istio/best-practice/improve-controlplane.html</link>
+      <title>性能优化</title>
+      <link>/learning-istio/best-practice/performance.html</link>
       <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/best-practice/improve-controlplane.html</guid>
-      <description>&lt;h2 id=&#34;istiod-负载均衡&#34;&gt;istiod 负载均衡&lt;/h2&gt;
+      <guid>/learning-istio/best-practice/performance.html</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注:&lt;/strong&gt; 本笔记处于草稿阶段&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;istiod-负载均衡&#34;&gt;istiod 负载均衡&lt;/h2&gt;
 &lt;p&gt;envoy 定时重连&lt;/p&gt;
 &lt;h2 id=&#34;istiod-hpa&#34;&gt;istiod HPA&lt;/h2&gt;
 &lt;p&gt;istiod 无状态，可水平扩展&lt;/p&gt;
@@ -411,6 +414,12 @@ STANDARD_BINARIES:=./istioctl/cmd/istioctl \
 &lt;/ul&gt;
 &lt;h2 id=&#34;batch-推送间隔优化&#34;&gt;batch 推送间隔优化&lt;/h2&gt;
 &lt;p&gt;istiod推送流控规则有合并推送策略，目前这个时间间隔默认值为100ms。可配，一般很少用户会关心这个，在 mesh 全局配置中可以改: PILOT_DEBOUNCE_AFTER 和 PILOT_DEBOUNCE_MAX。  主要取决于：用户期望流控规则更新的实时性，以及 istiod 稳定性的权衡，如果期望实时性高，则把防抖动时间设置短些，如果mesh规模大，希望istiod提高稳定性，则把防抖动时间设置长些。&lt;/p&gt;
+&lt;h2 id=&#34;关闭不必要的遥测&#34;&gt;关闭不必要的遥测&lt;/h2&gt;
+&lt;p&gt;TODO&lt;/p&gt;
+&lt;h2 id=&#34;istio-版本&#34;&gt;istio 版本&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;istio 1.8: 资源消耗上，envoy 大概有 30% 的降低&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
