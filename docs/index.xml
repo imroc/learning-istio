@@ -323,21 +323,18 @@ STANDARD_BINARIES:=./istioctl/cmd/istioctl \
 		},
 	}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;istiod 启动时会执行 &lt;code&gt;RunE&lt;/code&gt; 函数中的代码，可以看到核心是创建了一个 &lt;code&gt;discoveryServer&lt;/code&gt; 并启动，来看看 &lt;code&gt;Start&lt;/code&gt; 函数都做了些什么:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// Start starts all components of the Pilot discovery service on the port specified in DiscoveryServerOptions.
-// If Port == 0, a port number is automatically chosen. Content serving is started by this method,
-// but is executed asynchronously. Serving can be canceled at any time by closing the provided stop channel.
-func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
-	log.Infof(&amp;quot;Starting Istiod Server with primary cluster %s&amp;quot;, s.clusterID)
-
-	// Now start all of the components.
+&lt;p&gt;istiod 启动时会执行 &lt;code&gt;RunE&lt;/code&gt; 函数中的代码，可以看到核心是创建了一个 &lt;code&gt;discoveryServer&lt;/code&gt; 并启动，来看看 &lt;code&gt;Start&lt;/code&gt; 函数都做了些什么。&lt;/p&gt;
+&lt;p&gt;首先是启动了所有内部组件:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	// Now start all of the components.
 	for _, fn := range s.startFuncs {
 		if err := fn(stop); err != nil {
 			return err
 		}
 	}
-	...
-	if s.SecureGrpcListener != nil {
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;各个组件的启动函数放在了 &lt;code&gt;startFuncs&lt;/code&gt; 的函数数组里，依次执行。&lt;/p&gt;
+&lt;p&gt;接着就启动各个服务端口的监听:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	if s.SecureGrpcListener != nil {
 		go func() {
 			log.Infof(&amp;quot;starting secure gRPC discovery service at %s&amp;quot;, s.SecureGrpcListener.Addr())
 			if err := s.secureGrpcServer.Serve(s.SecureGrpcListener); err != nil {
@@ -354,9 +351,41 @@ func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
 			}
 		}()
 	}
-	...
-	return nil
-}
+	
+	// At this point we are ready - start Http Listener so that it can respond to readiness events.
+	go func() {
+		log.Infof(&amp;quot;starting Http service at %s&amp;quot;, s.HTTPListener.Addr())
+		if err := s.httpServer.Serve(s.HTTPListener); isUnexpectedListenerError(err) {
+			log.Errorf(&amp;quot;error serving http server: %v&amp;quot;, err)
+		}
+	}()
+
+	if s.HTTP2Listener != nil {
+		go func() {
+			log.Infof(&amp;quot;starting Http2 muxed service at %s&amp;quot;, s.HTTP2Listener.Addr())
+			h2s := &amp;amp;http2.Server{}
+			h1s := &amp;amp;http.Server{
+				Addr:    &amp;quot;:8080&amp;quot;,
+				Handler: h2c.NewHandler(s.httpMux, h2s),
+			}
+			if err := h1s.Serve(s.HTTP2Listener); isUnexpectedListenerError(err) {
+				log.Errorf(&amp;quot;error serving http server: %v&amp;quot;, err)
+			}
+		}()
+	}
+
+	if s.httpsServer != nil {
+		go func() {
+			log.Infof(&amp;quot;starting webhook service at %s&amp;quot;, s.HTTPListener.Addr())
+			if err := s.httpsServer.ListenAndServeTLS(&amp;quot;&amp;quot;, &amp;quot;&amp;quot;); isUnexpectedListenerError(err) {
+				log.Errorf(&amp;quot;error serving https server: %v&amp;quot;, err)
+			}
+		}()
+	}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后等待停止信号 (SIGTERM)，进行优雅停止:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	s.waitForShutdown(stop)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;去除无关紧要的干扰，聚焦核心逻辑，可以看到主要是:&lt;/p&gt;
 &lt;ol&gt;
@@ -378,6 +407,7 @@ func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
 &lt;h2 id=&#34;xds-按需下发&#34;&gt;xDS 按需下发&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;lazy loading&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.google.com/document/d/1hwC81_jS8qARBDcDE6VTxx6fA31In96xAZWqfwnKhpQ/edit#heading=h.xw1gqgyqs5b&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Delta xDS&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;batch-推送间隔优化&#34;&gt;batch 推送间隔优化&lt;/h2&gt;
 &lt;p&gt;istiod推送流控规则有合并推送策略，目前这个时间间隔默认值为100ms。可配，一般很少用户会关心这个，在 mesh 全局配置中可以改: PILOT_DEBOUNCE_AFTER 和 PILOT_DEBOUNCE_MAX。  主要取决于：用户期望流控规则更新的实时性，以及 istiod 稳定性的权衡，如果期望实时性高，则把防抖动时间设置短些，如果mesh规模大，希望istiod提高稳定性，则把防抖动时间设置长些。&lt;/p&gt;
@@ -785,7 +815,7 @@ spec:
       <description>&lt;h2 id=&#34;访问-statefulset-pod-ip-返回-404&#34;&gt;访问 StatefulSet Pod IP 返回 404&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;问题描述：在 istio 中业务容器访问同集群一 Pod IP 返回 404，在 istio-proxy 中访问却正常&lt;/li&gt;
-&lt;li&gt;原因: Pod 属于 StatefulSet，使用 headless svc，在 istio 中对 headless svc 的支持跟普通 svc 不太一样，如果 pod 用的普通 svc，对应的 listener 有兜底的 passthrough，即转发到报文对应的真实目的IP+Port，但 headless svc 的就没有，我们理解是因为 headless svc 没有 vip，它的路由是确定的，只指向后端固定的 pod，如果路由匹配不上就肯定出了问题，如果也用 passthrough 兜底路由，只会掩盖问题，所以就没有为 headless svc 创建 passthrough 兜底路由。&lt;/li&gt;
+&lt;li&gt;原因: Pod 属于 StatefulSet，使用 headless svc，在 istio 中对 headless svc 的支持跟普通 svc 不太一样，如果 pod 用的普通 svc，对应的 listener 有兜底的 passthrough，即转发到报文对应的真实目的IP+Port，但 headless svc 的就没有，我们理解是因为 headless svc 没有 vip，它的路由是确定的，只指向后端固定的 pod，如果路由匹配不上就肯定出了问题，如果也用 passthrough 兜底路由，只会掩盖问题，所以就没有为 headless svc 创建 passthrough 兜底路由。同样的业务，上了 istio 才会有这个问题，也算是 istio 的设计或实现问题。&lt;/li&gt;
 &lt;li&gt;示例场景: 使用了自己的服务发现，业务直接使用 Pod IP 调用 StatefulSet 的 Pod IP&lt;/li&gt;
 &lt;li&gt;解决方案: 同集群访问 statefulset pod ip 带上 host，以匹配上 headless svc 路由，避免匹配不到就 4&lt;/li&gt;
 &lt;/ul&gt;

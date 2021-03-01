@@ -92,21 +92,18 @@ STANDARD_BINARIES:=./istioctl/cmd/istioctl \
 		},
 	}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;istiod 启动时会执行 &lt;code&gt;RunE&lt;/code&gt; 函数中的代码，可以看到核心是创建了一个 &lt;code&gt;discoveryServer&lt;/code&gt; 并启动，来看看 &lt;code&gt;Start&lt;/code&gt; 函数都做了些什么:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// Start starts all components of the Pilot discovery service on the port specified in DiscoveryServerOptions.
-// If Port == 0, a port number is automatically chosen. Content serving is started by this method,
-// but is executed asynchronously. Serving can be canceled at any time by closing the provided stop channel.
-func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
-	log.Infof(&amp;quot;Starting Istiod Server with primary cluster %s&amp;quot;, s.clusterID)
-
-	// Now start all of the components.
+&lt;p&gt;istiod 启动时会执行 &lt;code&gt;RunE&lt;/code&gt; 函数中的代码，可以看到核心是创建了一个 &lt;code&gt;discoveryServer&lt;/code&gt; 并启动，来看看 &lt;code&gt;Start&lt;/code&gt; 函数都做了些什么。&lt;/p&gt;
+&lt;p&gt;首先是启动了所有内部组件:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	// Now start all of the components.
 	for _, fn := range s.startFuncs {
 		if err := fn(stop); err != nil {
 			return err
 		}
 	}
-	...
-	if s.SecureGrpcListener != nil {
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;各个组件的启动函数放在了 &lt;code&gt;startFuncs&lt;/code&gt; 的函数数组里，依次执行。&lt;/p&gt;
+&lt;p&gt;接着就启动各个服务端口的监听:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	if s.SecureGrpcListener != nil {
 		go func() {
 			log.Infof(&amp;quot;starting secure gRPC discovery service at %s&amp;quot;, s.SecureGrpcListener.Addr())
 			if err := s.secureGrpcServer.Serve(s.SecureGrpcListener); err != nil {
@@ -123,9 +120,41 @@ func (s *Server) Start(stop &amp;lt;-chan struct{}) error {
 			}
 		}()
 	}
-	...
-	return nil
-}
+	
+	// At this point we are ready - start Http Listener so that it can respond to readiness events.
+	go func() {
+		log.Infof(&amp;quot;starting Http service at %s&amp;quot;, s.HTTPListener.Addr())
+		if err := s.httpServer.Serve(s.HTTPListener); isUnexpectedListenerError(err) {
+			log.Errorf(&amp;quot;error serving http server: %v&amp;quot;, err)
+		}
+	}()
+
+	if s.HTTP2Listener != nil {
+		go func() {
+			log.Infof(&amp;quot;starting Http2 muxed service at %s&amp;quot;, s.HTTP2Listener.Addr())
+			h2s := &amp;amp;http2.Server{}
+			h1s := &amp;amp;http.Server{
+				Addr:    &amp;quot;:8080&amp;quot;,
+				Handler: h2c.NewHandler(s.httpMux, h2s),
+			}
+			if err := h1s.Serve(s.HTTP2Listener); isUnexpectedListenerError(err) {
+				log.Errorf(&amp;quot;error serving http server: %v&amp;quot;, err)
+			}
+		}()
+	}
+
+	if s.httpsServer != nil {
+		go func() {
+			log.Infof(&amp;quot;starting webhook service at %s&amp;quot;, s.HTTPListener.Addr())
+			if err := s.httpsServer.ListenAndServeTLS(&amp;quot;&amp;quot;, &amp;quot;&amp;quot;); isUnexpectedListenerError(err) {
+				log.Errorf(&amp;quot;error serving https server: %v&amp;quot;, err)
+			}
+		}()
+	}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后等待停止信号 (SIGTERM)，进行优雅停止:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	s.waitForShutdown(stop)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;去除无关紧要的干扰，聚焦核心逻辑，可以看到主要是:&lt;/p&gt;
 &lt;ol&gt;
