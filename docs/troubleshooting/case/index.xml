@@ -5,7 +5,7 @@
     <link>/learning-istio/troubleshooting/case.html</link>
       <atom:link href="/learning-istio/troubleshooting/case/index.xml" rel="self" type="application/rss+xml" />
     <description>案例分享</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 02 Mar 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>案例分享</title>
@@ -160,6 +160,23 @@ spec:
 &lt;h2 id=&#34;grpc-config-stream-closed-14&#34;&gt;gRPC config stream closed: 14&lt;/h2&gt;
 &lt;p&gt;如果只出现一次，通常是在 envoy 启动或重启时报这个错，没什么问题；但如果反复报这个错，可能是数据面(proxy)连接控制面(istiod)有问题，需要排查下。&lt;/p&gt;
 &lt;p&gt;参考 &lt;a href=&#34;https://github.com/istio/istio/wiki/Troubleshooting-Istio#common-issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Common Issues&lt;/a&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ingress 不通</title>
+      <link>/learning-istio/troubleshooting/case/ingress-connection-failure.html</link>
+      <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/troubleshooting/case/ingress-connection-failure.html</guid>
+      <description>&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
+&lt;p&gt;从公网访问 ingress gateway 不通，但集群内访问对应的 svc 没问题。&lt;/p&gt;
+&lt;h2 id=&#34;问题分析&#34;&gt;问题分析&lt;/h2&gt;
+&lt;p&gt;检查 vs 和 gateway 配置的 hosts 为 &lt;code&gt;*&lt;/code&gt;，且 gateway 上只绑了这一个 vs，按理是可以匹配上路由并转发的。&lt;/p&gt;
+&lt;p&gt;即便配置有误，那也不应该不通，所以怀疑是防火墙问题。&lt;/p&gt;
+&lt;h2 id=&#34;原因&#34;&gt;原因&lt;/h2&gt;
+&lt;p&gt;检查节点安全组，没对公网放通 gateway svc 对应的 nodeport。(LB转发方案依赖NodePort)&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;安全组对公网放通 gateway svc 的 nodeport，主要是 80 和 443 的 nodeport 放通即可。&lt;/p&gt;
 </description>
     </item>
     
