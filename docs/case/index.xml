@@ -14,9 +14,9 @@
     
     <item>
       <title>基于 iphash 进行负载均衡</title>
-      <link>/learning-istio/case/lb-based-on-source-ip.html</link>
+      <link>/learning-istio/case/iphash.html</link>
       <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/case/lb-based-on-source-ip.html</guid>
+      <guid>/learning-istio/case/iphash.html</guid>
       <description>&lt;h2 id=&#34;业务场景&#34;&gt;业务场景&lt;/h2&gt;
 &lt;p&gt;根据源 IP 进行负载均衡。&lt;/p&gt;
 &lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;

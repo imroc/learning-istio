@@ -34,10 +34,12 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="业务场景 根据源 IP 进行负载均衡。
+解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  ">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/case.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/case/iphash.html">
 
   
 
@@ -253,8 +255,6 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/case/index.xml" type="application/rss+xml" title="Istio 学习笔记">
-  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -263,7 +263,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/case.html">
+  <link rel="canonical" href="/learning-istio/case/iphash.html">
 
   
   
@@ -282,29 +282,36 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/case.html">
-  <meta property="og:title" content="实践案例 | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/case/iphash.html">
+  <meta property="og:title" content="基于 iphash 进行负载均衡 | Istio 学习笔记">
+  <meta property="og:description" content="业务场景 根据源 IP 进行负载均衡。
+解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  "><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
-    <meta property="og:updated_time" content="2021-03-02T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2021-03-02T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-03-02T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>实践案例 | Istio 学习笔记</title>
+
+
+  <title>基于 iphash 进行负载均衡 | Istio 学习笔记</title>
 
 </head>
 
@@ -612,7 +619,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link  active" href="/learning-istio/case.html"><span>实践案例</span></a>
+          <a class="nav-link " href="/learning-istio/case.html"><span>实践案例</span></a>
         </li>
 
         
@@ -760,12 +767,12 @@
 
     
       <ul class="nav docs-sidenav">
-        <li class="active"><a href="/learning-istio/case.html">实践案例</a></li>
+        <li class=""><a href="/learning-istio/case.html">实践案例</a></li>
     
       
 
 
-  <li class=""><a href="/learning-istio/case/iphash.html">基于 iphash 进行负载均衡</a></li>
+  <li class="active"><a href="/learning-istio/case/iphash.html">基于 iphash 进行负载均衡</a></li>
 
       
     
@@ -786,7 +793,13 @@
         <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
       </ul>
 
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#业务场景">业务场景</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
 
       
     </div>
@@ -803,6 +816,7 @@
     <ol class="breadcrumb">
       
   
+  
 
   <li class="breadcrumb-item">
     <a href="/learning-istio/">
@@ -813,8 +827,17 @@
   </li>
 
 
-      <li class="breadcrumb-item active" aria-current="page">
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/case.html">
+      
         实践案例
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        基于 iphash 进行负载均衡
       </li>
     </ol>
   </nav>
@@ -822,10 +845,28 @@
 
           
 
-          <h1>实践案例</h1>
+          <h1>基于 iphash 进行负载均衡</h1>
 
           <div class="article-style">
-            <p>先占位，后续陆续补充笔记</p>
+            <h2 id="业务场景">业务场景</h2>
+<p>根据源 IP 进行负载均衡。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>配置 <code>DestinationRule</code>，指定 <code>useSourceIp</code> 负载均衡策略:</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: bookinfo-ratings
+spec:
+  host: ratings.prod.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        useSourceIp: true
+</code></pre>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>官方参考文档: <a href="https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB" target="_blank" rel="noopener">LoadBalancerSettings.ConsistentHashLB</a></li>
+</ul>
 
           </div>
 
