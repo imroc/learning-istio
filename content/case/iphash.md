@@ -4,11 +4,11 @@ type: book
 date: "2021-03-02"
 ---
 
-## 业务场景
+## 场景
 
-根据源 IP 进行负载均衡。
+根据源 IP 进行负载均衡，在 istio 中如何配置呢 ？
 
-## 解决方案
+## 用法
 
 配置 `DestinationRule`，指定 `useSourceIp` 负载均衡策略:
 

@@ -776,9 +776,9 @@ spec:
       <link>/learning-istio/case/iphash.html</link>
       <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/case/iphash.html</guid>
-      <description>&lt;h2 id=&#34;业务场景&#34;&gt;业务场景&lt;/h2&gt;
-&lt;p&gt;根据源 IP 进行负载均衡。&lt;/p&gt;
-&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;场景&#34;&gt;场景&lt;/h2&gt;
+&lt;p&gt;根据源 IP 进行负载均衡，在 istio 中如何配置呢 ？&lt;/p&gt;
+&lt;h2 id=&#34;用法&#34;&gt;用法&lt;/h2&gt;
 &lt;p&gt;配置 &lt;code&gt;DestinationRule&lt;/code&gt;，指定 &lt;code&gt;useSourceIp&lt;/code&gt; 负载均衡策略:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule

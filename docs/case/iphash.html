@@ -34,9 +34,9 @@
   
     
   
-  <meta name="description" content="业务场景 根据源 IP 进行负载均衡。
-解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  ">
+  <meta name="description" content="场景 根据源 IP 进行负载均衡，在 istio 中如何配置呢 ？
+用法 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.">
 
   
   <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/case/iphash.html">
@@ -284,9 +284,9 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
   <meta property="og:site_name" content="Istio 学习笔记">
   <meta property="og:url" content="/learning-istio/case/iphash.html">
   <meta property="og:title" content="基于 iphash 进行负载均衡 | Istio 学习笔记">
-  <meta property="og:description" content="业务场景 根据源 IP 进行负载均衡。
-解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  "><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:description" content="场景 根据源 IP 进行负载均衡，在 istio 中如何配置呢 ？
+用法 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
+apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
@@ -799,8 +799,8 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#业务场景">业务场景</a></li>
-    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#场景">场景</a></li>
+    <li><a href="#用法">用法</a></li>
     <li><a href="#参考资料">参考资料</a></li>
   </ul>
 </nav>
@@ -852,9 +852,9 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
           <h1>基于 iphash 进行负载均衡</h1>
 
           <div class="article-style">
-            <h2 id="业务场景">业务场景</h2>
-<p>根据源 IP 进行负载均衡。</p>
-<h2 id="解决方案">解决方案</h2>
+            <h2 id="场景">场景</h2>
+<p>根据源 IP 进行负载均衡，在 istio 中如何配置呢 ？</p>
+<h2 id="用法">用法</h2>
 <p>配置 <code>DestinationRule</code>，指定 <code>useSourceIp</code> 负载均衡策略:</p>
 <pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
