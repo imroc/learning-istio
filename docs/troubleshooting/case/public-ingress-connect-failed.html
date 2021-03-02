@@ -34,13 +34,14 @@
   
     
   
-  <meta name="description" content="问题现象 不能从一个带 sidecar proxy 的 pod 访问到 Redis 服务
-问题分析 Redis是一个 Headless 服务，而Istio 1.6 之前的版本对 Headless 服务的处理有问题，会缺省启用 mTLS。
-解决方案 在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: host: redis-service trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在 isitio 1.">
+  <meta name="description" content="问题描述 从公网访问 ingress gateway 不通，但集群内访问对应的 svc 没问题。
+问题分析 检查 vs 和 gateway 配置的 hosts 为 *，且 gateway 上只绑了这一个 vs，按理是可以匹配上路由并转发的。
+即便配置有误，那也不应该不通，所以怀疑是防火墙问题。
+原因 检查节点安全组，没对公网放通 gateway svc 对应的 nodeport。(LB转发方案依赖NodePort)
+解决方案 安全组对公网放通 gateway svc 的 nodeport，主要是 80 和 443 的 nodeport 放通即可。">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/troubleshooting/case/public-ingress-connect-failed.html">
 
   
 
@@ -264,7 +265,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">
+  <link rel="canonical" href="/learning-istio/troubleshooting/case/public-ingress-connect-failed.html">
 
   
   
@@ -283,18 +284,19 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">
-  <meta property="og:title" content="无法访问不带 sidecar 的 Pod | Istio 学习笔记">
-  <meta property="og:description" content="问题现象 不能从一个带 sidecar proxy 的 pod 访问到 Redis 服务
-问题分析 Redis是一个 Headless 服务，而Istio 1.6 之前的版本对 Headless 服务的处理有问题，会缺省启用 mTLS。
-解决方案 在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-service namespace: test spec: host: redis-service trafficPolicy: loadBalancer: simple: ROUND_ROBIN tls: mode: DISABLE  该问题在 isitio 1."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/troubleshooting/case/public-ingress-connect-failed.html">
+  <meta property="og:title" content="公网 Ingress 不通 | Istio 学习笔记">
+  <meta property="og:description" content="问题描述 从公网访问 ingress gateway 不通，但集群内访问对应的 svc 没问题。
+问题分析 检查 vs 和 gateway 配置的 hosts 为 *，且 gateway 上只绑了这一个 vs，按理是可以匹配上路由并转发的。
+即便配置有误，那也不应该不通，所以怀疑是防火墙问题。
+原因 检查节点安全组，没对公网放通 gateway svc 对应的 nodeport。(LB转发方案依赖NodePort)
+解决方案 安全组对公网放通 gateway svc 的 nodeport，主要是 80 和 443 的 nodeport 放通即可。"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
-      <meta property="article:published_time" content="2021-02-24T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2021-03-02T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-02-24T00:00:00&#43;00:00">
+    <meta property="article:modified_time" content="2021-03-02T00:00:00&#43;00:00">
   
 
   
@@ -313,7 +315,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
 
 
-  <title>无法访问不带 sidecar 的 Pod | Istio 学习笔记</title>
+  <title>公网 Ingress 不通 | Istio 学习笔记</title>
 
 </head>
 
@@ -808,7 +810,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
 
 
-  <li class=""><a href="/learning-istio/troubleshooting/case/public-ingress-connect-failed.html">公网 Ingress 不通</a></li>
+  <li class="active"><a href="/learning-istio/troubleshooting/case/public-ingress-connect-failed.html">公网 Ingress 不通</a></li>
 
 
 
@@ -816,7 +818,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
 
 
-  <li class="active"><a href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的 Pod</a></li>
+  <li class=""><a href="/learning-istio/troubleshooting/case/cannot-connect-pod-without-sidecar.html">无法访问不带 sidecar 的 Pod</a></li>
 
 
 
@@ -856,8 +858,9 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#问题现象">问题现象</a></li>
+    <li><a href="#问题描述">问题描述</a></li>
     <li><a href="#问题分析">问题分析</a></li>
+    <li><a href="#原因">原因</a></li>
     <li><a href="#解决方案">解决方案</a></li>
   </ul>
 </nav>
@@ -908,7 +911,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        无法访问不带 sidecar 的 Pod
+        公网 Ingress 不通
       </li>
     </ol>
   </nav>
@@ -916,29 +919,18 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule name: mysql-servic
 
           
 
-          <h1>无法访问不带 sidecar 的 Pod</h1>
+          <h1>公网 Ingress 不通</h1>
 
           <div class="article-style">
-            <h2 id="问题现象">问题现象</h2>
-<p>不能从一个带 sidecar proxy 的 pod 访问到 Redis 服务</p>
+            <h2 id="问题描述">问题描述</h2>
+<p>从公网访问 ingress gateway 不通，但集群内访问对应的 svc 没问题。</p>
 <h2 id="问题分析">问题分析</h2>
-<p>Redis是一个 Headless 服务，而Istio 1.6 之前的版本对 Headless 服务的处理有问题，会缺省启用 mTLS。</p>
+<p>检查 vs 和 gateway 配置的 hosts 为 <code>*</code>，且 gateway 上只绑了这一个 vs，按理是可以匹配上路由并转发的。</p>
+<p>即便配置有误，那也不应该不通，所以怀疑是防火墙问题。</p>
+<h2 id="原因">原因</h2>
+<p>检查节点安全组，没对公网放通 gateway svc 对应的 nodeport。(LB转发方案依赖NodePort)</p>
 <h2 id="解决方案">解决方案</h2>
-<p>在 1.6 之前可以采用DR规则禁用该服务的 mTLS 来规避:</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
-name: mysql-service
-namespace: test
-spec:
-  host: redis-service
-  trafficPolicy:
-    loadBalancer:
-      simple: ROUND_ROBIN
-    tls:
-      mode: DISABLE
-
-</code></pre>
-<p>该问题在 isitio 1.6 中已经修复: <a href="https://github.com/istio/istio/pull/24319">https://github.com/istio/istio/pull/24319</a></p>
+<p>安全组对公网放通 gateway svc 的 nodeport，主要是 80 和 443 的 nodeport 放通即可。</p>
 
           </div>
 
@@ -956,14 +948,14 @@ spec:
   
   <div class="post-nav-item">
     <div class="meta-nav">上一页</div>
-    <a href="/learning-istio/troubleshooting/case/envoy-lowercase-http-header.html" rel="next">Envoy 将 HTTP Header 转换为小写</a>
+    <a href="/learning-istio/troubleshooting/case/grpc-config-stream-closed.html" rel="next">Envoy 报错: gRPC config stream closed</a>
   </div>
   
   
   
   <div class="post-nav-item">
     <div class="meta-nav">下一页</div>
-    <a href="/learning-istio/troubleshooting/case/404-status-code.html" rel="prev">Envoy 状态码: 404 Not Found</a>
+    <a href="/learning-istio/troubleshooting/case/envoy-lowercase-http-header.html" rel="prev">Envoy 将 HTTP Header 转换为小写</a>
   </div>
   
 </div>
@@ -973,7 +965,7 @@ spec:
         </div>
 
         <div class="body-footer">
-          <p>最近更新于 Feb 24, 2021</p>
+          <p>最近更新于 Mar 2, 2021</p>
 
           
 

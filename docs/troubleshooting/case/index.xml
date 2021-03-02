@@ -164,10 +164,10 @@ spec:
     </item>
     
     <item>
-      <title>Ingress 不通</title>
-      <link>/learning-istio/troubleshooting/case/ingress-connection-failure.html</link>
+      <title>公网 Ingress 不通</title>
+      <link>/learning-istio/troubleshooting/case/public-ingress-connect-failed.html</link>
       <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/troubleshooting/case/ingress-connection-failure.html</guid>
+      <guid>/learning-istio/troubleshooting/case/public-ingress-connect-failed.html</guid>
       <description>&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
 &lt;p&gt;从公网访问 ingress gateway 不通，但集群内访问对应的 svc 没问题。&lt;/p&gt;
 &lt;h2 id=&#34;问题分析&#34;&gt;问题分析&lt;/h2&gt;

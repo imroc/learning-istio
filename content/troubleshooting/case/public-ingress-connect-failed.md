@@ -1,5 +1,5 @@
 ---
-title: 'Ingress 不通'
+title: '公网 Ingress 不通'
 type: book
 date: "2021-03-02"
 ---
