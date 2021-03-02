@@ -32,6 +32,11 @@
   weight = 60
 
 [[main]]
+  name = "实践案例"
+  url = "/case.html"
+  weight = 61
+
+[[main]]
 name = "参考资料"
 url = "/ref.html"
 weight = 70

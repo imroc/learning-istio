@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>实践案例 | Istio 学习笔记</title>
+    <link>/learning-istio/case.html</link>
+      <atom:link href="/learning-istio/case/index.xml" rel="self" type="application/rss+xml" />
+    <description>实践案例</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Tue, 02 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
+      <title>实践案例</title>
+      <link>/learning-istio/case.html</link>
+    </image>
+    
+    <item>
+      <title>基于 iphash 进行负载均衡</title>
+      <link>/learning-istio/case/lb-based-on-source-ip.html</link>
+      <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/case/lb-based-on-source-ip.html</guid>
+      <description>&lt;h2 id=&#34;业务场景&#34;&gt;业务场景&lt;/h2&gt;
+&lt;p&gt;根据源 IP 进行负载均衡。&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;配置 &lt;code&gt;DestinationRule&lt;/code&gt;，指定 &lt;code&gt;useSourceIp&lt;/code&gt; 负载均衡策略:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: bookinfo-ratings
+spec:
+  host: ratings.prod.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        useSourceIp: true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;官方参考文档: &lt;a href=&#34;https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;LoadBalancerSettings.ConsistentHashLB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
