@@ -34,12 +34,12 @@
   
     
   
-  <meta name="description" content="业务场景 根据源 IP 进行负载均衡。
-解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  ">
+  <meta name="description" content="需求 业务使用的 websocket 协议，在 istio 中如何配置路由呢？
+解决方案 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
+apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-gateway spec: selector: istio: ingressgateway servers: - port: number: 80 name: http protocol: HTTP hosts: - &quot;*&quot; --- apiVersion: networking.">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/case/iphash.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/case/websocket.html">
 
   
 
@@ -263,7 +263,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/case/iphash.html">
+  <link rel="canonical" href="/learning-istio/case/websocket.html">
 
   
   
@@ -282,11 +282,11 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/case/iphash.html">
-  <meta property="og:title" content="基于 iphash 进行负载均衡 | Istio 学习笔记">
-  <meta property="og:description" content="业务场景 根据源 IP 进行负载均衡。
-解决方案 配置 DestinationRule，指定 useSourceIp 负载均衡策略:
-apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bookinfo-ratings spec: host: ratings.prod.svc.cluster.local trafficPolicy: loadBalancer: consistentHash: useSourceIp: true  参考资料  官方参考文档: LoadBalancerSettings.ConsistentHashLB  "><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/case/websocket.html">
+  <meta property="og:title" content="使用 Websocket | Istio 学习笔记">
+  <meta property="og:description" content="需求 业务使用的 websocket 协议，在 istio 中如何配置路由呢？
+解决方案 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
+apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-gateway spec: selector: istio: ingressgateway servers: - port: number: 80 name: http protocol: HTTP hosts: - &quot;*&quot; --- apiVersion: networking."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
@@ -311,7 +311,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
 
 
 
-  <title>基于 iphash 进行负载均衡 | Istio 学习笔记</title>
+  <title>使用 Websocket | Istio 学习笔记</title>
 
 </head>
 
@@ -772,11 +772,11 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
       
 
 
-  <li class=""><a href="/learning-istio/case/websocket.html">使用 Websocket</a></li>
+  <li class="active"><a href="/learning-istio/case/websocket.html">使用 Websocket</a></li>
 
 
 
-  <li class="active"><a href="/learning-istio/case/iphash.html">基于 iphash 进行负载均衡</a></li>
+  <li class=""><a href="/learning-istio/case/iphash.html">基于 iphash 进行负载均衡</a></li>
 
       
     
@@ -799,7 +799,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#业务场景">业务场景</a></li>
+    <li><a href="#需求">需求</a></li>
     <li><a href="#解决方案">解决方案</a></li>
     <li><a href="#参考资料">参考资料</a></li>
   </ul>
@@ -841,7 +841,7 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        基于 iphash 进行负载均衡
+        使用 Websocket
       </li>
     </ol>
   </nav>
@@ -849,27 +849,49 @@ apiVersion: networking.istio.io/v1beta1 kind: DestinationRule metadata: name: bo
 
           
 
-          <h1>基于 iphash 进行负载均衡</h1>
+          <h1>使用 Websocket</h1>
 
           <div class="article-style">
-            <h2 id="业务场景">业务场景</h2>
-<p>根据源 IP 进行负载均衡。</p>
+            <h2 id="需求">需求</h2>
+<p>业务使用的 websocket 协议，在 istio 中如何配置路由呢？</p>
 <h2 id="解决方案">解决方案</h2>
-<p>配置 <code>DestinationRule</code>，指定 <code>useSourceIp</code> 负载均衡策略:</p>
-<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
-kind: DestinationRule
+<p>由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
 metadata:
-  name: bookinfo-ratings
+  name: tornado-gateway
 spec:
-  host: ratings.prod.svc.cluster.local
-  trafficPolicy:
-    loadBalancer:
-      consistentHash:
-        useSourceIp: true
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - &quot;*&quot;
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tornado
+spec:
+  hosts:
+  - &quot;*&quot;
+  gateways:
+  - tornado-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: tornado
+      weight: 100
 </code></pre>
 <h2 id="参考资料">参考资料</h2>
 <ul>
-<li>官方参考文档: <a href="https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB" target="_blank" rel="noopener">LoadBalancerSettings.ConsistentHashLB</a></li>
+<li>官方 sample: <a href="https://github.com/istio/istio/tree/master/samples/websockets" target="_blank" rel="noopener">Tornado - Demo Websockets App</a></li>
 </ul>
 
           </div>
@@ -887,10 +909,9 @@ spec:
   
   
   <div class="post-nav-item">
-    <div class="meta-nav">上一页</div>
-    <a href="/learning-istio/case/websocket.html" rel="next">使用 Websocket</a>
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/case/iphash.html" rel="prev">基于 iphash 进行负载均衡</a>
   </div>
-  
   
 </div>
 

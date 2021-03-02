@@ -13,6 +13,55 @@
     </image>
     
     <item>
+      <title>使用 Websocket</title>
+      <link>/learning-istio/case/websocket.html</link>
+      <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/case/websocket.html</guid>
+      <description>&lt;h2 id=&#34;需求&#34;&gt;需求&lt;/h2&gt;
+&lt;p&gt;业务使用的 websocket 协议，在 istio 中如何配置路由呢？&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: tornado-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - &amp;quot;*&amp;quot;
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tornado
+spec:
+  hosts:
+  - &amp;quot;*&amp;quot;
+  gateways:
+  - tornado-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: tornado
+      weight: 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;官方 sample: &lt;a href=&#34;https://github.com/istio/istio/tree/master/samples/websockets&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Tornado - Demo Websockets App&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>基于 iphash 进行负载均衡</title>
       <link>/learning-istio/case/iphash.html</link>
       <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>

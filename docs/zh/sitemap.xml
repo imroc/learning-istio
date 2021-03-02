@@ -108,6 +108,11 @@
   </url>
   
   <url>
+    <loc>/learning-istio/case/websocket.html</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/learning-istio/troubleshooting/case/public-ingress-connect-failed.html</loc>
     <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url>
