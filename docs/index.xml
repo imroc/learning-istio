@@ -710,9 +710,9 @@ target_include_directories(istio-proxy PUBLIC ${istio_include_dirs})
       <link>/learning-istio/case/websocket.html</link>
       <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/case/websocket.html</guid>
-      <description>&lt;h2 id=&#34;需求&#34;&gt;需求&lt;/h2&gt;
-&lt;p&gt;业务使用的 websocket 协议，在 istio 中如何配置路由呢？&lt;/p&gt;
-&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;场景&#34;&gt;场景&lt;/h2&gt;
+&lt;p&gt;业务使用的 websocket 协议，想跑在 istio 中，那么在 istio 中如何配置 websocket 呢？&lt;/p&gt;
+&lt;h2 id=&#34;用法&#34;&gt;用法&lt;/h2&gt;
 &lt;p&gt;由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
 kind: Gateway

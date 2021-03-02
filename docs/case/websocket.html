@@ -34,8 +34,8 @@
   
     
   
-  <meta name="description" content="需求 业务使用的 websocket 协议，在 istio 中如何配置路由呢？
-解决方案 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
+  <meta name="description" content="场景 业务使用的 websocket 协议，想跑在 istio 中，那么在 istio 中如何配置 websocket 呢？
+用法 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
 apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-gateway spec: selector: istio: ingressgateway servers: - port: number: 80 name: http protocol: HTTP hosts: - &quot;*&quot; --- apiVersion: networking.">
 
   
@@ -284,8 +284,8 @@ apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-g
   <meta property="og:site_name" content="Istio 学习笔记">
   <meta property="og:url" content="/learning-istio/case/websocket.html">
   <meta property="og:title" content="使用 Websocket | Istio 学习笔记">
-  <meta property="og:description" content="需求 业务使用的 websocket 协议，在 istio 中如何配置路由呢？
-解决方案 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
+  <meta property="og:description" content="场景 业务使用的 websocket 协议，想跑在 istio 中，那么在 istio 中如何配置 websocket 呢？
+用法 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
 apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-gateway spec: selector: istio: ingressgateway servers: - port: number: 80 name: http protocol: HTTP hosts: - &quot;*&quot; --- apiVersion: networking."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
@@ -799,8 +799,8 @@ apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-g
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#需求">需求</a></li>
-    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#场景">场景</a></li>
+    <li><a href="#用法">用法</a></li>
     <li><a href="#参考资料">参考资料</a></li>
   </ul>
 </nav>
@@ -852,9 +852,9 @@ apiVersion: networking.istio.io/v1alpha3 kind: Gateway metadata: name: tornado-g
           <h1>使用 Websocket</h1>
 
           <div class="article-style">
-            <h2 id="需求">需求</h2>
-<p>业务使用的 websocket 协议，在 istio 中如何配置路由呢？</p>
-<h2 id="解决方案">解决方案</h2>
+            <h2 id="场景">场景</h2>
+<p>业务使用的 websocket 协议，想跑在 istio 中，那么在 istio 中如何配置 websocket 呢？</p>
+<h2 id="用法">用法</h2>
 <p>由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:</p>
 <pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
 kind: Gateway

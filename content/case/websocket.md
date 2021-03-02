@@ -4,11 +4,11 @@ type: book
 date: "2021-03-02"
 ---
 
-## 需求
+## 场景
 
-业务使用的 websocket 协议，在 istio 中如何配置路由呢？
+业务使用的 websocket 协议，想跑在 istio 中，那么在 istio 中如何配置 websocket 呢？
 
-## 解决方案
+## 用法
 
 由于 websocket 本身基于 HTTP，所以在 istio 中直接按照普通 http 来配就行了:
 
