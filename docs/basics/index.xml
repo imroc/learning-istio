@@ -12,5 +12,46 @@
       <link>/learning-istio/basics.html</link>
     </image>
     
+    <item>
+      <title>配置 accesslog</title>
+      <link>/learning-istio/basics/accesslogs.html</link>
+      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/basics/accesslogs.html</guid>
+      <description>&lt;h2 id=&#34;json-格式默认配置&#34;&gt;json 格式默认配置&lt;/h2&gt;
+&lt;p&gt;istio 的 json accesslog 配置格式见 &lt;a href=&#34;https://github.com/istio/istio/blob/1.8.3/pilot/pkg/networking/core/v1alpha3/accesslog.go#L63&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;源码&lt;/a&gt; 。转换成字符串为:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;authority&amp;quot;: &amp;quot;%REQ(:AUTHORITY)%&amp;quot;,
+  &amp;quot;bytes_received&amp;quot;: &amp;quot;%BYTES_RECEIVED%&amp;quot;,
+  &amp;quot;bytes_sent&amp;quot;: &amp;quot;%BYTES_SENT%&amp;quot;,
+  &amp;quot;downstream_local_address&amp;quot;: &amp;quot;%DOWNSTREAM_LOCAL_ADDRESS%&amp;quot;,
+  &amp;quot;downstream_remote_address&amp;quot;: &amp;quot;%DOWNSTREAM_REMOTE_ADDRESS%&amp;quot;,
+  &amp;quot;duration&amp;quot;: &amp;quot;%DURATION%&amp;quot;,
+  &amp;quot;istio_policy_status&amp;quot;: &amp;quot;%DYNAMIC_METADATA(istio.mixer:status)%&amp;quot;,
+  &amp;quot;method&amp;quot;: &amp;quot;%REQ(:METHOD)%&amp;quot;,
+  &amp;quot;path&amp;quot;: &amp;quot;%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%&amp;quot;,
+  &amp;quot;protocol&amp;quot;: &amp;quot;%PROTOCOL%&amp;quot;,
+  &amp;quot;request_id&amp;quot;: &amp;quot;%REQ(X-REQUEST-ID)%&amp;quot;,
+  &amp;quot;requested_server_name&amp;quot;: &amp;quot;%REQUESTED_SERVER_NAME%&amp;quot;,
+  &amp;quot;response_code&amp;quot;: &amp;quot;%RESPONSE_CODE%&amp;quot;,
+  &amp;quot;response_flags&amp;quot;: &amp;quot;%RESPONSE_FLAGS%&amp;quot;,
+  &amp;quot;route_name&amp;quot;: &amp;quot;%ROUTE_NAME%&amp;quot;,
+  &amp;quot;start_time&amp;quot;: &amp;quot;%START_TIME%&amp;quot;,
+  &amp;quot;upstream_cluster&amp;quot;: &amp;quot;%UPSTREAM_CLUSTER%&amp;quot;,
+  &amp;quot;upstream_host&amp;quot;: &amp;quot;%UPSTREAM_HOST%&amp;quot;,
+  &amp;quot;upstream_local_address&amp;quot;: &amp;quot;%UPSTREAM_LOCAL_ADDRESS%&amp;quot;,
+  &amp;quot;upstream_service_time&amp;quot;: &amp;quot;%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%&amp;quot;,
+  &amp;quot;upstream_transport_failure_reason&amp;quot;: &amp;quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&amp;quot;,
+  &amp;quot;user_agent&amp;quot;: &amp;quot;%REQ(USER-AGENT)%&amp;quot;,
+  &amp;quot;x_forwarded_for&amp;quot;: &amp;quot;%REQ(X-FORWARDED-FOR)%&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;变量&#34;&gt;变量&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;istio 官方文档将一些常见的变量给出了示例: &lt;a href=&#34;https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format&#34;&gt;https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;变量的解释参考 envoy 官方文档: &lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators&#34;&gt;https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
