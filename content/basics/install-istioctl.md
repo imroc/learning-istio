@@ -2,7 +2,7 @@
 title: 安装 istioctl
 type: book
 date: "2021-01-26"
-weight: 2
+weight: 10
 ---
 
 一键下载:

@@ -34,10 +34,11 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="一键下载:
+$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/install-istioctl.html">
 
   
 
@@ -253,8 +254,6 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/basics/index.xml" type="application/rss+xml" title="Istio 学习笔记">
-  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -263,7 +262,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/basics.html">
+  <link rel="canonical" href="/learning-istio/basics/install-istioctl.html">
 
   
   
@@ -282,29 +281,35 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/basics.html">
-  <meta property="og:title" content="Istio 基础 | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/basics/install-istioctl.html">
+  <meta property="og:title" content="安装 istioctl | Istio 学习笔记">
+  <meta property="og:description" content="一键下载:
+$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
-    <meta property="og:updated_time" content="2021-01-26T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>Istio 基础 | Istio 学习笔记</title>
+
+
+  <title>安装 istioctl | Istio 学习笔记</title>
 
 </head>
 
@@ -462,7 +467,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link  active" href="/learning-istio/basics.html"><span>Istio 基础</span></a>
+          <a class="nav-link " href="/learning-istio/basics.html"><span>Istio 基础</span></a>
         </li>
 
         
@@ -760,12 +765,12 @@
 
     
       <ul class="nav docs-sidenav">
-        <li class="active"><a href="/learning-istio/basics.html">Istio 基础</a></li>
+        <li class=""><a href="/learning-istio/basics.html">Istio 基础</a></li>
     
       
 
 
-  <li class=""><a href="/learning-istio/basics/install-istioctl.html">安装 istioctl</a></li>
+  <li class="active"><a href="/learning-istio/basics/install-istioctl.html">安装 istioctl</a></li>
 
 
 
@@ -811,6 +816,7 @@
     <ol class="breadcrumb">
       
   
+  
 
   <li class="breadcrumb-item">
     <a href="/learning-istio/">
@@ -821,8 +827,17 @@
   </li>
 
 
-      <li class="breadcrumb-item active" aria-current="page">
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/basics.html">
+      
         Istio 基础
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        安装 istioctl
       </li>
     </ol>
   </nav>
@@ -830,10 +845,30 @@
 
           
 
-          <h1>Istio 基础</h1>
+          <h1>安装 istioctl</h1>
 
           <div class="article-style">
-            <p>先占位，后续陆续补充笔记</p>
+            <p>一键下载:</p>
+<pre><code class="language-bash">$ curl -sL https://istio.io/downloadIstioctl | sh -
+ Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ...
+istioctl-1.8.2-osx.tar.gz download complete!
+
+Add the istioctl to your path with:
+  export PATH=$PATH:$HOME/.istioctl/bin
+
+Begin the Istio pre-installation check by running:
+	 istioctl x precheck
+
+Need more information? Visit https://istio.io/docs/reference/commands/istioctl/
+</code></pre>
+<p>二进制会被下载到 <code>~/.istioctl/bin/istioctl</code>，在我们的 shell 启动脚本里 (<code>~/.bashrc</code> 或 <code>~/.zshrc</code>) 加入:</p>
+<pre><code class="language-bash">export PATH=$PATH:$HOME/.istioctl/bin
+</code></pre>
+<p>新开终端，检测是否安装成功:</p>
+<pre><code class="language-bash">$ istioctl version
+no running Istio pods in &quot;istio-system&quot;
+1.8.2
+</code></pre>
 
           </div>
 
@@ -847,6 +882,12 @@
             
 <div class="post-nav">
   
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/learning-istio/basics/install-with-operator.html" rel="prev">使用 istio-operator 安装 istio</a>
+  </div>
   
 </div>
 

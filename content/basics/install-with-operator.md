@@ -2,7 +2,7 @@
 title: 使用 istio-operator 安装 istio
 type: book
 date: "2021-01-26"
-weight: 3
+weight: 20
 ---
 
 ## 安装 istioctl

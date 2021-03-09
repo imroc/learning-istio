@@ -2,7 +2,7 @@
 title: 配置 accesslog
 type: book
 date: "2021-03-09"
-weight: 2
+weight: 30
 ---
 
 ## TEXT 格式默认配置

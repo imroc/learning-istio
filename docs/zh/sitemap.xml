@@ -8,18 +8,8 @@
   </url>
   
   <url>
-    <loc>/learning-istio/basics/install.html</loc>
-    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/learning-istio/observability/metrics.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/learning-istio/basics/accesslogs.html</loc>
-    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -35,11 +25,6 @@
   <url>
     <loc>/learning-istio/best-practice/sidecar-order.html</loc>
     <lastmod>2021-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/learning-istio/basics/install/install-istioctl.html</loc>
-    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -73,11 +58,6 @@
   </url>
   
   <url>
-    <loc>/learning-istio/basics/install/install-with-operator.html</loc>
-    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/learning-istio/observability/tracing.html</loc>
     <lastmod>2021-01-26T00:00:00+00:00</lastmod>
   </url>
@@ -90,6 +70,21 @@
   <url>
     <loc>/learning-istio/troubleshooting/case/grpc-config-stream-closed.html</loc>
     <lastmod>2021-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/install-istioctl.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/install-with-operator.html</loc>
+    <lastmod>2021-01-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/basics/accesslogs.html</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
