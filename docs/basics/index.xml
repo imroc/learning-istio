@@ -17,7 +17,11 @@
       <link>/learning-istio/basics/accesslogs.html</link>
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/basics/accesslogs.html</guid>
-      <description>&lt;h2 id=&#34;json-格式默认配置&#34;&gt;json 格式默认配置&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;text-格式默认配置&#34;&gt;TEXT 格式默认配置&lt;/h2&gt;
+&lt;p&gt;istio 的 json accesslog 配置格式见 &lt;a href=&#34;https://github.com/istio/istio/blob/1.8.3/pilot/pkg/networking/core/v1alpha3/accesslog.go#L38&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;源码&lt;/a&gt; 。转换成字符串为:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;[%START_TIME%] &amp;quot;%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%&amp;quot; %RESPONSE_CODE% %RESPONSE_FLAGS% &amp;quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&amp;quot; %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% &amp;quot;%REQ(X-FORWARDED-FOR)%&amp;quot; &amp;quot;%REQ(USER-AGENT)%&amp;quot; &amp;quot;%REQ(X-REQUEST-ID)%&amp;quot; &amp;quot;%REQ(:AUTHORITY)%&amp;quot; &amp;quot;%UPSTREAM_HOST%&amp;quot; %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_REMOTE_ADDRESS% %REQUESTED_SERVER_NAME% %ROUTE_NAME%
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;json-格式默认配置&#34;&gt;JSON 格式默认配置&lt;/h2&gt;
 &lt;p&gt;istio 的 json accesslog 配置格式见 &lt;a href=&#34;https://github.com/istio/istio/blob/1.8.3/pilot/pkg/networking/core/v1alpha3/accesslog.go#L63&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;源码&lt;/a&gt; 。转换成字符串为:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
   &amp;quot;authority&amp;quot;: &amp;quot;%REQ(:AUTHORITY)%&amp;quot;,
@@ -45,7 +49,7 @@
   &amp;quot;x_forwarded_for&amp;quot;: &amp;quot;%REQ(X-FORWARDED-FOR)%&amp;quot;
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;变量&#34;&gt;变量&lt;/h2&gt;
+&lt;h2 id=&#34;变量相关参考文档&#34;&gt;变量相关参考文档&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;istio 官方文档将一些常见的变量给出了示例: &lt;a href=&#34;https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format&#34;&gt;https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;变量的解释参考 envoy 官方文档: &lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators&#34;&gt;https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators&lt;/a&gt;&lt;/li&gt;

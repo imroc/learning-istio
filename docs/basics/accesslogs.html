@@ -34,8 +34,8 @@
   
     
   
-  <meta name="description" content="json 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:
-{ &quot;authority&quot;: &quot;%REQ(:AUTHORITY)%&quot;, &quot;bytes_received&quot;: &quot;%BYTES_RECEIVED%&quot;, &quot;bytes_sent&quot;: &quot;%BYTES_SENT%&quot;, &quot;downstream_local_address&quot;: &quot;%DOWNSTREAM_LOCAL_ADDRESS%&quot;, &quot;downstream_remote_address&quot;: &quot;%DOWNSTREAM_REMOTE_ADDRESS%&quot;, &quot;duration&quot;: &quot;%DURATION%&quot;, &quot;istio_policy_status&quot;: &quot;%DYNAMIC_METADATA(istio.mixer:status)%&quot;, &quot;method&quot;: &quot;%REQ(:METHOD)%&quot;, &quot;path&quot;: &quot;%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%&quot;, &quot;protocol&quot;: &quot;%PROTOCOL%&quot;, &quot;request_id&quot;: &quot;%REQ(X-REQUEST-ID)%&quot;, &quot;requested_server_name&quot;: &quot;%REQUESTED_SERVER_NAME%&quot;, &quot;response_code&quot;: &quot;%RESPONSE_CODE%&quot;, &quot;response_flags&quot;: &quot;%RESPONSE_FLAGS%&quot;, &quot;route_name&quot;: &quot;%ROUTE_NAME%&quot;, &quot;start_time&quot;: &quot;%START_TIME%&quot;, &quot;upstream_cluster&quot;: &quot;%UPSTREAM_CLUSTER%&quot;, &quot;upstream_host&quot;: &quot;%UPSTREAM_HOST%&quot;, &quot;upstream_local_address&quot;: &quot;%UPSTREAM_LOCAL_ADDRESS%&quot;, &quot;upstream_service_time&quot;: &quot;%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%&quot;, &quot;upstream_transport_failure_reason&quot;: &quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&quot;, &quot;user_agent&quot;: &quot;%REQ(USER-AGENT)%&quot;, &quot;x_forwarded_for&quot;: &quot;%REQ(X-FORWARDED-FOR)%&quot; }  变量  istio 官方文档将一些常见的变量给出了示例: https://istio.">
+  <meta name="description" content="TEXT 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:
+[%START_TIME%] &quot;%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%&quot; %RESPONSE_CODE% %RESPONSE_FLAGS% &quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&quot; %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% &quot;%REQ(X-FORWARDED-FOR)%&quot; &quot;%REQ(USER-AGENT)%&quot; &quot;%REQ(X-REQUEST-ID)%&quot; &quot;%REQ(:AUTHORITY)%&quot; &quot;%UPSTREAM_HOST%&quot; %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_REMOTE_ADDRESS% %REQUESTED_SERVER_NAME% %ROUTE_NAME%  JSON 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:">
 
   
   <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/accesslogs.html">
@@ -283,8 +283,8 @@
   <meta property="og:site_name" content="Istio 学习笔记">
   <meta property="og:url" content="/learning-istio/basics/accesslogs.html">
   <meta property="og:title" content="配置 accesslog | Istio 学习笔记">
-  <meta property="og:description" content="json 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:
-{ &quot;authority&quot;: &quot;%REQ(:AUTHORITY)%&quot;, &quot;bytes_received&quot;: &quot;%BYTES_RECEIVED%&quot;, &quot;bytes_sent&quot;: &quot;%BYTES_SENT%&quot;, &quot;downstream_local_address&quot;: &quot;%DOWNSTREAM_LOCAL_ADDRESS%&quot;, &quot;downstream_remote_address&quot;: &quot;%DOWNSTREAM_REMOTE_ADDRESS%&quot;, &quot;duration&quot;: &quot;%DURATION%&quot;, &quot;istio_policy_status&quot;: &quot;%DYNAMIC_METADATA(istio.mixer:status)%&quot;, &quot;method&quot;: &quot;%REQ(:METHOD)%&quot;, &quot;path&quot;: &quot;%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%&quot;, &quot;protocol&quot;: &quot;%PROTOCOL%&quot;, &quot;request_id&quot;: &quot;%REQ(X-REQUEST-ID)%&quot;, &quot;requested_server_name&quot;: &quot;%REQUESTED_SERVER_NAME%&quot;, &quot;response_code&quot;: &quot;%RESPONSE_CODE%&quot;, &quot;response_flags&quot;: &quot;%RESPONSE_FLAGS%&quot;, &quot;route_name&quot;: &quot;%ROUTE_NAME%&quot;, &quot;start_time&quot;: &quot;%START_TIME%&quot;, &quot;upstream_cluster&quot;: &quot;%UPSTREAM_CLUSTER%&quot;, &quot;upstream_host&quot;: &quot;%UPSTREAM_HOST%&quot;, &quot;upstream_local_address&quot;: &quot;%UPSTREAM_LOCAL_ADDRESS%&quot;, &quot;upstream_service_time&quot;: &quot;%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%&quot;, &quot;upstream_transport_failure_reason&quot;: &quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&quot;, &quot;user_agent&quot;: &quot;%REQ(USER-AGENT)%&quot;, &quot;x_forwarded_for&quot;: &quot;%REQ(X-FORWARDED-FOR)%&quot; }  变量  istio 官方文档将一些常见的变量给出了示例: https://istio."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:description" content="TEXT 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:
+[%START_TIME%] &quot;%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%&quot; %RESPONSE_CODE% %RESPONSE_FLAGS% &quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&quot; %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% &quot;%REQ(X-FORWARDED-FOR)%&quot; &quot;%REQ(USER-AGENT)%&quot; &quot;%REQ(X-REQUEST-ID)%&quot; &quot;%REQ(:AUTHORITY)%&quot; &quot;%UPSTREAM_HOST%&quot; %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_REMOTE_ADDRESS% %REQUESTED_SERVER_NAME% %ROUTE_NAME%  JSON 格式默认配置 istio 的 json accesslog 配置格式见 源码 。转换成字符串为:"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
@@ -828,8 +828,9 @@
 
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#json-格式默认配置">json 格式默认配置</a></li>
-    <li><a href="#变量">变量</a></li>
+    <li><a href="#text-格式默认配置">TEXT 格式默认配置</a></li>
+    <li><a href="#json-格式默认配置">JSON 格式默认配置</a></li>
+    <li><a href="#变量相关参考文档">变量相关参考文档</a></li>
   </ul>
 </nav>
 
@@ -880,7 +881,11 @@
           <h1>配置 accesslog</h1>
 
           <div class="article-style">
-            <h2 id="json-格式默认配置">json 格式默认配置</h2>
+            <h2 id="text-格式默认配置">TEXT 格式默认配置</h2>
+<p>istio 的 json accesslog 配置格式见 <a href="https://github.com/istio/istio/blob/1.8.3/pilot/pkg/networking/core/v1alpha3/accesslog.go#L38" target="_blank" rel="noopener">源码</a> 。转换成字符串为:</p>
+<pre><code class="language-txt">[%START_TIME%] &quot;%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%&quot; %RESPONSE_CODE% %RESPONSE_FLAGS% &quot;%UPSTREAM_TRANSPORT_FAILURE_REASON%&quot; %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% &quot;%REQ(X-FORWARDED-FOR)%&quot; &quot;%REQ(USER-AGENT)%&quot; &quot;%REQ(X-REQUEST-ID)%&quot; &quot;%REQ(:AUTHORITY)%&quot; &quot;%UPSTREAM_HOST%&quot; %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% %DOWNSTREAM_REMOTE_ADDRESS% %REQUESTED_SERVER_NAME% %ROUTE_NAME%
+</code></pre>
+<h2 id="json-格式默认配置">JSON 格式默认配置</h2>
 <p>istio 的 json accesslog 配置格式见 <a href="https://github.com/istio/istio/blob/1.8.3/pilot/pkg/networking/core/v1alpha3/accesslog.go#L63" target="_blank" rel="noopener">源码</a> 。转换成字符串为:</p>
 <pre><code class="language-json">{
   &quot;authority&quot;: &quot;%REQ(:AUTHORITY)%&quot;,
@@ -908,7 +913,7 @@
   &quot;x_forwarded_for&quot;: &quot;%REQ(X-FORWARDED-FOR)%&quot;
 }
 </code></pre>
-<h2 id="变量">变量</h2>
+<h2 id="变量相关参考文档">变量相关参考文档</h2>
 <ul>
 <li>istio 官方文档将一些常见的变量给出了示例: <a href="https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format">https://istio.io/latest/docs/tasks/observability/logs/access-log/#default-access-log-format</a></li>
 <li>变量的解释参考 envoy 官方文档: <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators">https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators</a></li>
