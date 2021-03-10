@@ -13,11 +13,6 @@
   </url>
   
   <url>
-    <loc>/learning-istio/trick/troubleshooting-networking.html</loc>
-    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/learning-istio/troubleshooting/case/grpc-not-loadbalancing.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
   </url>
@@ -35,11 +30,6 @@
   <url>
     <loc>/learning-istio/source/project-structure.html</loc>
     <lastmod>2021-01-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/learning-istio/trick/check.html</loc>
-    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -65,6 +55,10 @@
   <url>
     <loc>/learning-istio/troubleshooting/case/kubeflow-on-istio.html</loc>
     <lastmod>2021-02-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-istio/trick/hide-server-name.html</loc>
   </url>
   
   <url>
@@ -168,11 +162,6 @@
   </url>
   
   <url>
-    <loc>/learning-istio/trick.html</loc>
-    <lastmod>2021-02-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/learning-istio/source.html</loc>
     <lastmod>2021-01-29T00:00:00+00:00</lastmod>
   </url>
@@ -250,6 +239,10 @@
                 hreflang="zh"
                 href="/learning-istio/tags.html"
                 />
+  </url>
+  
+  <url>
+    <loc>/learning-istio/trick.html</loc>
   </url>
   
 </urlset>

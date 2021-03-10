@@ -5,7 +5,7 @@
     <link>/learning-istio/trick.html</link>
       <atom:link href="/learning-istio/trick/index.xml" rel="self" type="application/rss+xml" />
     <description>实用技巧</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Wed, 03 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>实用技巧</title>
@@ -13,38 +13,36 @@
     </image>
     
     <item>
-      <title>网络排障</title>
-      <link>/learning-istio/trick/troubleshooting-networking.html</link>
-      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/trick/troubleshooting-networking.html</guid>
-      <description>&lt;h2 id=&#34;网络性能问题&#34;&gt;网络性能问题&lt;/h2&gt;
-&lt;p&gt;现象:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;P99 延时高，部分请求响应较慢 (比如P95为10~20ms，P99中就有1~2s的请求)，去掉 sidecar 又比较快&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;思路:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;看是否有丢包或者队列满之类的问题导致有重传(重传默认会等1s)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;client 端看是否有重传:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;image-20210203165254809.png&#34; alt=&#34;image-20210203165254809&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;检查是否有-conntrack-插入失败&#34;&gt;检查是否有 conntrack 插入失败&lt;/h2&gt;
-&lt;p&gt;watch:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;watch &#39;conntrack -S | awk -F &amp;quot;insert_failed=&amp;quot; &amp;quot;{print \$2}&amp;quot; | awk -F &amp;quot; &amp;quot; &amp;quot;{print \$1}&amp;quot; | awk &amp;quot;{sum += \$1} END {print sum}&amp;quot;&#39;
+      <title>隐藏自动添加的 server header</title>
+      <link>/learning-istio/trick/hide-server-name.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/trick/hide-server-name.html</guid>
+      <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;出于安全考虑，希望隐藏 istio 自动添加的 &lt;code&gt;server: istio-envoy&lt;/code&gt; 这样的 header。&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: hide-headers
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &amp;quot;envoy.http_connection_manager&amp;quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &amp;quot;@type&amp;quot;: &amp;quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&amp;quot;
+          server_header_transformation: PASS_THROUGH
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;执行一次:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;conntrack -S | awk -F &#39;insert_failed=&#39; &#39;{print $2}&#39; | awk -F &#39; &#39; &#39;{print $1}&#39; | awk &#39;{sum += $1} END {print sum}&#39;
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>常规检查</title>
-      <link>/learning-istio/trick/check.html</link>
-      <pubDate>Wed, 03 Feb 2021 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/trick/check.html</guid>
-      <description>&lt;h2 id=&#34;检查-port-name-是否符合规则&#34;&gt;检查 port name 是否符合规则&lt;/h2&gt;
-&lt;p&gt;istio 需要根据 svc 的 port name 来检查后端服务用的哪种协议，如果定义不正确，走到了不符合预期的 filter，就会造成一些异常现象。&lt;/p&gt;
+&lt;p&gt;参考 envoy 官网对 &lt;code&gt;server_header_transformation&lt;/code&gt; 字段各个值的解释: &lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation&#34;&gt;https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

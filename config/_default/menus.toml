@@ -37,6 +37,11 @@
   weight = 61
 
 [[main]]
+name = "使用技巧"
+url = "/trick.html"
+weight = 63
+
+[[main]]
 name = "参考资料"
 url = "/ref.html"
 weight = 70

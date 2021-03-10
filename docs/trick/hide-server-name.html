@@ -34,11 +34,12 @@
   
     
   
-  <meta name="description" content="一键下载:
-$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?">
+  <meta name="description" content="背景 出于安全考虑，希望隐藏 istio 自动添加的 server: istio-envoy 这样的 header。
+解决方案 可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: hide-headers namespace: istio-system spec: configPatches: - applyTo: NETWORK_FILTER match: context: ANY listener: filterChain: filter: name: &quot;envoy.">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/basics/install-istioctl.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick/hide-server-name.html">
 
   
 
@@ -262,7 +263,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/basics/install-istioctl.html">
+  <link rel="canonical" href="/learning-istio/trick/hide-server-name.html">
 
   
   
@@ -281,16 +282,15 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/basics/install-istioctl.html">
-  <meta property="og:title" content="安装 istioctl | Istio 学习笔记">
-  <meta property="og:description" content="一键下载:
-$ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ... istioctl-1.8.2-osx.tar.gz download complete! Add the istioctl to your path with: export PATH=$PATH:$HOME/.istioctl/bin Begin the Istio pre-installation check by running: istioctl x precheck Need more information?"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/trick/hide-server-name.html">
+  <meta property="og:title" content="隐藏自动添加的 server header | Istio 学习笔记">
+  <meta property="og:description" content="背景 出于安全考虑，希望隐藏 istio 自动添加的 server: istio-envoy 这样的 header。
+解决方案 可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: hide-headers namespace: istio-system spec: configPatches: - applyTo: NETWORK_FILTER match: context: ANY listener: filterChain: filter: name: &quot;envoy."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
     
-      <meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00">
   
 
   
@@ -309,7 +309,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
 
 
-  <title>安装 istioctl | Istio 学习笔记</title>
+  <title>隐藏自动添加的 server header | Istio 学习笔记</title>
 
 </head>
 
@@ -748,7 +748,7 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
     <div class="d-flex">
       <span class="d-md-none pl-1 flex-grow-1 text-left overflow-hidden">
         
-          Istio 基础
+          实用技巧
         
       </span>
       <span><i class="fas fa-chevron-down"></i></span>
@@ -795,20 +795,12 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
     
       <ul class="nav docs-sidenav">
-        <li class=""><a href="/learning-istio/basics.html">Istio 基础</a></li>
+        <li class=""><a href="/learning-istio/trick.html">实用技巧</a></li>
     
       
 
 
-  <li class="active"><a href="/learning-istio/basics/install-istioctl.html">安装 istioctl</a></li>
-
-
-
-  <li class=""><a href="/learning-istio/basics/install-with-operator.html">使用 istio-operator 安装 istio</a></li>
-
-
-
-  <li class=""><a href="/learning-istio/basics/accesslogs.html">配置 accesslog</a></li>
+  <li class="active"><a href="/learning-istio/trick/hide-server-name.html">隐藏自动添加的 server header</a></li>
 
       
     
@@ -829,7 +821,12 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
         <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
       </ul>
 
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+  </ul>
+</nav>
 
       
     </div>
@@ -858,16 +855,16 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
 
   <li class="breadcrumb-item">
-    <a href="/learning-istio/basics.html">
+    <a href="/learning-istio/trick.html">
       
-        Istio 基础
+        实用技巧
       
     </a>
   </li>
 
 
       <li class="breadcrumb-item active" aria-current="page">
-        安装 istioctl
+        隐藏自动添加的 server header
       </li>
     </ol>
   </nav>
@@ -875,30 +872,35 @@ $ curl -sL https://istio.io/downloadIstioctl | sh - Downloading istioctl-1.8.2 f
 
           
 
-          <h1>安装 istioctl</h1>
+          <h1>隐藏自动添加的 server header</h1>
 
           <div class="article-style">
-            <p>一键下载:</p>
-<pre><code class="language-bash">$ curl -sL https://istio.io/downloadIstioctl | sh -
- Downloading istioctl-1.8.2 from https://github.com/istio/istio/releases/download/1.8.2/istioctl-1.8.2-osx.tar.gz ...
-istioctl-1.8.2-osx.tar.gz download complete!
-
-Add the istioctl to your path with:
-  export PATH=$PATH:$HOME/.istioctl/bin
-
-Begin the Istio pre-installation check by running:
-	 istioctl x precheck
-
-Need more information? Visit https://istio.io/docs/reference/commands/istioctl/
+            <h2 id="背景">背景</h2>
+<p>出于安全考虑，希望隐藏 istio 自动添加的 <code>server: istio-envoy</code> 这样的 header。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: hide-headers
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &quot;envoy.http_connection_manager&quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &quot;@type&quot;: &quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&quot;
+          server_header_transformation: PASS_THROUGH
 </code></pre>
-<p>二进制会被下载到 <code>~/.istioctl/bin/istioctl</code>，在我们的 shell 启动脚本里 (<code>~/.bashrc</code> 或 <code>~/.zshrc</code>) 加入:</p>
-<pre><code class="language-bash">export PATH=$PATH:$HOME/.istioctl/bin
-</code></pre>
-<p>新开终端，检测是否安装成功:</p>
-<pre><code class="language-bash">$ istioctl version
-no running Istio pods in &quot;istio-system&quot;
-1.8.2
-</code></pre>
+<p>参考 envoy 官网对 <code>server_header_transformation</code> 字段各个值的解释: <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation">https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation</a></p>
 
           </div>
 
@@ -913,12 +915,6 @@ no running Istio pods in &quot;istio-system&quot;
 <div class="post-nav">
   
   
-  
-  <div class="post-nav-item">
-    <div class="meta-nav">下一页</div>
-    <a href="/learning-istio/basics/install-with-operator.html" rel="prev">使用 istio-operator 安装 istio</a>
-  </div>
-  
 </div>
 
           </div>
@@ -926,7 +922,7 @@ no running Istio pods in &quot;istio-system&quot;
         </div>
 
         <div class="body-footer">
-          <p>最近更新于 Jan 26, 2021</p>
+          <p>最近更新于 Jan 1, 0001</p>
 
           
 
