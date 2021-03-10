@@ -14,9 +14,9 @@
     
     <item>
       <title>隐藏自动添加的 server header</title>
-      <link>/learning-istio/trick/hide-server-name.html</link>
+      <link>/learning-istio/trick/hide-server-header.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>/learning-istio/trick/hide-server-name.html</guid>
+      <guid>/learning-istio/trick/hide-server-header.html</guid>
       <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 &lt;p&gt;出于安全考虑，希望隐藏 istio 自动添加的 &lt;code&gt;server: istio-envoy&lt;/code&gt; 这样的 header。&lt;/p&gt;
 &lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;

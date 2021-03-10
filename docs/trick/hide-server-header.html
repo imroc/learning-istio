@@ -34,10 +34,12 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="背景 出于安全考虑，希望隐藏 istio 自动添加的 server: istio-envoy 这样的 header。
+解决方案 可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: hide-headers namespace: istio-system spec: configPatches: - applyTo: NETWORK_FILTER match: context: ANY listener: filterChain: filter: name: &quot;envoy.">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick/hide-server-header.html">
 
   
 
@@ -253,8 +255,6 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/trick/index.xml" type="application/rss+xml" title="Istio 学习笔记">
-  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -263,7 +263,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/trick.html">
+  <link rel="canonical" href="/learning-istio/trick/hide-server-header.html">
 
   
   
@@ -282,11 +282,14 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/trick.html">
-  <meta property="og:title" content="实用技巧 | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/trick/hide-server-header.html">
+  <meta property="og:title" content="隐藏自动添加的 server header | Istio 学习笔记">
+  <meta property="og:description" content="背景 出于安全考虑，希望隐藏 istio 自动添加的 server: istio-envoy 这样的 header。
+解决方案 可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: hide-headers namespace: istio-system spec: configPatches: - applyTo: NETWORK_FILTER match: context: ANY listener: filterChain: filter: name: &quot;envoy."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
+    
     
   
 
@@ -294,17 +297,19 @@
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>实用技巧 | Istio 学习笔记</title>
+
+
+  <title>隐藏自动添加的 server header | Istio 学习笔记</title>
 
 </head>
 
@@ -642,7 +647,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link  active" href="/learning-istio/trick.html"><span>使用技巧</span></a>
+          <a class="nav-link " href="/learning-istio/trick.html"><span>使用技巧</span></a>
         </li>
 
         
@@ -790,12 +795,12 @@
 
     
       <ul class="nav docs-sidenav">
-        <li class="active"><a href="/learning-istio/trick.html">实用技巧</a></li>
+        <li class=""><a href="/learning-istio/trick.html">实用技巧</a></li>
     
       
 
 
-  <li class=""><a href="/learning-istio/trick/hide-server-header.html">隐藏自动添加的 server header</a></li>
+  <li class="active"><a href="/learning-istio/trick/hide-server-header.html">隐藏自动添加的 server header</a></li>
 
       
     
@@ -816,7 +821,12 @@
         <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
       </ul>
 
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+  </ul>
+</nav>
 
       
     </div>
@@ -833,6 +843,7 @@
     <ol class="breadcrumb">
       
   
+  
 
   <li class="breadcrumb-item">
     <a href="/learning-istio/">
@@ -843,8 +854,17 @@
   </li>
 
 
-      <li class="breadcrumb-item active" aria-current="page">
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/trick.html">
+      
         实用技巧
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        隐藏自动添加的 server header
       </li>
     </ol>
   </nav>
@@ -852,10 +872,35 @@
 
           
 
-          <h1>实用技巧</h1>
+          <h1>隐藏自动添加的 server header</h1>
 
           <div class="article-style">
-            <p>记录使用 istio 时的实用技巧</p>
+            <h2 id="背景">背景</h2>
+<p>出于安全考虑，希望隐藏 istio 自动添加的 <code>server: istio-envoy</code> 这样的 header。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>可以配置 envoyfilter ，让 envoy 返回响应时不自动添加 server 的 header，将HttpConnectionManager 的 server_header_transformation 设为 PASS_THROUGH(后端没返回该header时envoy也不会自动添加):</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: hide-headers
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: ANY
+      listener:
+        filterChain:
+          filter:
+            name: &quot;envoy.http_connection_manager&quot;
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          &quot;@type&quot;: &quot;type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager&quot;
+          server_header_transformation: PASS_THROUGH
+</code></pre>
+<p>参考 envoy 官网对 <code>server_header_transformation</code> 字段各个值的解释: <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation">https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation</a></p>
 
           </div>
 
