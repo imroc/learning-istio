@@ -42,6 +42,6 @@
   weight = 63
 
 [[main]]
-name = "参考资料"
-url = "/ref.html"
-weight = 70
+  name = "参考资料"
+  url = "/ref.html"
+  weight = 70
