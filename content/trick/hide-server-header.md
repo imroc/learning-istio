@@ -1,7 +1,7 @@
 ---
 title: 隐藏自动添加的 server header
 type: book
-date: "2021-03-010"
+date: "2021-03-10"
 weight: 5
 ---
 

@@ -34,10 +34,12 @@
   
     
   
-  <meta name="description" content="腾讯云高级工程师">
+  <meta name="description" content="背景 nginx 可以设置 client_max_body_size，那么在 istio 场景下如何调整客户端的最大请求大小呢？
+解决方案 可以配置 envoyfilter:
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: limit-request-size namespace: istio-system spec: workloadSelector: labels: istio: ingressgateway configPatches: - applyTo: HTTP_FILTER match: context: GATEWAY listener: filterChain: filter: name: envoy.">
 
   
-  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick.html">
+  <link rel="alternate" hreflang="zh-Hans" href="/learning-istio/trick/set-max-body-size.html">
 
   
 
@@ -253,8 +255,6 @@
   
 
   
-  <link rel="alternate" href="/learning-istio/trick/index.xml" type="application/rss+xml" title="Istio 学习笔记">
-  
 
   
   <link rel="manifest" href="/learning-istio/index.webmanifest">
@@ -263,7 +263,7 @@
   <link rel="icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/learning-istio/images/icon_hu021e42606c59825ae75f9d06a98e9cb4_5953_180x180_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/learning-istio/trick.html">
+  <link rel="canonical" href="/learning-istio/trick/set-max-body-size.html">
 
   
   
@@ -282,29 +282,36 @@
   <meta property="twitter:creator" content="@imrocchan">
   
   <meta property="og:site_name" content="Istio 学习笔记">
-  <meta property="og:url" content="/learning-istio/trick.html">
-  <meta property="og:title" content="实用技巧 | Istio 学习笔记">
-  <meta property="og:description" content="腾讯云高级工程师"><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
+  <meta property="og:url" content="/learning-istio/trick/set-max-body-size.html">
+  <meta property="og:title" content="设置 max_body_size | Istio 学习笔记">
+  <meta property="og:description" content="背景 nginx 可以设置 client_max_body_size，那么在 istio 场景下如何调整客户端的最大请求大小呢？
+解决方案 可以配置 envoyfilter:
+apiVersion: networking.istio.io/v1alpha3 kind: EnvoyFilter metadata: name: limit-request-size namespace: istio-system spec: workloadSelector: labels: istio: ingressgateway configPatches: - applyTo: HTTP_FILTER match: context: GATEWAY listener: filterChain: filter: name: envoy."><meta property="og:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png">
   <meta property="twitter:image" content="/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png"><meta property="og:locale" content="zh-Hans">
   
-    <meta property="og:updated_time" content="2021-03-15T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2021-03-15T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-03-15T00:00:00&#43;00:00">
   
 
   
 
 
 
-
   
 
 
   
 
 
+  
 
 
 
-  <title>实用技巧 | Istio 学习笔记</title>
+
+
+  <title>设置 max_body_size | Istio 学习笔记</title>
 
 </head>
 
@@ -642,7 +649,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link  active" href="/learning-istio/trick.html"><span>实用技巧</span></a>
+          <a class="nav-link " href="/learning-istio/trick.html"><span>实用技巧</span></a>
         </li>
 
         
@@ -790,7 +797,7 @@
 
     
       <ul class="nav docs-sidenav">
-        <li class="active"><a href="/learning-istio/trick.html">实用技巧</a></li>
+        <li class=""><a href="/learning-istio/trick.html">实用技巧</a></li>
     
       
 
@@ -799,7 +806,7 @@
 
 
 
-  <li class=""><a href="/learning-istio/trick/set-max-body-size.html">设置 max_body_size</a></li>
+  <li class="active"><a href="/learning-istio/trick/set-max-body-size.html">设置 max_body_size</a></li>
 
       
     
@@ -820,7 +827,12 @@
         <li><a href="#" id="back_to_top" class="docs-toc-title">在本页</a></li>
       </ul>
 
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+  </ul>
+</nav>
 
       
     </div>
@@ -837,6 +849,7 @@
     <ol class="breadcrumb">
       
   
+  
 
   <li class="breadcrumb-item">
     <a href="/learning-istio/">
@@ -847,8 +860,17 @@
   </li>
 
 
-      <li class="breadcrumb-item active" aria-current="page">
+  <li class="breadcrumb-item">
+    <a href="/learning-istio/trick.html">
+      
         实用技巧
+      
+    </a>
+  </li>
+
+
+      <li class="breadcrumb-item active" aria-current="page">
+        设置 max_body_size
       </li>
     </ol>
   </nav>
@@ -856,10 +878,39 @@
 
           
 
-          <h1>实用技巧</h1>
+          <h1>设置 max_body_size</h1>
 
           <div class="article-style">
-            <p>记录使用 istio 时的实用技巧</p>
+            <h2 id="背景">背景</h2>
+<p>nginx 可以设置 <code>client_max_body_size</code>，那么在 istio 场景下如何调整客户端的最大请求大小呢？</p>
+<h2 id="解决方案">解决方案</h2>
+<p>可以配置 envoyfilter:</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: limit-request-size
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.http_connection_manager
+    patch:
+      operation: INSERT_BEFORE
+</code></pre>
+<blockquote>
+<p>已验证版本: istio 1.8</p>
+</blockquote>
+<ul>
+<li>更改 <code>workloadSelector</code> 以选中需要设置的 gateway</li>
+</ul>
 
           </div>
 
@@ -872,6 +923,13 @@
           <div class="article-widget">
             
 <div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/learning-istio/trick/hide-server-header.html" rel="next">隐藏自动添加的 server header</a>
+  </div>
   
   
 </div>

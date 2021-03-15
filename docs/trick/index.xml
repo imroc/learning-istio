@@ -5,7 +5,7 @@
     <link>/learning-istio/trick.html</link>
       <atom:link href="/learning-istio/trick/index.xml" rel="self" type="application/rss+xml" />
     <description>实用技巧</description>
-    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Mon, 15 Mar 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/learning-istio/images/logo_hu634e455be796c40d2982c5e1e8e42be5_7500_300x300_fit_lanczos_2.png</url>
       <title>实用技巧</title>
@@ -15,7 +15,7 @@
     <item>
       <title>隐藏自动添加的 server header</title>
       <link>/learning-istio/trick/hide-server-header.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
       <guid>/learning-istio/trick/hide-server-header.html</guid>
       <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 &lt;p&gt;出于安全考虑，希望隐藏 istio 自动添加的 &lt;code&gt;server: istio-envoy&lt;/code&gt; 这样的 header。&lt;/p&gt;
@@ -43,6 +43,44 @@ spec:
           server_header_transformation: PASS_THROUGH
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;参考 envoy 官网对 &lt;code&gt;server_header_transformation&lt;/code&gt; 字段各个值的解释: &lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation&#34;&gt;https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/filter/network/http_connection_manager/v2/http_connection_manager.proto#envoy-api-enum-config-filter-network-http-connection-manager-v2-httpconnectionmanager-serverheadertransformation&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>设置 max_body_size</title>
+      <link>/learning-istio/trick/set-max-body-size.html</link>
+      <pubDate>Mon, 15 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/learning-istio/trick/set-max-body-size.html</guid>
+      <description>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;nginx 可以设置 &lt;code&gt;client_max_body_size&lt;/code&gt;，那么在 istio 场景下如何调整客户端的最大请求大小呢？&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;可以配置 envoyfilter:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: limit-request-size
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.http_connection_manager
+    patch:
+      operation: INSERT_BEFORE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;已验证版本: istio 1.8&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;更改 &lt;code&gt;workloadSelector&lt;/code&gt; 以选中需要设置的 gateway&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
