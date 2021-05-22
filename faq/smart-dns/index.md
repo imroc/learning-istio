@@ -2,7 +2,7 @@
 title: 启用 Smart DNS 后解析失败
 type: book
 date: "2021-04-26"
-weight: 95
+weight: 96
 ---
 
 ## 问题描述
