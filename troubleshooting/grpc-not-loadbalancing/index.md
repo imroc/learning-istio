@@ -1,5 +1,5 @@
 ---
-title: GRPC 服务负载不均
+title: "GRPC 服务负载不均"
 type: book
 date: "2021-02-02"
 weight: 2
@@ -80,3 +80,5 @@ spec:
     app: grpc
   type: ClusterIP
 ```
+
+> 更多协议指定方式请参考 [istio 最佳实践: 为服务显式指定协议](https://imroc.cc/istio/best-practice/specify-protocol/)
