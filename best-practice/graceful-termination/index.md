@@ -6,7 +6,7 @@ date: "2021-05-29"
 
 ## 概述
 
-本文介绍在 istio 场景下实现优雅终止时需要重点关注的点，一些容器场景通用的关注点请参考 [Kubenretes 最佳实践: 容器优雅终止](https://imroc.cc/k8s/best-practice/graceful-shutdown/) 。
+本文介绍在 istio 场景下实现优雅终止时需要重点关注的点，一些容器场景通用的关注点请参考 [Kubenretes 最佳实践: 优雅终止](https://imroc.cc/k8s/best-practice/graceful-shutdown/) 。
 
 ## outbound 流量问题
 
