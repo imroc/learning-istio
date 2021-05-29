@@ -1,8 +1,7 @@
 ---
 title: "优雅终止"
 type: book
-date: "2021-05-28"
-draft: true
+date: "2021-05-29"
 ---
 
 ## 概述
@@ -53,6 +52,30 @@ spec:
 * 如果 `terminationDrainDuration` 大于 30s，需要显式给 Pod 指定 `terminationGracePeriodSeconds`，因为这个值默认为 30s，即 30s 之后容器内进程还未退出就发 SIGKILL 信号将其强制杀死。所以要确保 `terminationGracePeriodSeconds` 大于等于 `terminationDrainDuration` 才好让优雅终止时长完全生效。
 * `terminationDrainDuration` 设置的越大，同时也意味着 Pod 会停止得越慢，所以建议根据业务场景进行自定义，只给需要的服务进行合理自定义，其它情况可以使用默认值。
 
+### 使用 preStop
+
+如果业务停止需要的时长不太固定，不好使用固定的 `terminationDrainDuration` 去控制 sidecar 停止时间，其实也可以通过给 sidecar 加一个 preStop 脚本，在脚本里通过判断是否还要连接来间接判断应用是否已经退出，等应用退出了之后 envoy 才真正开始退出 (默认再等 5s)。
+
+添加 preStop 可以通过修改 sidecar injector 的全局 configmap 来实现:
+
+```bash
+kubectl -n istio-system edit configmap istio-sidecar-injector
+```
+
+> 如果使用 TCM，托管网格添加 preStop 需要提工单后台操作，独立网格可以自行修改主集群里的 configmap，但 configmap 名称和这里不一样，会带上版本后缀。
+
+在 values 里面的 `global.proxy` 加入以下 lifecycle 字段:
+
+```json
+          "lifecycle": {
+            "preStop": {
+              "exec": {
+                "command": ["/bin/sh", "-c", "while [ $(netstat -plunt | grep tcp | grep -v envoy | wc -l | xargs) -ne 0 ]; do sleep 1; done"]
+              },
+            },
+          },
+```
+
 ## 参考资料
 
-* [istio 常见问题: Sidecar 停止顺序问题](https://imroc.cc/istio/faq/sidecar-shutdown-order/)
+* [istio 常见问题: Sidecar 停止问题](https://imroc.cc/istio/faq/sidecar-shutdown/)
