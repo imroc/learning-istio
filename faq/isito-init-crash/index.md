@@ -126,8 +126,10 @@ main.main()
 	istio.io/istio/pilot/cmd/pilot-agent/main.go:505 +0x2d
 ```
 
-## 原因
+## 原因与解决方案
 
 跟这个 issue 基本一致 https://github.com/istio/istio/issues/24148
 
-直接原因: 这种情况应该通常是清理了已退出的 istio-init 容器，导致 k8s 检测到 pod 关联的容器不在了，然后会重新拉起被删除的容器，而 istio-init 的执行不可重入，因为之前已创建了 iptables 规则，导致后拉起的 istio-init 执行 iptables 失败而 crash。清理的动作通常是执行了  `docker container rm` 或 `docker container prune` 或 `docker system prune`。 通常是 crontab 定时脚本里定时清理了容器导致，需要停止清理。
+直接原因: 这种情况应该通常是清理了已退出的 istio-init 容器，导致 k8s 检测到 pod 关联的容器不在了，然后会重新拉起被删除的容器，而 istio-init 的执行不可重入，因为之前已创建了 iptables 规则，导致后拉起的 istio-init 执行 iptables 失败而 crash。
+
+根因与解决方案: 清理的动作通常是执行了  `docker container rm` 或 `docker container prune` 或 `docker system prune`。 一般是 crontab 定时脚本里定时清理了容器导致，需要停止清理。
