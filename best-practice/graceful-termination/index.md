@@ -8,7 +8,7 @@ date: "2021-05-29"
 
 本文介绍在 istio 场景下实现优雅终止时需要重点关注的点，一些容器场景通用的关注点请参考 [Kubenretes 最佳实践: 优雅终止](https://imroc.cc/k8s/best-practice/graceful-shutdown/) 。
 
-## outbound 流量问题
+## envoy 被强杀导致流量异常
 
 当业务上了 istio 之后，流量被 sidecar 劫持，进程之间不会直接建立连接，而是经过了 sidecar 这一层代理:
 
