@@ -17,4 +17,4 @@ weight: 120
 
 ## 参考资料
 
-* [What is required for distributed tracing with Istio](https://istio.io/latest/faq/distributed-tracing/#how-to-support-tracing)
+* [What is required for distributed tracing with Istio](https://istio.io/latest/about/faq/#how-to-support-tracing)
