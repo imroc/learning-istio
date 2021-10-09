@@ -5,6 +5,17 @@ date: "2021-04-26"
 weight: 13
 ---
 
+## sidecar 注入相关
+
+### 为指定 workload 取消 sidecar 自动注入
+
+```yaml
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+```
+
 ## proxy 相关
 
 ### 自定义 request/limit
