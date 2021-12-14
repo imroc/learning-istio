@@ -65,6 +65,10 @@ spec:
       holdApplicationUntilProxyStarts: true
 ```
 
+如果你使用了 TCM (Tecnet Cloud Mesh)，已经产品化了该能力，直接开启 `Sidecar 就绪保障` 即可:
+
+![](4.png)
+
 **局部配置:**
 
 如果使用 istio 1.8 及其以上的版本，可以为需要打开此开关的 Pod 加上 `proxy.istio.io/config` 注解，将 `holdApplicationUntilProxyStarts` 置为 `true`，示例:
@@ -97,6 +101,7 @@ spec:
 ## 完美方案: K8S 支持容器依赖
 
 最完美的方案还是 Kubernetes 自身支持容器依赖，社区也提出了 [Sidecar Container](https://github.com/kubernetes/enhancements/issues/753) 的特性，只可惜最终还是被废弃了，新的方案还未落地，详细可参考 [这篇笔记](https://imroc.cc/k8s/kep/sidecar-containers/) 。
+
 
 ## 参考资料
 
